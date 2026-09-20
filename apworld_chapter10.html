@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AP World Chapter 10 Study</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+  <style>
+    :root{ color-scheme: light dark; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+    body{ margin:0; }
+    img{ max-width:100%; }
+    [hidden]{ display:none !important; }
+  </style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#eae5d9; --surface:#fffdf8; --surface-2:#f2ede1; --ink:#211d18; --ink-soft:#5c5648;
+    --accent:#ab2436; --accent-ink:#fff6ee; --accent-2:#2c5d4e; --accent-2-ink:#fff6ee;
+    --border:#d7cfba; --success:#2c7a4d; --success-bg:#e2efe4; --danger:#ab2436; --danger-bg:#f7e3e1;
+    --star:#b8860b;
+    --shadow:rgba(33,29,24,0.10);
+    --font-display:'Spectral',Georgia,'Times New Roman',serif;
+    --font-body:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17191a; --surface:#212426; --surface-2:#282b2d; --ink:#eee8db; --ink-soft:#b3ac9d;
+      --accent:#e2687a; --accent-ink:#221316; --accent-2:#6bb79b; --accent-2-ink:#0f2019;
+      --border:#3a3d3d; --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+      --star:#d9b45c;
+      --shadow:rgba(0,0,0,0.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17191a; --surface:#212426; --surface-2:#282b2d; --ink:#eee8db; --ink-soft:#b3ac9d;
+    --accent:#e2687a; --accent-ink:#221316; --accent-2:#6bb79b; --accent-2-ink:#0f2019;
+    --border:#3a3d3d; --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+    --star:#d9b45c;
+    --shadow:rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;}
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); margin:0; padding-inline:20px; }
+  .page{ max-width:900px; margin:0 auto; padding-block:28px 64px; }
+
+  .eyebrow{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 6px; }
+  h1{ font-family:var(--font-display); font-weight:700; font-size:clamp(1.7rem,4.5vw,2.5rem); margin:0 0 6px; text-wrap:balance; letter-spacing:-0.01em; }
+  .subtitle{ color:var(--ink-soft); margin:0 0 20px; font-size:0.98rem; max-width:62ch; }
+  h2.section-h{ font-family:var(--font-display); font-size:1.25rem; margin:34px 0 12px; }
+  h2.section-h:first-child{ margin-top:0; }
+
+  nav.tabs{ display:flex; gap:6px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  nav.tabs button{ font-family:var(--font-body); font-weight:600; font-size:0.9rem; color:var(--ink-soft);
+    background:transparent; border:none; padding:10px 15px; border-radius:8px 8px 0 0; cursor:pointer; position:relative; top:1px; }
+  nav.tabs button[aria-selected="true"]{ color:var(--accent-ink); background:var(--accent); }
+  nav.tabs button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  main{ padding-top:24px; }
+
+  /* ---------- shared bits ---------- */
+  button.btn{ font-family:var(--font-body); font-weight:600; font-size:0.9rem; padding:10px 18px; border-radius:9px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
+  button.btn:hover{ border-color:var(--accent); }
+  button.btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  button.btn.primary{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  button.btn.secondary{ background:var(--accent-2); color:var(--accent-2-ink); border-color:var(--accent-2); }
+  button.btn.small{ padding:7px 13px; font-size:0.82rem; }
+
+  .settings{ background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:20px; }
+  .settings-row{ display:flex; flex-wrap:wrap; gap:16px 22px; align-items:flex-start; }
+  .setting{ display:flex; flex-direction:column; gap:6px; }
+  .setting > span.label{ font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft); }
+  .seg{ display:flex; gap:4px; flex-wrap:wrap; }
+  .seg button{ font-family:var(--font-body); font-size:0.82rem; font-weight:500; padding:6px 12px; border-radius:7px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; }
+  .seg button[aria-pressed="true"]{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-2-ink); font-weight:600; }
+  .seg button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  select, input[type="text"]{ font-family:var(--font-body); font-size:0.88rem; padding:8px 10px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink); }
+  select:focus-visible, input[type="text"]:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  /* ---------- Cheat sheet ---------- */
+  .sheet-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(245px,1fr)); gap:14px; }
+  .sheet-card{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; box-shadow:0 2px 10px var(--shadow); }
+  .sheet-card h3{ font-family:var(--font-display); font-size:1.05rem; margin:0; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .dates{ font-family:var(--font-mono); font-size:0.72rem; color:var(--accent-2); background:var(--surface-2); padding:2px 7px; border-radius:5px; }
+  .sheet-card ul{ margin:10px 0 0; padding-left:1.1em; }
+  .sheet-card li{ margin-bottom:6px; font-size:0.9rem; line-height:1.45; }
+  .sheet-card li::marker{ color:var(--accent); }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--surface); box-shadow:0 2px 10px var(--shadow); }
+  table{ border-collapse:collapse; width:100%; min-width:520px; font-size:0.88rem; }
+  th, td{ text-align:left; padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.45; }
+  thead th{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); background:var(--surface-2); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td:first-child{ font-weight:600; }
+
+  /* ---------- Vocab ---------- */
+  .vocab-count{ font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); margin:0 0 14px; }
+  .vocab-list{ display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .vocab-item{ background:var(--surface); padding:12px 16px; display:flex; gap:12px; align-items:flex-start; }
+  .vocab-item .vt{ font-weight:600; flex:0 0 33%; }
+  .vocab-item .vd{ color:var(--ink-soft); font-size:0.9rem; line-height:1.45; flex:1; }
+  .vocab-item .vcat{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--accent-2); border:1px solid var(--border); border-radius:5px; padding:2px 6px; flex:none; align-self:center; }
+  @media (max-width:560px){
+    .vocab-item{ flex-direction:column; gap:4px; }
+    .vocab-item .vt{ flex:none; }
+    .vocab-item .vcat{ align-self:flex-start; }
+  }
+  .empty{ padding:24px; text-align:center; color:var(--ink-soft); font-size:0.9rem; }
+
+  /* ---------- Flashcards ---------- */
+  .fc-wrap{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+  .fc-progress{ font-family:var(--font-mono); font-size:0.8rem; color:var(--ink-soft); letter-spacing:0.04em; }
+  .fc-card{ width:100%; max-width:440px; aspect-ratio:4/3; perspective:1200px; cursor:pointer; }
+  .fc-inner{ position:relative; width:100%; height:100%; transition:transform 0.5s cubic-bezier(.2,.7,.3,1); transform-style:preserve-3d; }
+  .fc-card.flipped .fc-inner{ transform:rotateY(180deg); }
+  .fc-face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; align-items:center;
+    justify-content:center; text-align:center; padding:30px 26px; border:1px solid var(--border); box-shadow:0 6px 20px var(--shadow); overflow:auto; }
+  .fc-front{ background:var(--surface); }
+  .fc-back{ background:var(--accent); color:var(--accent-ink); transform:rotateY(180deg); }
+  .fc-label{ position:absolute; top:12px; left:14px; font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.12em; text-transform:uppercase; opacity:0.7; }
+  .fc-star{ position:absolute; top:8px; right:10px; background:none; border:none; font-size:1.15rem; cursor:pointer; line-height:1; color:var(--ink-soft); padding:4px; }
+  .fc-star[aria-pressed="true"]{ color:var(--star); }
+  .fc-star:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .fc-text{ font-size:clamp(1rem,3.4vw,1.45rem); line-height:1.4; }
+  .fc-text.is-term{ font-family:var(--font-display); font-weight:600; }
+  .fc-hint{ font-size:0.78rem; color:var(--ink-soft); text-align:center; }
+  .fc-controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  @media (prefers-reduced-motion: reduce){ .fc-inner{ transition:none; } }
+
+  /* ---------- Quiz ---------- */
+  .quiz-bar{ height:6px; border-radius:4px; background:var(--surface-2); overflow:hidden; margin-bottom:8px; }
+  .quiz-bar-fill{ height:100%; background:var(--accent); transition:width 0.3s ease; width:0%; }
+  .quiz-meta{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); margin-bottom:18px; }
+  .quiz-q{ font-family:var(--font-display); font-size:clamp(1.05rem,3.2vw,1.3rem); margin:0 0 16px; text-wrap:balance; line-height:1.4; }
+  .quiz-choices{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-choice{ text-align:left; font-family:var(--font-body); font-size:0.94rem; padding:13px 16px; border-radius:10px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; display:flex; gap:10px; line-height:1.4; }
+  .quiz-choice .letter{ font-family:var(--font-mono); font-weight:600; color:var(--accent-2); flex:none; }
+  .quiz-choice:hover:not(:disabled){ border-color:var(--accent); }
+  .quiz-choice:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .quiz-choice.correct{ background:var(--success-bg); border-color:var(--success); }
+  .quiz-choice.wrong{ background:var(--danger-bg); border-color:var(--danger); }
+  .quiz-choice:disabled{ cursor:default; }
+  .quiz-foot{ margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  .feedback{ font-size:0.88rem; font-weight:600; }
+  .feedback.ok{ color:var(--success); }
+  .feedback.no{ color:var(--danger); }
+
+  .type-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .type-row input[type="text"]{ flex:1; min-width:180px; font-size:1rem; }
+  input[type="text"].correct{ background:var(--success-bg); border-color:var(--success); }
+  input[type="text"].wrong{ background:var(--danger-bg); border-color:var(--danger); }
+
+  .match-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media (max-width:520px){ .match-grid{ grid-template-columns:1fr; } }
+  .match-col{ display:flex; flex-direction:column; gap:8px; }
+  .match-col h4{ font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 2px; }
+  .match-btn{ text-align:left; font-family:var(--font-body); font-size:0.86rem; padding:11px 13px; border-radius:9px;
+    border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; line-height:1.35; }
+  .match-btn[aria-pressed="true"]{ border-color:var(--accent); background:var(--surface-2); }
+  .match-btn.matched{ background:var(--success-bg); border-color:var(--success); cursor:default; opacity:0.75; }
+  .match-btn.miss{ background:var(--danger-bg); border-color:var(--danger); }
+  .match-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .quiz-done{ text-align:center; padding:8px 0; }
+  .quiz-score{ font-family:var(--font-display); font-size:clamp(2.2rem,8vw,3.2rem); font-weight:700; margin:6px 0; }
+  .quiz-score-label{ color:var(--ink-soft); font-size:0.9rem; margin:0 0 18px; }
+  .missed{ text-align:left; margin-top:26px; }
+  .missed h3{ font-family:var(--font-display); font-size:1.05rem; margin:0 0 10px; }
+  .missed-item{ background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--danger);
+    border-radius:8px; padding:10px 14px; margin-bottom:8px; font-size:0.88rem; line-height:1.45; }
+  .missed-item b{ font-weight:600; }
+
+  /* ---------- Timeline ---------- */
+  .timeline{ display:flex; flex-direction:column; gap:0; border-left:2px solid var(--border); margin-left:8px; }
+  .tl-row{ display:flex; gap:16px; padding:9px 0 9px 18px; position:relative; }
+  .tl-row::before{ content:""; position:absolute; left:-6px; top:16px; width:10px; height:10px; border-radius:50%;
+    background:var(--accent); border:2px solid var(--bg); }
+  .tl-year{ font-family:var(--font-mono); font-size:0.8rem; font-weight:600; color:var(--accent-2); flex:0 0 92px; padding-top:1px; }
+  .tl-event{ font-size:0.92rem; line-height:1.45; }
+  @media (max-width:480px){
+    .tl-row{ flex-direction:column; gap:2px; }
+    .tl-year{ flex:none; }
+  }
+</style>
+
+<div class="page">
+  <header>
+    <p class="eyebrow">AP World History · Chapter 10</p>
+    <h1>Middle Kingdom Study Hub</h1>
+    <p class="subtitle">Tang &amp; Song China, plus Japan, Korea, and Vietnam in their orbit. Cheat sheet, full vocabulary, flashcards, and a quiz you can set up however you study best.</p>
+    <nav class="tabs" role="tablist" aria-label="Study mode">
+      <button role="tab" id="tab-sheet" aria-selected="true" aria-controls="panel-sheet">Cheat Sheet</button>
+      <button role="tab" id="tab-vocab" aria-selected="false" aria-controls="panel-vocab">Vocabulary</button>
+      <button role="tab" id="tab-cards" aria-selected="false" aria-controls="panel-cards">Flashcards</button>
+      <button role="tab" id="tab-quiz" aria-selected="false" aria-controls="panel-quiz">Quiz</button>
+      <button role="tab" id="tab-time" aria-selected="false" aria-controls="panel-time">Timeline</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- CHEAT SHEET -->
+    <section id="panel-sheet" class="panel" role="tabpanel" aria-labelledby="tab-sheet">
+      <div class="sheet-grid" id="sheetGrid"></div>
+
+      <h2 class="section-h">China's neighbors, compared</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Country</th><th>Relationship with China</th><th>What they took</th><th>What they kept / resisted</th></tr></thead>
+          <tbody id="compareBody1"></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-h">Japanese vs. European feudalism</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Japan</th><th>Europe</th></tr></thead>
+          <tbody id="compareBody2"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VOCABULARY -->
+    <section id="panel-vocab" class="panel" role="tabpanel" aria-labelledby="tab-vocab" hidden>
+      <div class="settings">
+        <div class="settings-row">
+          <label class="setting">
+            <span class="label">Search</span>
+            <input type="text" id="vocabSearch" placeholder="Type a term…" autocomplete="off">
+          </label>
+          <div class="setting">
+            <span class="label">Theme</span>
+            <div class="seg" id="vocabCatSeg"></div>
+          </div>
+        </div>
+      </div>
+      <p class="vocab-count" id="vocabCount"></p>
+      <div class="vocab-list" id="vocabList"></div>
+    </section>
+
+    <!-- FLASHCARDS -->
+    <section id="panel-cards" class="panel" role="tabpanel" aria-labelledby="tab-cards" hidden>
+      <div class="settings">
+        <div class="settings-row">
+          <div class="setting">
+            <span class="label">Show first</span>
+            <div class="seg" id="fcSideSeg">
+              <button data-val="term" aria-pressed="true">Term</button>
+              <button data-val="def" aria-pressed="false">Definition</button>
+              <button data-val="mix" aria-pressed="false">Mix it up</button>
+            </div>
+          </div>
+          <div class="setting">
+            <span class="label">Deck</span>
+            <div class="seg" id="fcCatSeg"></div>
+          </div>
+          <div class="setting">
+            <span class="label">Filter</span>
+            <div class="seg" id="fcStarSeg">
+              <button data-val="all" aria-pressed="true">All cards</button>
+              <button data-val="starred" aria-pressed="false">★ Starred only</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-wrap">
+        <div class="fc-progress" id="fcProgress"></div>
+        <div class="fc-card" id="fcCard" tabindex="0" role="button" aria-label="Flip card">
+          <div class="fc-inner">
+            <div class="fc-face fc-front">
+              <span class="fc-label" id="fcFrontLabel">Term</span>
+              <button class="fc-star" id="fcStarBtn" aria-pressed="false" aria-label="Star this card" title="Star for review">☆</button>
+              <div class="fc-text" id="fcFront"></div>
+            </div>
+            <div class="fc-face fc-back">
+              <span class="fc-label" id="fcBackLabel">Definition</span>
+              <div class="fc-text" id="fcBack"></div>
+            </div>
+          </div>
+        </div>
+        <p class="fc-hint">Tap the card to flip · arrow keys to move · space to flip · S to star</p>
+        <div class="fc-controls">
+          <button class="btn" id="fcPrev">← Prev</button>
+          <button class="btn secondary" id="fcShuffle">Shuffle</button>
+          <button class="btn primary" id="fcNext">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="panel-quiz" class="panel" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+      <div id="quizSetup">
+        <div class="settings">
+          <div class="settings-row">
+            <div class="setting">
+              <span class="label">Question type</span>
+              <div class="seg" id="qModeSeg">
+                <button data-val="mixed" aria-pressed="true">Mixed</button>
+                <button data-val="mc" aria-pressed="false">Multiple choice</button>
+                <button data-val="tf" aria-pressed="false">True / False</button>
+                <button data-val="match" aria-pressed="false">Matching</button>
+                <button data-val="type" aria-pressed="false">Type the term</button>
+              </div>
+            </div>
+            <div class="setting">
+              <span class="label">How many</span>
+              <div class="seg" id="qCountSeg">
+                <button data-val="10" aria-pressed="false">10</button>
+                <button data-val="15" aria-pressed="true">15</button>
+                <button data-val="20" aria-pressed="false">20</button>
+                <button data-val="30" aria-pressed="false">30</button>
+                <button data-val="50" aria-pressed="false">50</button>
+              </div>
+            </div>
+            <div class="setting">
+              <span class="label">Content</span>
+              <div class="seg" id="qCatSeg"></div>
+            </div>
+          </div>
+        </div>
+        <p class="fc-hint" id="quizBest" style="text-align:left;"></p>
+        <button class="btn primary" id="quizStart">Start quiz</button>
+      </div>
+
+      <div id="quizActive" hidden>
+        <div class="quiz-bar"><div class="quiz-bar-fill" id="quizBarFill"></div></div>
+        <div class="quiz-meta">
+          <span id="quizCount"></span>
+          <span id="quizScore"></span>
+        </div>
+        <p class="quiz-q" id="quizQuestion"></p>
+        <div id="quizBody"></div>
+        <div class="quiz-foot">
+          <span class="feedback" id="quizFeedback"></span>
+          <button class="btn primary" id="quizNextBtn" hidden>Next →</button>
+        </div>
+      </div>
+
+      <div id="quizDone" class="quiz-done" hidden>
+        <p class="eyebrow">Quiz complete</p>
+        <div class="quiz-score" id="quizFinalScore"></div>
+        <p class="quiz-score-label" id="quizFinalLabel"></p>
+        <button class="btn primary" id="quizRetake">Retake</button>
+        <button class="btn" id="quizBack">Change settings</button>
+        <div class="missed" id="missedWrap" hidden>
+          <h3>Worth another look</h3>
+          <div id="missedList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section id="panel-time" class="panel" role="tabpanel" aria-labelledby="tab-time" hidden>
+      <div class="timeline" id="timeline"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =======================  DATA  ======================= */
+
+  var CATS = ["Economics","Social","State-Building","Culture"];
+
+  var VOCAB = [
+    // ---- Economics ----
+    ["equal-field system","Tang land policy that tried to give every family a plot to farm, aimed at breaking the landed aristocracy's power; it worked for about 100 years.","Economics"],
+    ["fast-ripening rice","Also called Champa rice; a quick-growing grain from northern Vietnam that let warm southern China harvest two crops a year.","Economics"],
+    ["Champa rice","The other name for fast-ripening rice, native to northern Vietnam, which drove China's food surplus and population growth.","Economics"],
+    ["proto-industrialization","A phase of mass production for commercial sale (porcelain and silk) that comes before and enables true industrialization; Song China reached it before Western Europe.","Economics"],
+    ["flying cash","A Tang/Song credit system letting a merchant deposit money in one place and withdraw the same amount in another; the model for modern banks.","Economics"],
+    ["paper money","Currency in paper form, first developed in China around 800 CE; later only the government was allowed to print it.","Economics"],
+    ["magnetic compass","A Chinese navigational invention that let ships hold a course out of sight of land, boosting sea trade.","Economics"],
+    ["rudder","An improved Chinese steering device that gave ships far better control at sea.","Economics"],
+    ["junk","A large Chinese ship — up to 400 feet, multiple sails, with a compartmentalized hull that made sinking less likely.","Economics"],
+    ["wood-block printing","A printing method using ink on carved raised wood; China used it first, and a 7th-century Buddhist scripture may be the earliest printed work.","Economics"],
+    ["smelting","The process of separating metal from ore; Chinese skill at it expanded iron and steel production enormously.","Economics"],
+    ["coke","Coal processed to remove impurities, letting Chinese metalworkers make stronger plows, weapons, and bridges.","Economics"],
+    ["abacus","A counting device Chinese merchants and tax collectors used to calculate transactions.","Economics"],
+    ["Silk Roads","The overland trade network, revived by Abbasid-era Arab merchants in the 8th–9th centuries, that carried Chinese goods and ideas across Eurasia.","Economics"],
+
+    // ---- Social ----
+    ["nuclear family","A household of just a husband, wife, and their children — Vietnam's preference, unlike China's extended families.","Social"],
+    ["sinification","The assimilation of Chinese traditions, language, and practices by neighboring peoples; welcomed in Korea, resisted in Vietnam.","Social"],
+    ["polygyny","The practice of having more than one spouse at a time — a Confucian-linked custom Vietnamese women resented.","Social"],
+    ["Xuanzang","Tang-era Buddhist monk who traveled the Silk Roads to India in 629, studied at Nalanda, and brought texts back to translate into Chinese.","Social"],
+    ["Hsuan Tsung","Tang emperor (r. 712–756) who neglected governing, distracted by his concubine Yang Guifei, leaving the empire open to rebellion.","Social"],
+    ["An Lushan","Military leader whose 755 rebellion of about 100,000 soldiers overthrew Hsuan Tsung and devastated the Tang Empire.","Social"],
+    ["scholar gentry","The new Song social class of Confucian-educated bureaucrats who outnumbered the old aristocracy and became China's most influential class.","Social"],
+    ["daimyo","Japanese landowning aristocrats who fought each other for territory and held more real power than European nobles did.","Social"],
+    ["serfs","Japanese peasants born into economic dependency on landowners under feudalism.","Social"],
+    ["feudalism","A hereditary system of lords, warriors, and peasants with very little social mobility; found in both Japan and Europe.","Social"],
+    ["meritocracy","A system where position is earned by ability (the exam) rather than birth; China's allowed more upward mobility than any other hiring system of its time.","Social"],
+    ["civil service examination","The rigorous Chinese test that decided entry into the bureaucracy, making education central to Chinese life for centuries.","Social"],
+
+    // ---- State-Building ----
+    ["Sui Dynasty","Short dynasty (581–618) that reunified China after nearly 400 years of division and began the Grand Canal.","State-Building"],
+    ["Sui Yangdi","The emperor who unified China through violence and repression and pushed the Grand Canal and Long Wall projects.","State-Building"],
+    ["Grand Canal","The Sui public-works project that linked the food-rich Yangtze valley in the south to the populous north and the capital at Luoyang.","State-Building"],
+    ["Luoyang","The northern city that served as the Sui government's center, fed by the Grand Canal.","State-Building"],
+    ["Hangzhou","City at the southern end of the Grand Canal; about one million people, a trade and culture hub Marco Polo wrote about.","State-Building"],
+    ["Tang Dynasty","Dynasty (618–907) of prosperity, expansion, exam-based bureaucracy, and the spread of Buddhism.","State-Building"],
+    ["Middle Kingdom","China's view of itself as the society around which the entire world revolved.","State-Building"],
+    ["tributary system","An arrangement in which other states paid money or goods to honor the Chinese emperor; it cemented China's power but also stabilized trade.","State-Building"],
+    ["Silla Kingdom","The Korean kingdom that agreed to tributary status with Tang China and copied Chinese models closely.","State-Building"],
+    ["Kumsong","The capital of Silla Korea, modeled directly on China's Chang'an.","State-Building"],
+    ["Tang Taizong","Tang emperor (r. 627–649) who expanded roads, canals, postal service, and the civil service bureaucracy.","State-Building"],
+    ["Chang'an","The Tang capital of roughly two million people and a Silk Road terminus; Korea modeled Kumsong on it.","State-Building"],
+    ["Uighurs","A Central Asian ethnic group whose army restored Tang power after the An Lushan Rebellion — and collected annual tribute for it.","State-Building"],
+    ["Song Dynasty","Dynasty (960–1279) ruling a smaller territory than the Tang but reaching extraordinary commercial and artistic heights.","State-Building"],
+    ["Song Taizu","Song emperor who widened educational access so men of lower status could pass the civil service exams, expanding the bureaucracy.","State-Building"],
+    ["Jin","The empire nomadic pastoralists from Manchuria set up in northern China, with a capital at Beijing.","State-Building"],
+    ["Kaifeng","The city about 530 miles east of Chang'an that the Song made their capital under nomadic pressure.","State-Building"],
+    ["Southern Song Dynasty","The Song state after 1127, ruling from Hangzhou after nomads forced the capital further south; it fell in 1279.","State-Building"],
+    ["Yuan Dynasty","The dynasty the Mongols established after vanquishing the Song in 1279.","State-Building"],
+    ["Ming Dynasty","The Chinese dynasty that followed Mongol rule under the Yuan.","State-Building"],
+    ["Shotoku Taishi","Yamato prince (574–622) who wrote a constitution centralizing Japan and imported Chinese practices to keep China at bay.","State-Building"],
+    ["Taika Reforms","Japanese reforms of 646 that put all farmland under government ownership so taxes went to the central state, not the nobility.","State-Building"],
+    ["Fujiwara clan","The family that took control of Japan's government in 710 and held the real power through the Heian era.","State-Building"],
+    ["Nara","The Japanese capital founded in 710, built in the style of China's Chang'an.","State-Building"],
+    ["Heian","Japan's capital from 794 and the era (794–1185) when the country drifted back into political decentralization.","State-Building"],
+    ["Minamoto clan","The Japanese clan that rose in the late 12th century and installed the shogun, shifting Japan to military rule.","State-Building"],
+    ["shogun","Japan's supreme military ruler, holding real power separately from the figurehead emperor.","State-Building"],
+    ["samurai","Professional Japanese warriors who received clothing, shelter, and food from a landlord in exchange for protecting his estate.","State-Building"],
+    ["guerilla warfare","Irregular hit-and-run fighting Vietnam used to drive out Chinese and Mongol forces — including sharpened logs hidden in a harbor at high tide.","State-Building"],
+
+    // ---- Culture ----
+    ["kowtow","The ritual in which anyone greeting the Chinese emperor bowed until their head touched the floor, acknowledging China's superiority.","Culture"],
+    ["foot binding","The Song-era practice of binding aristocratic girls' feet so the bones stayed small; a painful status symbol that restricted women's movement.","Culture"],
+    ["Li Bo","Tang poet (701–762) whose light, airy verse celebrated nature, friendship, and wine.","Culture"],
+    ["Du Fu","Tang poet known as the 'poet-historian,' whose somber verse dealt with the hardships of daily life as the dynasty crumbled.","Culture"],
+    ["landscape painting","Chinese art form literally meaning 'mountain-water,' with tiny human figures dwarfed by nature — Daoism's influence made visible.","Culture"],
+    ["Daoism","Chinese philosophy centered on nature and 'the way'; it blended comfortably with Confucianism in daily practice.","Culture"],
+    ["Confucianism","The Chinese ethical system of hierarchy, education, and duty that formed the basis of the civil service exam.","Culture"],
+    ["Chan (Zen) Buddhism","Syncretic faith blending Buddhism with Daoist ideas; it stresses meditation and direct experience over formal scripture.","Culture"],
+    ["Neo-Confucianism","A social and ethical philosophy (c. 770–840) combining rational Confucian thought with the metaphysics of Daoism and Buddhism; it spread to Japan, Korea, and Vietnam.","Culture"],
+    ["Nalanda University","The famous Indian center of Buddhist learning where Xuanzang studied for years.","Culture"],
+    ["Yang Guifei","The favorite concubine of Emperor Hsuan Tsung, whose hold on his attention helped set up the An Lushan Rebellion.","Culture"],
+    ["Shinto","Japan's traditional native religion, practiced alongside the Buddhism and Confucianism imported from China.","Culture"],
+    ["Murasaki Shikibu","The Heian noblewoman at the Japanese court who wrote The Tale of Genji.","Culture"],
+    ["The Tale of Genji","Heian-era novel about Prince Genji, often called the world's first novel because it follows one character's psychological development.","Culture"],
+    ["bushido","The Japanese warrior code stressing frugality, loyalty, the martial arts, and honor unto death.","Culture"],
+    ["chivalry","The European knight's code of duty to countrymen, God, and women — Japan's rough counterpart to bushido.","Culture"],
+    ["gunpowder","Explosive powder discovered by 9th-century Chinese researchers hunting an elixir of long life; it spread across Eurasia via traders and the Mongols.","Culture"],
+    ["Marco Polo","The Venetian traveler whose account described Hangzhou's huge markets, widespread silk, and paper money.","Culture"],
+    ["Joseph Needham","British scholar whose Science and Civilization in China proved the Chinese were making guns by the 10th century.","Culture"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Sui Dynasty", dates:"581–618", items:[
+      "Sui Yangdi reunified China by force after ~400 years of division",
+      "Built the Grand Canal (south food → north) + reinforced the Long Wall",
+      "Fell from high taxes + forced labor; emperor assassinated 618"
+    ]},
+    {name:"Tang Dynasty", dates:"618–907", items:[
+      "China = &ldquo;Middle Kingdom&rdquo;; tributary system required the kowtow",
+      "Tang Taizong expanded roads, canals, and the civil service exam",
+      "Xuanzang traveled to India, helped spread Buddhism in China",
+      "An Lushan Rebellion (755) crippled the empire; Tang fell 907"
+    ]},
+    {name:"Song Dynasty", dates:"960–1279", items:[
+      "Smaller territory than Tang — nomads took the north (Jin state)",
+      "Song Taizu widened exam access; bureaucracy grew (too big, too costly)",
+      "Scholar gentry = Confucian officials, also given weak military roles",
+      "Capital moved Chang'an → Kaifeng → Hangzhou; Mongols ended it in 1279"
+    ]},
+    {name:"Economy", dates:"", items:[
+      "Equal-field system: gave land to families, weakened the aristocracy",
+      "Champa (fast-ripening) rice: two harvests a year in the south",
+      "Proto-industrialization: mass silk + porcelain production",
+      "Gunpowder (9th c.) + first guns (Song) — from Daoist alchemy",
+      "Flying cash + paper money = the model for modern banking",
+      "Compass + rudder + the junk = command of South China Sea trade"
+    ]},
+    {name:"Society", dates:"", items:[
+      "Class order: scholar gentry &gt; farmers &gt; artisans &gt; merchants",
+      "Merchants ranked last (produced nothing) but were often rich",
+      "Foot binding = status symbol; restricted women, strengthened patriarchy"
+    ]},
+    {name:"Culture &amp; Religion", dates:"", items:[
+      "Wood-block printing = China's invention; spread books among elites",
+      "Li Bo (light, airy) vs. Du Fu (somber &ldquo;poet-historian&rdquo;)",
+      "Landscape painting = &ldquo;mountain-water&rdquo;; Daoist influence",
+      "Daoism + Confucianism coexisted; Confucianism + Buddhism clashed",
+      "Chan (Zen) Buddhism = Buddhism blended with Daoism",
+      "Neo-Confucianism = Confucian + Daoist + Buddhist ideas (770–840)"
+    ]},
+    {name:"Japan", dates:"", items:[
+      "Shotoku Taishi + Taika Reforms (646) copied China to centralize power",
+      "Reforms failed — aristocracy too strong, exams not open to all",
+      "Emperor = figurehead; real power with clans (Fujiwara, then Minamoto)",
+      "Minamoto clan → shogun system; samurai, daimyo, bushido",
+      "The Tale of Genji (Murasaki Shikibu) = often called world's first novel"
+    ]},
+    {name:"Korea", dates:"", items:[
+      "Silla Kingdom: tributary to China; capital Kumsong modeled on Chang'an",
+      "Adopted Confucianism, Buddhism, and Chinese writing",
+      "Aristocracy stayed strong — exam closed to peasants, no real meritocracy"
+    ]},
+    {name:"Vietnam", dates:"", items:[
+      "Resisted sinification; kept its own spoken language",
+      "Women had more independence; nuclear families, resented polygyny",
+      "Scholar-officials loyal to villages, not the emperor — led revolts",
+      "Guerilla warfare vs. China — major victory in 938"
+    ]},
+    {name:"Historiography", dates:"", items:[
+      "Europeans long doubted China invented gunpowder and guns (Henry Hime, 1904)",
+      "They first allowed China had gunpowder — but &ldquo;only for fireworks&rdquo;",
+      "Joseph Needham's research proved China had real guns by the 900s CE"
+    ]}
+  ];
+
+  var COMPARE1 = [
+    ["Japan","Never invaded, but feared China's power nearby in Korea","Chinese writing, Buddhism, Confucianism, centralized-government model, wood-block printing","Kept Shinto; reforms collapsed back into decentralized feudal rule"],
+    ["Korea","Direct land border; Silla became a tributary state and kowtowed","Capital design (Kumsong from Chang'an), centralized government, Confucianism, Buddhism, Chinese writing","Aristocracy blocked a true merit exam — no peasant access to the bureaucracy"],
+    ["Vietnam","Adversarial; conquered by the Han, fought to push China out","Buddhism, Chinese characters for writing, a merit-based bureaucracy in form","Spoken language, nuclear families, women's independence, village-first loyalty"]
+  ];
+
+  var COMPARE2 = [
+    ["Who holds real power","Daimyo — often stronger than either the emperor or the shogun","The monarch sits above the nobility"],
+    ["Warrior class","Samurai, serving a landlord for food and shelter","Knights, serving a lord"],
+    ["Warrior code","Bushido: frugality, loyalty, martial arts, honor unto death","Chivalry: duty to countrymen, to God, and to women"],
+    ["Peasants","Serfs born into economic dependency","Serfs bound to the manor"],
+    ["Social mobility","Very little — hereditary hierarchy","Very little — hereditary hierarchy"]
+  ];
+
+  var TIMELINE = [
+    ["581","Sui Dynasty reunifies China under Sui Yangdi"],
+    ["c. 600","Grand Canal construction underway; Hangzhou grows"],
+    ["618","Sui emperor assassinated — Tang Dynasty begins"],
+    ["627–649","Tang Taizong's reign: roads, canals, exam bureaucracy"],
+    ["629","Xuanzang leaves for India to study Buddhism"],
+    ["646","Taika Reforms in Japan put farmland under government control"],
+    ["710","Fujiwara clan takes power; Japan's capital moves to Nara"],
+    ["755","An Lushan Rebellion devastates the Tang Empire"],
+    ["770–840","Neo-Confucianism develops in China"],
+    ["794","Japan's capital moves to Heian — decentralization returns"],
+    ["800s","Chinese alchemists discover gunpowder"],
+    ["907","Tang Dynasty collapses"],
+    ["938","Vietnam defeats a Chinese force nearly three times its size"],
+    ["960","Song Dynasty founded"],
+    ["900s–1000s","First guns made in China under the Song"],
+    ["1127","Capital forced south to Hangzhou — Southern Song begins"],
+    ["1185","Heian period ends; Minamoto clan installs the shogun"],
+    ["1279","Mongols conquer the Song and establish the Yuan Dynasty"],
+    ["c. 1300","Marco Polo describes Hangzhou's markets and paper money"]
+  ];
+
+  // Curated content questions (beyond straight vocabulary)
+  var CONTENT_Q = [
+    ["What was the greatest accomplishment of the Sui Dynasty?",["The Great Wall","The Grand Canal","The civil service exam","Gunpowder"],1],
+    ["What brought down the Sui Dynasty after only about 40 years?",["A Mongol invasion","High taxes, forced labor, and dictatorial rule","A collapse in foreign trade","Famine from failed rice crops"],1],
+    ["What did tributary states have to do when greeting the Chinese emperor?",["Pay a gold tax","Perform the kowtow","Send a royal hostage","Convert to Confucianism"],1],
+    ["Which rebellion crippled the Tang Dynasty in 755?",["The Zanj Rebellion","The An Lushan Rebellion","The Taika Revolt","The Red Turban Revolt"],1],
+    ["Who helped restore Tang power after the rebellion — and collected tribute for it?",["The Mongols","The Uighurs","The Jin","The Silla"],1],
+    ["Who conquered the Song Dynasty in 1279?",["The Japanese","The Mongols","The Jin","The Vietnamese"],1],
+    ["How was the Song bureaucracy a weakness as well as a strength?",["It excluded all commoners","It grew so large it drained China's surplus wealth, and scholars ran the military badly","It was controlled entirely by Buddhist monks","It refused to collect taxes"],1],
+    ["Why was Champa rice important?",["It resisted drought","It let southern China grow two crops a year","It replaced silk as an export","It was used to make paper"],1],
+    ["What philosophy was behind the accidental discovery of gunpowder?",["Confucianism","Daoism — alchemists sought an elixir of long life","Buddhism","Legalism"],1],
+    ["Which two goods drove Song proto-industrialization?",["Iron and coal","Porcelain and silk","Tea and rice","Paper and jade"],1],
+    ["How did flying cash work?",["It was a lottery","Deposit money in one place, withdraw the same amount elsewhere","It taxed merchants by weight","It converted silk into currency"],1],
+    ["Rank Song China's social classes from highest to lowest.",["Merchants, artisans, farmers, gentry","Scholar gentry, farmers, artisans, merchants","Farmers, gentry, merchants, artisans","Gentry, merchants, farmers, artisans"],1],
+    ["Why was foot binding rare among rural peasants?",["It was banned outside cities","It restricted movement, and peasant women had to work","Peasants considered it unlucky","Only Buddhists practiced it"],1],
+    ["Which two belief systems coexisted comfortably in China?",["Buddhism and Confucianism","Daoism and Confucianism","Shinto and Daoism","Buddhism and Shinto"],1],
+    ["Why did Tang officials close Buddhist monasteries in the 8th century?",["Monks refused military service","Monasteries held tax-exempt land and Buddhism's popularity angered Confucians and Daoists","They were spreading Christianity","They were bankrupt"],1],
+    ["What made Chan (Zen) Buddhism different from earlier Buddhism?",["It rejected meditation","It stressed direct experience and meditation over formal scripture","It required monastic vows for all","It was practiced only by emperors"],1],
+    ["Why did Shotoku Taishi model Japan on China?",["To become a Chinese province","To build a government strong enough that China could not encroach","To spread Shinto abroad","To gain access to the Silk Roads"],1],
+    ["Why did the Taika Reforms ultimately fail in Japan?",["The emperor rejected them","The aristocracy stayed too powerful and the exams were not open to all classes","China invaded","They were never actually enacted"],1],
+    ["What role did the Japanese emperor actually play during this era?",["Absolute ruler","A respected figurehead while clans held real power","Chief military commander","High priest of Buddhism only"],1],
+    ["What was Korea's biggest political difference from China?",["Korea rejected Buddhism","Korea's aristocracy blocked a true merit-based exam system","Korea had no central government","Korea refused all tribute"],1],
+    ["How did Vietnamese scholar-officials differ from Chinese ones?",["They were chosen by birth","They owed loyalty to village peasants and sometimes led revolts","They were all Buddhist monks","They served the Mongols"],1],
+    ["Which tactic did the Vietnamese use against Chinese and Mongol ships?",["Fire ships","Sharpened logs hidden in harbors, exposed at low tide","Naval blockades","Cannon fire from cliffs"],1],
+    ["How did women's roles in Vietnam compare to China's?",["Identical under Confucian law","Vietnamese women had more independence in marriage and lived in nuclear families","Vietnamese women held the throne","Chinese women had more freedom"],1],
+    ["What did Joseph Needham's research establish?",["That Europe invented gunpowder","That China was making real guns by the 10th century","That gunpowder came from India","That the Mongols invented firearms"],1],
+    ["Why is The Tale of Genji considered significant?",["It was the first printed book","It follows one character's psychological development, like a modern novel","It codified bushido","It was written by an emperor"],1],
+    ["What two regions did the Grand Canal connect?",["Tibet and Mongolia","The Yangtze valley in the south and the populous north","Korea and Manchuria","The Silk Road and the coast"],1],
+    ["What was the Long Wall?",["A canal levee","A northern wall Sui conscripts reinforced that later became part of the Great Wall","The wall around Hangzhou","A Korean fortification"],1],
+    ["How did the civil service exam change Chinese society?",["It ended the aristocracy overnight","It made education central for centuries and allowed real upward mobility","It replaced Confucianism with Daoism","It restricted literacy to monks"],1],
+    ["Who still had the easiest path to high-level bureaucratic posts?",["Buddhist monks","Aristocratic families","Merchants","Foreign traders"],1],
+    ["Where did Xuanzang study during his years in India?",["Chang'an","Nalanda University","Kilwa","Kaifeng"],1],
+    ["How did monks first make Buddhism understandable to Chinese audiences?",["By translating it into Korean","By relating dharma to the Daoist idea of 'dao' (the way)","By banning Confucian texts","By rejecting meditation"],1],
+    ["Why did Buddhist monasteries irritate the Confucian bureaucracy?",["They refused to teach reading","Wealthy converts donated large tracts of tax-exempt land to them","They sided with the Mongols","They printed illegal money"],1],
+    ["What happened to the Song capital in 1127?",["It was burned by the Mongols","It moved 400 miles south to Hangzhou under nomadic pressure","It moved north to Beijing","It was abandoned entirely"],1],
+    ["Which empire did Manchurian nomads set up in northern China?",["The Yuan","The Jin, with a capital at Beijing","The Ming","The Silla"],1],
+    ["Why did the equal-field system eventually break down?",["Peasants refused the land","The landed aristocracy bribed officials to keep their holdings","A flood destroyed the records","The Mongols abolished it"],1],
+    ["Which methods raised Chinese agricultural yields under the Tang and Song?",["Crop rotation and windmills","Manure, irrigation systems, and heavy plows pulled by oxen or water buffalo","Slash-and-burn farming","Terrace-free dry farming"],1],
+    ["What made the Chinese junk safer than comparable ships?",["A double mast","A hull divided into compartments","A copper-plated bottom","A shallow draft"],1],
+    ["Roughly how large could a junk be?",["About 100 feet","Up to 400 feet — at least triple a typical Western European ship","About 50 feet","Around 1,000 feet"],1],
+    ["Which European city did Marco Polo compare Chinese cities to?",["Paris","Venice","Rome","Lisbon"],1],
+    ["Roughly how many people lived in Chang'an?",["About 200,000","About two million","About 50,000","About ten million"],1],
+    ["What was coke used for in Song China?",["Sweetening tea","Removing impurities from coal so metal came out stronger","Fueling ships","Making porcelain glaze"],1],
+    ["How did Song tax policy promote economic growth?",["It abolished all taxes","It paid people to work on public projects instead of requiring unpaid labor","It taxed only foreigners","It banned paper money"],1],
+    ["Why did the gentry rank merchants lowest?",["Merchants were foreigners","Merchants produced nothing new — they profited from others' work","Merchants could not read","Merchants refused to pay taxes"],1],
+    ["What religion did Japan practice before Chinese influence arrived?",["Buddhism","Shinto","Confucianism","Daoism"],1],
+    ["What did Shotoku Taishi's constitution try to do?",["Divide Japan among the clans","Consolidate power under one ruler with merit-selected bureaucrats","Establish a shogunate","Ban foreign trade"],1],
+    ["Why did Japan's merit-based bureaucracy end up strengthening the nobility?",["The exams were too easy","The civil service examination was not open to all social classes","Nobles wrote the exams","Only monks could take it"],1],
+    ["What distinguished the daimyo from European nobles?",["They were elected","They often held more real power than either the emperor or the shogun","They owned no land","They were forbidden to fight"],1],
+    ["Which Chinese import proved awkward for Korea?",["Buddhism","The Chinese writing system","Papermaking","The compass"],1],
+    ["Why could Korea's elite block Chinese-style reforms?",["Korea had no king","Korea's landed aristocracy was more powerful than China's","China never sent envoys","Korea was at war"],1],
+    ["What did Vietnam export to China during the Han period?",["Gunpowder and porcelain","Tortoise shells, ivory, peacock feathers, and pearls","Horses and salt","Rice and tea only"],1],
+    ["In what year did Vietnam defeat a Chinese force nearly three times its size?",["755","938","1127","1279"],1],
+    ["What did Henry Hime argue in his 1904 book?",["That gunpowder was Mongol","That the Chinese lacked mechanical genius and got guns from the West","That guns came from India","That gunpowder was never used in war"],1],
+    ["What did Europeans first concede about Chinese gunpowder?",["That China invented modern artillery","That China invented gunpowder but used it only for fireworks","That China never had it","That it came from Korea"],1],
+    ["What position did the Southern Song rule from after 1127?",["Chang'an","Hangzhou","Kaifeng","Beijing"],1],
+    ["Which two dynasties bracket the Mongol Yuan period in China?",["Han and Sui","Song before it and Ming after it","Tang and Sui","Qin and Han"],1],
+    ["What did Tang Taizong develop that the Sui had begun?",["The Silk Roads","Roads, canals, and postal and messenger services","The tributary system","The junk"],1],
+    ["Why was Hangzhou important beyond its size?",["It was the imperial birthplace","It sat at the southern end of the Grand Canal and became a trade and culture center","It held the only gunpowder works","It was Korea's capital"],1],
+    ["What happened to Japan's political structure after the Heian court fell?",["A republic formed","About 400 years of military rule under the Kamakura and Muromachi shogunates","China annexed Japan","The emperor regained full power"],1],
+    ["How did Vietnamese and Chinese family structures differ?",["They were identical","Vietnam preferred nuclear families; China lived in extended families","China preferred nuclear families","Neither had formal families"],1],
+    ["What is sinification?",["A Chinese tax","The assimilation of Chinese traditions and practices by other peoples","A Buddhist ritual","A trade agreement"],1]
+  ];
+
+  // True/False bank — [statement, isTrue, correction, category]
+  var TF_Q = [
+    ["The Sui Dynasty ruled China for more than two centuries.",false,"It lasted only about 40 years (581–618).","State-Building"],
+    ["The Grand Canal moved crops from the southern Yangtze valley to northern China.",true,"That was exactly its purpose — feeding the populous north.","State-Building"],
+    ["Sui Yangdi came to power peacefully through the civil service exam.",false,"He unified China through violence and repression, and ruled by harsh, dictatorial methods.","State-Building"],
+    ["The Long Wall that Sui conscripts reinforced later became part of the Great Wall of China.",true,"","State-Building"],
+    ["The Tang Dynasty lasted from 618 to 907 CE.",true,"","State-Building"],
+    ["In the tributary system, China paid other states to leave its borders alone.",false,"It was the reverse — other states paid money or goods to honor the Chinese emperor.","State-Building"],
+    ["The kowtow required a visitor to bow until their head touched the floor.",true,"It acknowledged China's superior status.","Culture"],
+    ["Passing the civil service exam gave every family equal access to top posts.",false,"Aristocratic families still had far greater access to high-level bureaucratic positions.","Social"],
+    ["Xuanzang traveled to India and brought Buddhist texts back to translate into Chinese.",true,"He was away about 17 years and was greeted as a celebrity.","Social"],
+    ["The An Lushan Rebellion strengthened Tang control over its territory.",false,"It devastated the empire — millions died and the Tang never fully recovered.","Social"],
+    ["After the rebellion, the Tang had to pay annual tribute to the Uighurs.",true,"The Uighur army had restored their government for them.","State-Building"],
+    ["The Song Dynasty controlled more territory than the Tang.",false,"The Song ruled a smaller region — Manchurian nomads held the north as the Jin empire.","State-Building"],
+    ["Song Taizu expanded educational opportunity so more men of lower status could pass the exams.",true,"","State-Building"],
+    ["The scholar gentry were expert military strategists.",false,"They studied Confucius and the classics, not tactics — which left Chinese armies vulnerable.","Social"],
+    ["The Mongols conquered the Song in 1279 and established the Yuan Dynasty.",true,"","State-Building"],
+    ["Paying tribute to the Mongols successfully saved the Song from conquest.",false,"It delayed but did not prevent Mongol domination.","State-Building"],
+    ["The equal-field system was created mainly out of humanitarian concern for peasants.",false,"The empire's intent was to wrest power away from the landed aristocracy.","Economics"],
+    ["Fast-ripening rice came from northern Vietnam.",true,"Vietnam came under Tang control, and the rice spread from there.","Economics"],
+    ["Champa rice let peasants in southern China grow two crops a year.",true,"","Economics"],
+    ["Song China produced fewer nonagricultural goods than earlier civilizations did.",false,"It produced more for commercial use than any earlier civilization — especially porcelain and silk.","Economics"],
+    ["Proto-industrialization reached Western Europe before it reached China.",false,"Song China got there earlier than Western Europe.","Economics"],
+    ["Flying cash let a merchant deposit money in one place and withdraw it in another.",true,"It became the model for the banks of the modern era.","Economics"],
+    ["Paper money was first developed in China.",true,"Around 800 CE.","Economics"],
+    ["Private individuals in China were always free to print their own paper money.",false,"Later Chinese governments reserved that right for themselves.","Economics"],
+    ["Gunpowder was discovered by researchers hunting for a substance that would extend life.",true,"Ninth-century Chinese alchemists were after an elixir of immortality.","Culture"],
+    ["The first guns were made during the Sui Dynasty.",false,"Under the Song.","Culture"],
+    ["The magnetic compass and the improved rudder were both Chinese developments.",true,"","Economics"],
+    ["The junk's hull was divided into compartments, which made sinking less likely.",true,"","Economics"],
+    ["Merchants sat at the top of Song China's social hierarchy.",false,"The gentry ranked them lowest — though merchants were often wealthy and influential anyway.","Social"],
+    ["The scholar gentry eventually outnumbered the hereditary aristocracy.",true,"That is why they became the most influential class in China.","Social"],
+    ["Foot binding began during the Song Dynasty.",true,"","Culture"],
+    ["Foot binding was most widespread among rural peasant women.",false,"It restricted movement, so it was an aristocratic status symbol, not a peasant practice.","Culture"],
+    ["Wood-block printing was used in China before anywhere else.",true,"A 7th-century Buddhist scripture may be the world's first printed work.","Economics"],
+    ["Li Bo's poetry was somber and focused on the hardships of daily life.",false,"That describes Du Fu, the 'poet-historian.' Li Bo's verse was light and airy.","Culture"],
+    ["Chinese landscape painting translates literally as 'mountain-water.'",true,"Human figures are tiny against vast nature — Daoism's influence.","Culture"],
+    ["Confucianism and Buddhism coexisted comfortably in Tang China.",false,"Daoism and Confucianism blended easily; Confucians and Buddhists did not.","Culture"],
+    ["Chan (Zen) Buddhism emphasizes meditation and direct experience over formal scripture.",true,"That similarity to Daoism is what made it spread.","Culture"],
+    ["Tang officials ordered Buddhist monasteries closed during the 8th century.",true,"Their lands were seized, though Chan Buddhism stayed popular with ordinary people.","Culture"],
+    ["Neo-Confucianism is a religion with its own gods and rituals.",false,"It is a social and ethical philosophy, not a religion.","Culture"],
+    ["Neo-Confucianism spread to Japan, Korea, and Vietnam.",true,"","Culture"],
+    ["China invaded and occupied Japan during the Post-Classical period.",false,"China never invaded Japan then — but its presence in nearby Korea worried Japanese officials.","State-Building"],
+    ["Shotoku Taishi argued for a centralized government with merit-selected bureaucrats.",true,"He also sent nobility to China to study and imported wood-block printing.","State-Building"],
+    ["The Taika Reforms placed all farmland under government ownership.",true,"That meant taxes went to the central state rather than the nobility.","State-Building"],
+    ["The Japanese emperor held absolute political power during the Heian period.",false,"The emperor was a figurehead; the Fujiwara family held the real power.","State-Building"],
+    ["Japan's capital moved to Nara in 710 and was built in the style of Chang'an.",true,"","State-Building"],
+    ["The Tale of Genji was written by a noblewoman at the Japanese court.",true,"Murasaki Shikibu — and it is often called the world's first novel.","Culture"],
+    ["Bushido stressed frugality, loyalty, the martial arts, and honor unto death.",true,"","Culture"],
+    ["Japanese daimyo held less power than European nobles did relative to their monarch.",false,"The opposite — daimyo often outweighed both the emperor and the shogun.","Social"],
+    ["European knights followed a code called chivalry.",true,"Duty to countrymen, to God, and to women.","Culture"],
+    ["Korea modeled its capital, Kumsong, on the Chinese capital of Chang'an.",true,"","State-Building"],
+    ["Korea's civil service examination was open to peasants, just as China's was.",false,"It was closed to peasants, so Korea never had a truly merit-based bureaucracy.","Social"],
+    ["Vietnam accepted sinification more willingly than Korea did.",false,"Vietnam resisted it; Korea's relationship with China was the peaceful one.","Social"],
+    ["Spoken Vietnamese is closely related to spoken Chinese.",false,"The written language used Chinese characters, but the spoken language is not related at all.","Social"],
+    ["Vietnamese women generally had more independence in marriage than Chinese women did.",true,"They also resented Confucian practices like polygyny.","Social"],
+    ["Vietnamese scholar-officials owed their first loyalty to the Chinese emperor.",false,"They owed more allegiance to village peasants, and sometimes led revolts against the government.","Social"],
+    ["Vietnam used guerrilla tactics, including sharpened logs hidden in harbors at high tide.",true,"When the tide went out, the stakes trapped enemy ships.","State-Building"],
+    ["Joseph Needham concluded the Chinese built the first gun before other peoples knew of the invention.",true,"He called gunpowder the greatest of all Chinese military inventions.","Culture"],
+    ["Most historians now credit Europeans with inventing gunpowder.",false,"The Chinese invented it; traders and the Mongols carried the knowledge west by the 1200s.","Culture"],
+    ["The Silk Roads declined after the fall of the Han and Roman empires, then revived under Arab merchants.",true,"Abbasid-era merchants revived both the land route and Indian Ocean sea routes.","Economics"],
+    ["Marco Polo reported that people in Hangzhou used paper money as currency.",true,"He also noted how widely silk was worn there.","Economics"]
+  ];
+
+  /* =======================  UTIL  ======================= */
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function store(key, val){
+    try{ if (val === undefined) { var r = localStorage.getItem("mk."+key); return r ? JSON.parse(r) : null; }
+      localStorage.setItem("mk."+key, JSON.stringify(val)); }catch(e){ return null; }
+  }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function segInit(el, onPick){
+    el.addEventListener("click", function(e){
+      var btn = e.target.closest("button"); if (!btn || !el.contains(btn)) return;
+      Array.prototype.forEach.call(el.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b===btn)); });
+      onPick(btn.getAttribute("data-val"));
+    });
+  }
+  function fillCatSeg(el, extra){
+    var vals = [["all","All"]].concat(CATS.map(function(c){ return [c,c]; }));
+    if (extra) vals = vals.concat(extra);
+    el.innerHTML = vals.map(function(v,i){
+      return '<button data-val="'+v[0]+'" aria-pressed="'+(i===0)+'">'+esc(v[1])+'</button>';
+    }).join("");
+  }
+
+  /* =======================  TABS  ======================= */
+  var TABS = ["sheet","vocab","cards","quiz","time"];
+  TABS.forEach(function(t){
+    document.getElementById("tab-"+t).addEventListener("click", function(){
+      TABS.forEach(function(x){
+        document.getElementById("tab-"+x).setAttribute("aria-selected", String(x===t));
+        document.getElementById("panel-"+x).hidden = (x!==t);
+      });
+    });
+  });
+
+  /* =======================  CHEAT SHEET  ======================= */
+  document.getElementById("sheetGrid").innerHTML = SHEET.map(function(sec){
+    return '<div class="sheet-card"><h3>'+sec.name+(sec.dates?' <span class="dates">'+sec.dates+'</span>':'')+'</h3><ul>'+
+      sec.items.map(function(i){ return '<li>'+i+'</li>'; }).join("")+'</ul></div>';
+  }).join("");
+
+  document.getElementById("compareBody1").innerHTML = COMPARE1.map(function(r){
+    return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td></tr>';
+  }).join("");
+  document.getElementById("compareBody2").innerHTML = COMPARE2.map(function(r){
+    return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td></tr>';
+  }).join("");
+
+  /* =======================  VOCABULARY  ======================= */
+  var vocabCat = "all", vocabQuery = "";
+  var vocabListEl = document.getElementById("vocabList");
+  var vocabCountEl = document.getElementById("vocabCount");
+  fillCatSeg(document.getElementById("vocabCatSeg"));
+  segInit(document.getElementById("vocabCatSeg"), function(v){ vocabCat = v; renderVocab(); });
+  document.getElementById("vocabSearch").addEventListener("input", function(e){
+    vocabQuery = e.target.value.toLowerCase().trim(); renderVocab();
+  });
+
+  function vocabFiltered(){
+    return VOCAB.filter(function(v){
+      if (vocabCat !== "all" && v.cat !== vocabCat) return false;
+      if (vocabQuery && (v.term+" "+v.def).toLowerCase().indexOf(vocabQuery) === -1) return false;
+      return true;
+    });
+  }
+  function renderVocab(){
+    var list = vocabFiltered();
+    vocabCountEl.textContent = list.length + " of " + VOCAB.length + " terms";
+    vocabListEl.innerHTML = list.length ? list.map(function(v){
+      return '<div class="vocab-item"><div class="vt">'+esc(v.term)+'</div><div class="vd">'+esc(v.def)+
+        '</div><span class="vcat">'+esc(v.cat)+'</span></div>';
+    }).join("") : '<div class="vocab-item"><div class="empty">No terms match that search.</div></div>';
+  }
+  renderVocab();
+
+  /* =======================  FLASHCARDS  ======================= */
+  var fcSide = store("fcSide") || "term";
+  var fcCat = "all", fcFilter = "all";
+  var starred = store("starred") || {};
+  var deck = [], fcIndex = 0, fcFlipSides = [];
+
+  var fcCardEl = document.getElementById("fcCard");
+  var fcFrontEl = document.getElementById("fcFront");
+  var fcBackEl = document.getElementById("fcBack");
+  var fcFrontLabel = document.getElementById("fcFrontLabel");
+  var fcBackLabel = document.getElementById("fcBackLabel");
+  var fcProgressEl = document.getElementById("fcProgress");
+  var fcStarBtn = document.getElementById("fcStarBtn");
+
+  fillCatSeg(document.getElementById("fcCatSeg"));
+  segInit(document.getElementById("fcCatSeg"), function(v){ fcCat = v; buildDeck(); });
+  segInit(document.getElementById("fcStarSeg"), function(v){ fcFilter = v; buildDeck(); });
+  segInit(document.getElementById("fcSideSeg"), function(v){ fcSide = v; store("fcSide", v); buildDeck(); });
+  Array.prototype.forEach.call(document.getElementById("fcSideSeg").querySelectorAll("button"), function(b){
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-val") === fcSide));
+  });
+
+  function buildDeck(){
+    deck = VOCAB.filter(function(v){
+      if (fcCat !== "all" && v.cat !== fcCat) return false;
+      if (fcFilter === "starred" && !starred[v.term]) return false;
+      return true;
+    });
+    fcFlipSides = deck.map(function(){
+      return fcSide === "mix" ? (Math.random() < 0.5 ? "term" : "def") : fcSide;
+    });
+    fcIndex = 0;
+    renderCard();
+  }
+
+  function renderCard(){
+    if (!deck.length){
+      fcProgressEl.textContent = "No cards here yet";
+      fcFrontEl.textContent = fcFilter === "starred" ? "Star some cards first" : "No cards in this deck";
+      fcBackEl.textContent = "Switch the filter back to All cards.";
+      fcCardEl.classList.remove("flipped");
+      fcStarBtn.hidden = true;
+      return;
+    }
+    fcStarBtn.hidden = false;
+    var card = deck[fcIndex];
+    var showTermFirst = fcFlipSides[fcIndex] === "term";
+    fcFrontEl.textContent = showTermFirst ? card.term : card.def;
+    fcBackEl.textContent = showTermFirst ? card.def : card.term;
+    fcFrontEl.className = "fc-text" + (showTermFirst ? " is-term" : "");
+    fcBackEl.className = "fc-text" + (showTermFirst ? "" : " is-term");
+    fcFrontLabel.textContent = showTermFirst ? "Term" : "Definition";
+    fcBackLabel.textContent = showTermFirst ? "Definition" : "Term";
+    fcCardEl.classList.remove("flipped");
+    fcProgressEl.textContent = "Card " + (fcIndex+1) + " of " + deck.length + " · " + card.cat;
+    var isStar = !!starred[card.term];
+    fcStarBtn.setAttribute("aria-pressed", String(isStar));
+    fcStarBtn.textContent = isStar ? "★" : "☆";
+  }
+
+  function flip(){ fcCardEl.classList.toggle("flipped"); }
+  function step(n){ if (!deck.length) return; fcIndex = (fcIndex + n + deck.length) % deck.length; renderCard(); }
+  function toggleStar(){
+    if (!deck.length) return;
+    var t = deck[fcIndex].term;
+    if (starred[t]) delete starred[t]; else starred[t] = 1;
+    store("starred", starred);
+    renderCard();
+    if (fcFilter === "starred") buildDeck();
+  }
+
+  fcCardEl.addEventListener("click", flip);
+  fcCardEl.addEventListener("keydown", function(e){
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); flip(); }
+  });
+  fcStarBtn.addEventListener("click", function(e){ e.stopPropagation(); toggleStar(); });
+  document.getElementById("fcNext").addEventListener("click", function(){ step(1); });
+  document.getElementById("fcPrev").addEventListener("click", function(){ step(-1); });
+  document.getElementById("fcShuffle").addEventListener("click", function(){
+    var order = shuffle(deck.map(function(_,i){ return i; }));
+    deck = order.map(function(i){ return deck[i]; });
+    fcFlipSides = order.map(function(i){ return fcFlipSides[i]; });
+    fcIndex = 0; renderCard();
+  });
+  document.addEventListener("keydown", function(e){
+    if (document.getElementById("panel-cards").hidden) return;
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "SELECT")) return;
+    if (e.key === "ArrowRight"){ step(1); }
+    else if (e.key === "ArrowLeft"){ step(-1); }
+    else if (e.key === " " && e.target === document.body){ e.preventDefault(); flip(); }
+    else if (e.key === "s" || e.key === "S"){ toggleStar(); }
+  });
+  buildDeck();
+
+  /* =======================  QUIZ  ======================= */
+  var qMode = "mixed", qCount = 15, qCat = "all";
+  var qItems = [], qIndex = 0, qScore = 0, qAnswered = false, qMissed = [];
+  var matchState = null;
+
+  var quizSetup = document.getElementById("quizSetup");
+  var quizActive = document.getElementById("quizActive");
+  var quizDone = document.getElementById("quizDone");
+  var quizBody = document.getElementById("quizBody");
+  var quizQuestionEl = document.getElementById("quizQuestion");
+  var quizCountEl = document.getElementById("quizCount");
+  var quizScoreEl = document.getElementById("quizScore");
+  var quizBarFill = document.getElementById("quizBarFill");
+  var quizFeedback = document.getElementById("quizFeedback");
+  var quizNextBtn = document.getElementById("quizNextBtn");
+  var LETTERS = ["A","B","C","D"];
+
+  fillCatSeg(document.getElementById("qCatSeg"), [["content","Big-picture questions"]]);
+  segInit(document.getElementById("qCatSeg"), function(v){ qCat = v; });
+  segInit(document.getElementById("qModeSeg"), function(v){ qMode = v; });
+  segInit(document.getElementById("qCountSeg"), function(v){ qCount = parseInt(v,10); });
+
+  function showBest(){
+    var best = store("best");
+    document.getElementById("quizBest").textContent = best ?
+      ("Your best so far: " + best.score + "/" + best.total + " on " + best.mode + ".") : "";
+  }
+  showBest();
+
+  function vocabPool(){
+    if (qCat === "all" || qCat === "content") return VOCAB.slice();
+    return VOCAB.filter(function(v){ return v.cat === qCat; });
+  }
+
+  function mcPool(){
+    var out = [];
+    if (qCat === "all" || qCat === "content"){
+      out = out.concat(CONTENT_Q.map(function(q){
+        var answer = q[1][q[2]];
+        var choices = shuffle(q[1]);              // vary which letter is correct each run
+        return {kind:"mc", q:q[0], choices:choices, correct:choices.indexOf(answer), answerText:answer};
+      }));
+    }
+    if (qCat !== "content"){
+      var pool = vocabPool();
+      var wide = VOCAB;
+      pool.forEach(function(v){
+        // direction 1: definition given, pick the term
+        var terms = shuffle(wide.filter(function(o){ return o.term !== v.term && o.cat === v.cat; })).slice(0,3);
+        while (terms.length < 3){
+          var filler = wide[Math.floor(Math.random()*wide.length)];
+          if (filler.term !== v.term && terms.indexOf(filler) === -1) terms.push(filler);
+        }
+        var c1 = shuffle([v.term].concat(terms.map(function(o){ return o.term; })));
+        out.push({kind:"mc", q:"Which term matches this definition? — “"+v.def+"”",
+          choices:c1, correct:c1.indexOf(v.term), answerText:v.term});
+
+        // direction 2: term given, pick the definition
+        var defs = shuffle(wide.filter(function(o){ return o.term !== v.term && o.cat === v.cat; })).slice(0,3);
+        while (defs.length < 3){
+          var f2 = wide[Math.floor(Math.random()*wide.length)];
+          if (f2.term !== v.term && defs.indexOf(f2) === -1) defs.push(f2);
+        }
+        var c2 = shuffle([v.def].concat(defs.map(function(o){ return o.def; })));
+        out.push({kind:"mc", q:"What does “"+v.term+"” mean?",
+          choices:c2, correct:c2.indexOf(v.def), answerText:v.def});
+      });
+    }
+    return out;
+  }
+
+  function tfPool(){
+    return TF_Q.filter(function(t){
+      if (qCat === "all" || qCat === "content") return true;
+      return t[3] === qCat;
+    }).map(function(t){
+      return {kind:"tf", q:t[0], isTrue:t[1], note:t[2], answerText:(t[1] ? "True" : "False")};
+    });
+  }
+
+  function typePool(){
+    return vocabPool().map(function(v){ return {kind:"type", q:v.def, answerText:v.term}; });
+  }
+
+  function buildMC(){ return shuffle(mcPool()).slice(0, qCount); }
+  function buildTF(){ return shuffle(tfPool()).slice(0, qCount); }
+  function buildType(){ return shuffle(typePool()).slice(0, qCount); }
+
+  function buildMixed(){
+    // roughly half multiple choice, a third true/false, the rest type-in
+    var n = qCount;
+    var nMC = Math.round(n*0.5), nTF = Math.round(n*0.3), nType = n - nMC - nTF;
+    var picks = shuffle(mcPool()).slice(0, nMC)
+      .concat(shuffle(tfPool()).slice(0, nTF))
+      .concat(shuffle(typePool()).slice(0, nType));
+    return shuffle(picks).slice(0, n);
+  }
+
+  function buildMatch(){
+    var picks = shuffle(vocabPool()).slice(0, qCount);
+    var rounds = [];
+    for (var i=0;i<picks.length;i+=4){ rounds.push(picks.slice(i, i+4)); }
+    return rounds.map(function(r){ return {kind:"match", pairs:r}; });
+  }
+
+  function normalize(s){
+    return String(s).toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9 ]/g," ")
+      .replace(/\bthe\b/g," ").replace(/\s+/g," ").trim();
+  }
+  function acceptable(term){
+    var forms = [term];
+    var m = term.match(/^(.*)\(([^)]*)\)(.*)$/);
+    if (m){ forms.push(m[1]+m[3]); forms.push(m[1]+m[2]+m[3]); forms.push(m[2]); }
+    return forms.map(normalize);
+  }
+
+  document.getElementById("quizStart").addEventListener("click", function(){
+    if (qMode === "mc") qItems = buildMC();
+    else if (qMode === "tf") qItems = buildTF();
+    else if (qMode === "type") qItems = buildType();
+    else if (qMode === "mixed") qItems = buildMixed();
+    else qItems = buildMatch();
+    if (!qItems.length){
+      document.getElementById("quizBest").textContent = "No questions match those settings — try a different theme.";
+      return;
+    }
+    qIndex = 0; qScore = 0; qMissed = [];
+    quizSetup.hidden = true; quizDone.hidden = true; quizActive.hidden = false;
+    renderQuizItem();
+  });
+
+  function totalPoints(){
+    if (qMode === "match") return qItems.reduce(function(n,r){ return n + r.pairs.length; }, 0);
+    return qItems.length;
+  }
+
+  function renderQuizItem(){
+    qAnswered = false;
+    quizNextBtn.hidden = true;
+    quizFeedback.textContent = "";
+    quizFeedback.className = "feedback";
+    quizNextBtn.textContent = (qIndex === qItems.length - 1) ? "See results →" : "Next →";
+    var item = qItems[qIndex];
+    quizBarFill.style.width = (qIndex / qItems.length * 100) + "%";
+    quizScoreEl.textContent = "Score: " + qScore + " / " + totalPoints();
+
+    if (item.kind === "mc"){
+      quizCountEl.textContent = "Question " + (qIndex+1) + " of " + qItems.length;
+      quizQuestionEl.textContent = item.q;
+      quizBody.innerHTML = '<div class="quiz-choices"></div>';
+      var wrap = quizBody.firstChild;
+      item.choices.forEach(function(choice, i){
+        var btn = document.createElement("button");
+        btn.className = "quiz-choice";
+        btn.innerHTML = '<span class="letter">'+LETTERS[i]+'</span><span>'+esc(choice)+'</span>';
+        btn.addEventListener("click", function(){ answerMC(i, item, wrap); });
+        wrap.appendChild(btn);
+      });
+    }
+    else if (item.kind === "tf"){
+      quizCountEl.textContent = "Question " + (qIndex+1) + " of " + qItems.length + " · True or False";
+      quizQuestionEl.textContent = item.q;
+      quizBody.innerHTML = '<div class="quiz-choices"></div>';
+      var tfWrap = quizBody.firstChild;
+      ["True","False"].forEach(function(label, i){
+        var btn = document.createElement("button");
+        btn.className = "quiz-choice";
+        btn.innerHTML = '<span class="letter">'+(i===0?"T":"F")+'</span><span>'+label+'</span>';
+        btn.addEventListener("click", function(){ answerTF(i===0, item, tfWrap); });
+        tfWrap.appendChild(btn);
+      });
+    }
+    else if (item.kind === "type"){
+      quizCountEl.textContent = "Question " + (qIndex+1) + " of " + qItems.length;
+      quizQuestionEl.textContent = "Which term is this? — “" + item.q + "”";
+      quizBody.innerHTML = '<div class="type-row"><input type="text" id="typeInput" placeholder="Type the term…" autocomplete="off" autocapitalize="off" spellcheck="false">'+
+        '<button class="btn primary" id="typeSubmit">Check</button></div>';
+      var input = document.getElementById("typeInput");
+      input.focus();
+      function submit(){ answerType(input.value, item, input); }
+      document.getElementById("typeSubmit").addEventListener("click", submit);
+      input.addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); if (qAnswered) nextItem(); else submit(); } });
+    }
+    else {
+      quizCountEl.textContent = "Round " + (qIndex+1) + " of " + qItems.length;
+      quizQuestionEl.textContent = "Match each term to its definition.";
+      renderMatch(item);
+    }
+  }
+
+  function answerMC(chosen, item, wrap){
+    if (qAnswered) return;
+    qAnswered = true;
+    var btns = wrap.querySelectorAll(".quiz-choice");
+    Array.prototype.forEach.call(btns, function(b, i){
+      b.disabled = true;
+      if (i === item.correct) b.classList.add("correct");
+      else if (i === chosen) b.classList.add("wrong");
+    });
+    if (chosen === item.correct){ qScore++; quizFeedback.textContent = "Correct"; quizFeedback.className = "feedback ok"; }
+    else {
+      quizFeedback.textContent = "Answer: " + item.answerText;
+      quizFeedback.className = "feedback no";
+      qMissed.push({q:item.q, a:item.answerText});
+    }
+    quizScoreEl.textContent = "Score: " + qScore + " / " + totalPoints();
+    quizNextBtn.hidden = false;
+    quizNextBtn.focus();
+  }
+
+  function answerTF(said, item, wrap){
+    if (qAnswered) return;
+    qAnswered = true;
+    var btns = wrap.querySelectorAll(".quiz-choice");
+    var correctIdx = item.isTrue ? 0 : 1;
+    var chosenIdx = said ? 0 : 1;
+    Array.prototype.forEach.call(btns, function(b, i){
+      b.disabled = true;
+      if (i === correctIdx) b.classList.add("correct");
+      else if (i === chosenIdx) b.classList.add("wrong");
+    });
+    if (said === item.isTrue){
+      qScore++;
+      quizFeedback.textContent = item.note ? "Correct — " + item.note : "Correct";
+      quizFeedback.className = "feedback ok";
+    } else {
+      quizFeedback.textContent = (item.isTrue ? "Actually true. " : "Actually false. ") + (item.note || "");
+      quizFeedback.className = "feedback no";
+      qMissed.push({q:item.q, a:(item.isTrue ? "True" : "False"), note:item.note});
+    }
+    quizScoreEl.textContent = "Score: " + qScore + " / " + totalPoints();
+    quizNextBtn.hidden = false;
+    quizNextBtn.focus();
+  }
+
+  function answerType(value, item, input){
+    if (qAnswered) return;
+    qAnswered = true;
+    input.disabled = true;
+    document.getElementById("typeSubmit").disabled = true;
+    var ok = acceptable(item.answerText).indexOf(normalize(value)) !== -1;
+    if (ok){ qScore++; quizFeedback.textContent = "Correct — " + item.answerText; quizFeedback.className = "feedback ok"; input.classList.add("correct"); }
+    else {
+      input.classList.add("wrong");
+      quizFeedback.textContent = "Answer: " + item.answerText;
+      quizFeedback.className = "feedback no";
+      qMissed.push({q:item.q, a:item.answerText});
+    }
+    quizScoreEl.textContent = "Score: " + qScore + " / " + totalPoints();
+    quizNextBtn.hidden = false;
+    quizNextBtn.focus();
+  }
+
+  function renderMatch(item){
+    var defs = shuffle(item.pairs.slice());
+    matchState = {selectedTerm:null, remaining:item.pairs.length, missedThisRound:{}};
+    quizBody.innerHTML =
+      '<div class="match-grid">'+
+        '<div class="match-col"><h4>Terms</h4>'+
+          item.pairs.map(function(p,i){ return '<button class="match-btn" data-term="'+esc(p.term)+'">'+esc(p.term)+'</button>'; }).join("")+
+        '</div>'+
+        '<div class="match-col"><h4>Definitions</h4>'+
+          defs.map(function(p){ return '<button class="match-btn" data-def-for="'+esc(p.term)+'">'+esc(p.def)+'</button>'; }).join("")+
+        '</div>'+
+      '</div>';
+
+    var termBtns = quizBody.querySelectorAll("[data-term]");
+    var defBtns = quizBody.querySelectorAll("[data-def-for]");
+
+    Array.prototype.forEach.call(termBtns, function(b){
+      b.addEventListener("click", function(){
+        if (b.classList.contains("matched")) return;
+        Array.prototype.forEach.call(termBtns, function(x){ x.setAttribute("aria-pressed", String(x===b)); });
+        matchState.selectedTerm = b;
+      });
+    });
+
+    Array.prototype.forEach.call(defBtns, function(b){
+      b.addEventListener("click", function(){
+        if (b.classList.contains("matched")) return;
+        var sel = matchState.selectedTerm;
+        if (!sel){ quizFeedback.textContent = "Pick a term first."; quizFeedback.className = "feedback"; return; }
+        var term = sel.getAttribute("data-term");
+        if (b.getAttribute("data-def-for") === term){
+          sel.classList.add("matched"); b.classList.add("matched");
+          sel.setAttribute("aria-pressed","false");
+          if (!matchState.missedThisRound[term]) qScore++;
+          matchState.selectedTerm = null;
+          matchState.remaining--;
+          quizFeedback.textContent = "Matched"; quizFeedback.className = "feedback ok";
+          quizScoreEl.textContent = "Score: " + qScore + " / " + totalPoints();
+          if (matchState.remaining === 0){
+            qAnswered = true;
+            quizNextBtn.hidden = false;
+            quizNextBtn.textContent = (qIndex === qItems.length-1) ? "See results →" : "Next round →";
+            quizNextBtn.focus();
+          }
+        } else {
+          if (!matchState.missedThisRound[term]){
+            matchState.missedThisRound[term] = 1;
+            var def = item.pairs.filter(function(p){ return p.term === term; })[0].def;
+            qMissed.push({q:def, a:term});
+          }
+          b.classList.add("miss"); sel.classList.add("miss");
+          quizFeedback.textContent = "Not that one — try again."; quizFeedback.className = "feedback no";
+          setTimeout(function(){ b.classList.remove("miss"); sel.classList.remove("miss"); }, 500);
+        }
+      });
+    });
+  }
+
+  function nextItem(){
+    qIndex++;
+    if (qIndex >= qItems.length) finishQuiz();
+    else renderQuizItem();
+  }
+  quizNextBtn.addEventListener("click", nextItem);
+
+  function finishQuiz(){
+    var total = totalPoints();
+    quizBarFill.style.width = "100%";
+    quizActive.hidden = true;
+    quizDone.hidden = false;
+    document.getElementById("quizFinalScore").textContent = qScore + " / " + total;
+    var pct = total ? Math.round(qScore/total*100) : 0;
+    var msg = pct === 100 ? "Perfect. Go do something else." :
+              pct >= 85 ? "Strong — skim the cheat sheet and you're done." :
+              pct >= 65 ? "Decent. Run the missed terms as starred flashcards." :
+              "Start with the flashcards, then come back to this.";
+    document.getElementById("quizFinalLabel").textContent = pct + "% — " + msg;
+
+    var best = store("best");
+    if (!best || (qScore/total) > (best.score/best.total)){
+      var MODE_NAMES = {mc:"multiple choice", tf:"true/false", type:"type the term", match:"matching", mixed:"mixed"};
+      store("best", {score:qScore, total:total, mode:MODE_NAMES[qMode] || qMode});
+    }
+    showBest();
+
+    var wrap = document.getElementById("missedWrap");
+    var list = document.getElementById("missedList");
+    if (qMissed.length){
+      wrap.hidden = false;
+      list.innerHTML = qMissed.map(function(m){
+        return '<div class="missed-item"><b>'+esc(m.a)+'</b> — '+esc(m.q)+
+          (m.note ? ' <span style="color:var(--ink-soft)">('+esc(m.note)+')</span>' : '')+'</div>';
+      }).join("");
+    } else { wrap.hidden = true; }
+  }
+
+  document.getElementById("quizRetake").addEventListener("click", function(){
+    document.getElementById("quizStart").click();
+  });
+  document.getElementById("quizBack").addEventListener("click", function(){
+    quizDone.hidden = true; quizActive.hidden = true; quizSetup.hidden = false;
+  });
+
+  /* =======================  TIMELINE  ======================= */
+  document.getElementById("timeline").innerHTML = TIMELINE.map(function(t){
+    return '<div class="tl-row"><div class="tl-year">'+esc(t[0])+'</div><div class="tl-event">'+esc(t[1])+'</div></div>';
+  }).join("");
+
+})();
+</script>
+</body>
+</html>
