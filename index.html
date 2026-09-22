@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>AP World Chapter 10 Study</title>
+  <title>AP World Study Guides</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
   <style>
@@ -188,6 +188,15 @@
     .tl-row{ flex-direction:column; gap:2px; }
     .tl-year{ flex:none; }
   }
+
+  /* ---------- Packet Answers ---------- */
+  .packet-section{ font-family:var(--font-display); font-size:1.1rem; margin:30px 0 12px; }
+  .packet-section:first-child{ margin-top:0; }
+  .packet-list{ display:flex; flex-direction:column; gap:10px; }
+  .packet-item{ background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent-2);
+    border-radius:8px; padding:12px 16px; }
+  .packet-q{ font-weight:600; margin:0 0 6px; line-height:1.4; }
+  .packet-a{ color:var(--ink-soft); margin:0; line-height:1.45; font-size:0.94rem; }
 </style>
 
 <div class="page">
@@ -201,6 +210,7 @@
       <button role="tab" id="tab-cards" aria-selected="false" aria-controls="panel-cards">Flashcards</button>
       <button role="tab" id="tab-quiz" aria-selected="false" aria-controls="panel-quiz">Quiz</button>
       <button role="tab" id="tab-time" aria-selected="false" aria-controls="panel-time">Timeline</button>
+      <button role="tab" id="tab-packet" aria-selected="false" aria-controls="panel-packet">Packet Answers</button>
     </nav>
   </header>
 
@@ -359,6 +369,12 @@
     <!-- TIMELINE -->
     <section id="panel-time" class="panel" role="tabpanel" aria-labelledby="tab-time" hidden>
       <div class="timeline" id="timeline"></div>
+    </section>
+
+    <!-- PACKET ANSWERS -->
+    <section id="panel-packet" class="panel" role="tabpanel" aria-labelledby="tab-packet" hidden>
+      <p class="subtitle" style="margin-bottom:20px;">Answers to the Chapter 10 reading guide packet, question by question.</p>
+      <div id="packetList"></div>
     </section>
   </main>
 </div>
@@ -711,7 +727,7 @@
   }
 
   /* =======================  TABS  ======================= */
-  var TABS = ["sheet","vocab","cards","quiz","time"];
+  var TABS = ["sheet","vocab","cards","quiz","time","packet"];
   TABS.forEach(function(t){
     document.getElementById("tab-"+t).addEventListener("click", function(){
       TABS.forEach(function(x){
@@ -1214,6 +1230,93 @@
   /* =======================  TIMELINE  ======================= */
   document.getElementById("timeline").innerHTML = TIMELINE.map(function(t){
     return '<div class="tl-row"><div class="tl-year">'+esc(t[0])+'</div><div class="tl-event">'+esc(t[1])+'</div></div>';
+  }).join("");
+
+  /* =======================  PACKET ANSWERS  ======================= */
+  var PACKET = [
+    {section:"Political Structures in China", items:[
+      {q:"What happened during the Sui Dynasty's reunification of China in 581 CE?", a:"Sui Yangdi reunified China through military force and ruled with a harsh, dictatorial style."},
+      {q:"What were the Sui Dynasty's two key construction projects?", a:"The Sui built the Grand Canal to link the south's food supply to the north, and reinforced the “Long Wall,” which later became part of the Great Wall."},
+      {q:"How did the Sui Dynasty end?", a:"High taxes, forced labor, and dictatorial rule caused unrest, and the emperor was assassinated in 618 after only about 40 years of rule."},
+      {q:"Analysis: What role did the Grand Canal play in unifying China?", a:"It linked the wealthy south to the populous north, letting food and trade move freely and tying the empire together economically."}
+    ]},
+    {section:"Tang Dynasty", items:[
+      {q:"What was the tributary system?", a:"Other states paid tribute to honor the Chinese emperor, since China saw itself as the “Middle Kingdom” — for example, Korea's Silla Kingdom."},
+      {q:"What was the kowtow?", a:"It was a ritual bow to the floor before the Chinese emperor that showed China's superior status."},
+      {q:"What were the Tang Dynasty's major accomplishments?", a:"The Tang improved roads, canals, and the postal system, expanded the bureaucracy through the civil service exam, and raised the importance of education."},
+      {q:"How did Xuanzang help spread Buddhism?", a:"He traveled the Silk Roads to India in 629, studied Buddhism, and returned with texts he translated, boosting Buddhism's spread in China."},
+      {q:"What led to the Tang Dynasty's decline and fall?", a:"Emperor Hsuan Tsung neglected his rule, the An Lushan Rebellion in 755 devastated the empire, and the weakened dynasty finally collapsed in 907."},
+      {q:"Analysis: How did the tributary system spread Chinese culture to Korea, Japan, and Vietnam?", a:"Close contact through tribute spread Chinese government, Confucianism, Buddhism, and writing, though it was adopted unevenly — most in Korea, least in Vietnam."}
+    ]},
+    {section:"Song Dynasty", items:[
+      {q:"How did the Song Dynasty's territory compare to the Tang's?", a:"The Song ruled a smaller territory because nomads took the north and formed the Jin state."},
+      {q:"Who were the scholar gentry?", a:"They were Confucian-educated officials who were also given military duties despite having no military training, which weakened the Song's armies."},
+      {q:"Who ended the Song Dynasty?", a:"The Mongols conquered the Song in 1279 and founded the Yuan Dynasty."},
+      {q:"Analysis: What were the pros and cons of the Song's expanding bureaucracy?", a:"It created more meritocracy and upward mobility, but it drained wealth paying officials and left the military weaker since scholars had no combat training."}
+    ]},
+    {section:"Economic Developments", items:[
+      {q:"What was the equal-field system?", a:"It tried to give every family land in order to weaken the aristocracy, not out of charity, and it worked for about 100 years."},
+      {q:"What new farming methods increased Chinese agricultural output?", a:"Farmers used manure fertilizer, irrigation systems like wheels, pumps, and terraces, and heavy plows pulled by oxen or water buffalo."},
+      {q:"Why was Champa rice important?", a:"This fast-ripening rice from Vietnam allowed two harvests a year in the warm south, creating a huge food surplus."},
+      {q:"What was proto-industrialization?", a:"It was the mass-production phase before full industrialization, and Song China mass-produced porcelain and silk earlier than Europe did."},
+      {q:"Which two cities grew through trade and the Grand Canal?", a:"Chang'an, with about two million people, and Hangzhou, with about one million people and a reputation as a cultural hub."},
+      {q:"What were two military-changing inventions from this period?", a:"Gunpowder, discovered in the 9th century under the Tang, and guns, first made under the Song."},
+      {q:"What did China trade along the Silk Roads?", a:"China exported porcelain, tea, silk, the compass, paper, and gunpowder, and imported cotton, gems, horses, and fruit."},
+      {q:"What was flying money?", a:"It was a paper credit system that let merchants deposit money in one place and withdraw it elsewhere, serving as a model for modern banking."},
+      {q:"What navigation inventions improved Chinese sea trade?", a:"The magnetic compass, an improved rudder, and the junk, a huge ship with compartmentalized construction."},
+      {q:"Analysis: How did the equal-field system contribute to economic growth?", a:"It put more farmland and rural wealth into the hands of ordinary families instead of just the aristocracy."},
+      {q:"Analysis: How did proto-industrialization later affect trade between Europe and China?", a:"It made silk and porcelain into exports that Europe wanted badly, setting up centuries of trade imbalance in China's favor."},
+      {q:"Analysis: What philosophy was behind the invention of gunpowder?", a:"Daoism — it was discovered by accident by alchemists who were searching for an immortality elixir."},
+      {q:"Analysis: Why is flying money considered a model for modern banks?", a:"It introduced the idea of depositing money in one place and withdrawing it in another, which is the basic idea behind checks and modern banking."}
+    ]},
+    {section:"Social Structures", items:[
+      {q:"How were Song China's social classes ranked from top to bottom?", a:"Scholar gentry ranked highest, followed by farmers, then artisans and craftsmen, with merchants ranked lowest despite often being wealthy."},
+      {q:"What was foot-binding?", a:"It was the painful practice of wrapping the feet of aristocratic girls so they stayed small, a status symbol that also limited women's mobility and reinforced patriarchy."}
+    ]},
+    {section:"Intellectual & Cultural Developments", items:[
+      {q:"How did wood-block printing work?", a:"A design was carved into a wood block, ink was applied to the raised parts, and the block was pressed onto paper; China invented this method, and the earliest known printed work is a 7th-century Buddhist scripture."},
+      {q:"What was Chinese landscape painting like?", a:"It used a “mountain-water” style that placed tiny human figures against vast natural scenery, reflecting the influence of Daoism."},
+      {q:"Analysis: How did printing lead to a more educated population?", a:"It made books cheaper and faster to copy, which widened access to literature, mainly for the privileged classes."}
+    ]},
+    {section:"Religious Diversity", items:[
+      {q:"Which two belief systems coexisted easily in China, and why?", a:"Daoism and Confucianism coexisted easily because they were commonly blended together in daily practice."},
+      {q:"Which two belief systems did not coexist well, and why?", a:"Confucianism and Buddhism clashed because Buddhism competed for influence and its tax-exempt monasteries angered the Confucian bureaucracy."},
+      {q:"What was Zen (Chan) Buddhism?", a:"It was a blend of Buddhism and Daoism that stressed meditation and direct experience over formal scripture."},
+      {q:"Why did Buddhist monasteries close in the 8th century?", a:"Confucian and Daoist officials, motivated partly by jealousy over Buddhism's tax-exempt land, pressured the Tang government into seizing monastery lands."},
+      {q:"What was Neo-Confucianism?", a:"It was a syncretic ethical system blending Confucian thought with Daoist and Buddhist ideas, developed between 770 and 840 CE and later spread to Japan, Korea, and Vietnam."}
+    ]},
+    {section:"Japan", items:[
+      {q:"What did Shotoku Taishi's reforms try to accomplish?", a:"He introduced a new constitution, centralized rule, created a merit-based bureaucracy, hired Chinese laborers, and promoted Buddhism, Confucianism, Shinto, and wood-block printing."},
+      {q:"What did the Taika Reforms of 646 do?", a:"They put farmland under government ownership so taxes were paid to the central government instead of local nobles, weakening feudal lords."},
+      {q:"What was the Japanese emperor's actual role?", a:"The emperor was mostly a figurehead, while real power was held by clans such as the Fujiwara and, later, the Minamoto shoguns."},
+      {q:"Why is The Tale of Genji significant?", a:"Written by the noblewoman Murasaki Shikibu, it is often called the world's first novel because it follows one character's psychological development."},
+      {q:"What impact did the Minamoto clan have in the 12th century?", a:"They installed a shogun, a military ruler separate from the emperor, shifting Japan toward military and feudal rule."},
+      {q:"What do shogun, samurai, daimyo, and bushido mean?", a:"A shogun was Japan's military ruler, samurai were warriors who served nobles, daimyo were landowning aristocrats, and bushido was the warrior code of loyalty, honor, and martial arts."},
+      {q:"Analysis: Why did Japan copy China's systems to avoid a Chinese takeover?", a:"A strong, centralized Japan modeled on China's system would be harder for China to dominate or absorb."},
+      {q:"Analysis: Why did the Taishi and Taika reforms ultimately fail?", a:"The aristocracy remained too powerful and the exams were never opened to all classes, so Japan slid into feudalism instead of a true meritocracy."}
+    ]},
+    {section:"Korea", items:[
+      {q:"What did Silla Korea gain from its tributary status?", a:"It gained valuable Chinese goods and greater regional stability."},
+      {q:"How was Silla similar to China?", a:"Its capital was modeled on Chang'an, it had a centralized government, it practiced Confucianism and Buddhism, and it adopted Chinese writing."},
+      {q:"What was Korea's main political difference from China?", a:"Korea's aristocracy remained stronger, and the civil service exam was closed to peasants, so Korea never developed a true meritocracy."}
+    ]},
+    {section:"Vietnam", items:[
+      {q:"How did Vietnam view sinification?", a:"Vietnam resisted it, wanting the trade and technological benefits of contact with China without losing its own identity."},
+      {q:"When did Vietnam first come into contact with China?", a:"The Han Dynasty expanded south into Vietnam and brought trade, exchanging silk for tortoise shells, ivory, and pearls."},
+      {q:"How did the Vietnamese language compare to Chinese?", a:"The written language used Chinese characters, but spoken Vietnamese was unrelated to spoken Chinese."},
+      {q:"How did women's roles differ between Vietnam and China?", a:"Vietnamese women had more independence and lived in nuclear families, unlike China's extended families, and they resented the practice of polygyny."},
+      {q:"How did Vietnam's bureaucracy differ from China's?", a:"Vietnamese scholar-officials were loyal to their villages rather than the emperor, and they sometimes led revolts against the government."},
+      {q:"What faith did Vietnam adopt from China?", a:"Buddhism."},
+      {q:"What warfare style did Vietnam use against China, and is there a modern parallel?", a:"Vietnam used guerrilla warfare, such as hiding sharpened logs in harbors to trap enemy ships, and won a major victory in 938; a modern parallel is the tactics used in the Vietnam War."}
+    ]}
+  ];
+
+  document.getElementById("packetList").innerHTML = PACKET.map(function(sec){
+    return '<h3 class="packet-section">'+esc(sec.section)+'</h3><div class="packet-list">'+
+      sec.items.map(function(it){
+        return '<div class="packet-item"><p class="packet-q">'+esc(it.q)+'</p><p class="packet-a">'+esc(it.a)+'</p></div>';
+      }).join("")+
+    '</div>';
   }).join("");
 
 })();
