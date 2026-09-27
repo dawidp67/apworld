@@ -640,6 +640,382 @@
 <script>
 var CH = [];
 CH.push((function(){
+
+  var CATS = ["State-Building","Culture","Economics","Environment","Social Structure"];
+
+  var VOCAB = [
+    // ---- Environment ----
+    ["malaria","Disease spread by mosquitoes that put parasites in the blood. Bantu-speakers had some immunity from long exposure, but the forest peoples they met did not.","Environment"],
+    ["bananas","Crop Indonesian sailors brought across the Indian Ocean between 300 and 500 B.C.E. It caused a population spike and let Bantu-speakers settle where yams would not grow.","Environment"],
+    ["Congo River","River in Central Africa that flows into the Atlantic. Larger, more hierarchical kingdoms grew up in its basin after 1000 C.E.","Environment"],
+    ["Sahara Desert","Huge dry desert that few people could farm. Camels finally made crossing it for trade practical.","Environment"],
+    ["Senegal River","River near modern Senegal and Mauritania where West African merchants got their gold.","Environment"],
+    ["Madagascar","Big island off East Africa that Indonesians settled. Its language is still part of the Austronesian family today.","Environment"],
+    ["Great Lakes","East African lakes like Lake Victoria that Bantu-speakers reached by 2000 B.C.E., where they picked up raising sheep and cattle.","Environment"],
+    ["overgrazing","Too many animals eating the land bare. It damaged the land around Great Zimbabwe so badly that people left by the end of the 1400s.","Environment"],
+
+    // ---- Culture ----
+    ["Ibn Battuta","Moroccan scholar of Islamic law who traveled Africa and Asia in the 1300s. His travel account is a key source on Mali and shows how Islam connected Asia, Africa, and southern Europe.","Culture"],
+    ["camel saddle","Saddles built for different jobs. People made as many as 15 kinds, like sitting behind the hump, on top of it for battle, in front for control, or a Somali saddle for carrying loads.","Culture"],
+    ["hijab","A veil covering the head and chest. It was a Southwest Asian custom before Muhammad, and many African Muslim women did not wear it.","Culture"],
+    ["eunuchs","Castrated men. Some male slaves became high-ranking eunuchs in royal courts.","Culture"],
+    ["Ali bin Muhammad","Leader of the Zanj Rebellion. He and about 15,000 slaves captured Basra and set up their own government.","Culture"],
+    ["Zanj Rebellion","Slave revolt from 869 to 883 C.E. by East Africans forced to work sugar plantations in Mesopotamia. It lasted about ten years, making it one of the most successful slave revolts ever.","Culture"],
+    ["griots","West African storytellers who kept a community's history, family lineages, and the deeds of leaders by memory and song. People said when a griot died, it was like a library burned.","Culture"],
+    ["griottes","Women trained as griots. They sang at weddings and counseled brides, which gave women some power in a male-run society.","Culture"],
+    ["kora","A 12-string harp griots played while telling their stories.","Culture"],
+    ["rock churches","Eleven huge Christian churches in Ethiopia carved completely out of rock in the 1100s. They are still used today.","Culture"],
+    ["San","One of the original peoples of southern Africa, sometimes called bushmen, who speak Khoisan languages.","Culture"],
+    ["ancestor veneration","The belief that spirits of the dead stay on Earth to guide the living. Bantu religion, art, and music all connected to it.","Culture"],
+    ["Swahili language","A Bantu language mixed with Arabic words from Muslim merchants. It is official in the Democratic Republic of the Congo, Kenya, Uganda, and Tanzania and in the African Union.","Culture"],
+    ["Ethiopian Christianity","Christianity that grew on its own, cut off from Rome and Constantinople, and blended with local beliefs like spirits and ancestor veneration.","Culture"],
+    ["religious syncretism","Mixing of different religious traditions into something new, like Ethiopian Christianity mixing with local spirit beliefs.","Culture"],
+    ["Benin","West African kingdom famous for detailed iron and bronze sculptures of past rulers.","Culture"],
+
+    // ---- Economics ----
+    ["Indian Ocean trade","The sea trade network linking East Africa with Arabia, Persia, India, Southeast Asia, and China. Muslim merchants revived it by the 700s.","Economics"],
+    ["trans-Saharan trade","Camel caravan trade across the Sahara between North and West Africa. Gold was the biggest good, traded for salt, textiles, and horses.","Economics"],
+    ["Kumbai Saleh","The capital city of the kingdom of Ghana, where the king ran a centralized government.","Economics"],
+    ["Timbuktu","Wealthy city in Mali that became a world-famous center of Islamic learning. By the 1500s books there sold for more than most other goods.","Economics"],
+    ["Gao","Wealthy trading city in Mali on the Niger River that was also a center of Islamic life. It later became Songhay's capital.","Economics"],
+    ["Kilwa","Swahili trading city in modern Tanzania whose stone and coral ruins show how rich the Indian Ocean trade made it.","Economics"],
+    ["Swahili city-states","Trading cities on the East African coast like Kilwa, Mombasa, and Zanzibar. Swahili literally means coasters.","Economics"],
+    ["Mombasa","Swahili trading city in modern Kenya on the Indian Ocean coast.","Economics"],
+    ["Zanj Coast","The Arabic name for the East African coast. Its traders sold ivory, gold, and slaves for Chinese porcelain, Indian cotton, and ironwork.","Economics"],
+    ["Malindi and Mogadishu","East African coast cities in modern Kenya and Somalia that traded long before Islam arrived.","Economics"],
+    ["camels","Animals from Arabia that can drink over 50 gallons in three minutes and then go a long time without water. They replaced horses and donkeys in the Sahara after 300 C.E.","Economics"],
+
+    // ---- Social Structure ----
+    ["matrilineal descent","Tracing your family line through your mother instead of your father. It did not mean women ran things, since most societies were still patriarchal.","Social Structure"],
+    ["kin-based networks","Communities where families governed themselves, led by a male chief instead of a central government.","Social Structure"],
+    ["age grades","Also called age sets. Groups that split up work by age, since younger people did hard labor and relied on advice from their elders.","Social Structure"],
+    ["chattel slavery","Slavery where slaves were legal property forever and their kids were born slaves, common in the Americas from the 1500s to 1800s.","Social Structure"],
+    ["domestic slavery","Slaves who worked as cooks, cleaners, and household workers, common in classical Greece and Rome and the Middle East.","Social Structure"],
+    ["debt bondage","Becoming a slave to pay off a debt. It was not supposed to be permanent, but kids often inherited the debt.","Social Structure"],
+
+    // ---- State-Building ----
+    ["Bantu-speakers","People who started in modern Nigeria and Cameroon and slowly migrated east and south, eventually covering about a third of Africa.","State-Building"],
+    ["Batwa","People of the Congo Basin, formerly called pygmies, who were defeated, absorbed, or pushed out by iron-using Bantu-speakers.","State-Building"],
+    ["chief","The male head of a kin-based network who settled conflicts and dealt with neighboring groups.","State-Building"],
+    ["Kongo Kingdom","One of the larger, more centralized kingdoms that grew in the Congo River basin after 1000 C.E.","State-Building"],
+    ["Ghana","West African kingdom between the Sahara and the rain forests, not where modern Ghana is. It peaked from the 700s to 1000s selling gold and ivory for salt, copper, cloth, and tools.","State-Building"],
+    ["Mali","Kingdom that replaced Ghana by the 1100s. It taxed nearly all trade coming into West Africa and got even richer than Ghana.","State-Building"],
+    ["Sundiata","The Lion Prince who founded Mali. He survived his family's murder, was exiled, came back in 1235 to take the throne, and built Mali's gold trade.","State-Building"],
+    ["Mansa Musa","Sundiata's grand-nephew and Mali's most famous ruler. His 1324 pilgrimage to Mecca with 100 camels and loads of gold showed the world how rich Mali was.","State-Building"],
+    ["Mecca","Islam's holiest city, where Mansa Musa went on his famous pilgrimage in 1324.","State-Building"],
+    ["Songhay","Kingdom that replaced Mali as West Africa's powerhouse by the late 1400s, with its capital at Gao.","State-Building"],
+    ["Zimbabwe","The most powerful East African kingdom from the 1100s to 1400s, between the Zambezi and Limpopo rivers. It got rich from gold and taxed gold passing through.","State-Building"],
+    ["Great Zimbabwe","Zimbabwe's capital, surrounded by a stone wall 30 feet tall and 15 feet thick built without mortar. About 20,000 people lived there before it was abandoned.","State-Building"],
+    ["Axum","Region of Ethiopia where Christianity had spread early but was weakened when Islam spread.","State-Building"],
+    ["Pan-Africanism","The effort to build a shared African identity across the continent's many peoples. Edward Wilmot Blyden was an early leader of it.","State-Building"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Ibn Battuta", dates:"1300s", items:[
+      "Moroccan scholar and expert in Islamic law, or <b>shariah</b>",
+      "Governments in Mogadishu and Delhi asked for his advice",
+      "His account of <b>Mali</b> is a key primary source",
+      "Big idea: Islam changed Africa's politics and trade, but most people kept their old traditions"
+    ]},
+    {name:"Bantu migrations", dates:"3000 B.C.E.–400 C.E.", items:[
+      "Started in modern <b>Nigeria and Cameroon</b>, spread over about a third of Africa",
+      "Small groups over time, not one big invasion",
+      "Crops: yams, oil palms, millet, sorghum, then <b>bananas</b> from Indonesian sailors",
+      "<b>Canoes</b> and <b>iron-making</b> by 500 B.C.E. beat groups like the <b>Batwa</b>",
+      "Carried <b>malaria</b>, which they had some immunity to and locals did not"
+    ]},
+    {name:"Bantu life", dates:"", items:[
+      "Great Lakes by 2000 B.C.E., where they picked up herding; South Africa by 400 C.E.",
+      "<b>Matrilineal</b>: family traced through the mother",
+      "One creator god reached through spirits, plus <b>ancestor veneration</b>",
+      "Masks and ancestor figures, drums, flutes, horns, and storytelling"
+    ]},
+    {name:"Inland politics", dates:"decentralized", items:[
+      "No single ruler or strong central government",
+      "<b>Kin-based networks</b> run by a male <b>chief</b>",
+      "Villages formed districts, and groups of chiefs solved district problems",
+      "More people meant more fighting; bigger kingdoms like <b>Kongo</b> grew after 1000 C.E."
+    ]},
+    {name:"Trans-Saharan trade", dates:"", items:[
+      "Took off when Islamic merchants arrived in the 600s and 700s",
+      "<b>Camels</b> replaced horses and donkeys after 300 C.E.",
+      "Up to 15 kinds of <b>camel saddles</b> for different jobs",
+      "<b>Gold</b> from the Senegal River was the top good, plus ivory and slaves",
+      "Africa got <b>salt, textiles, and horses</b> back"
+    ]},
+    {name:"Indian Ocean trade", dates:"", items:[
+      "Kilwa, Malindi, and Mogadishu traded long before Islam",
+      "Muslim merchants revived it by the 700s, creating the <b>Swahili city-states</b>",
+      "Swahili literally means <b>coasters</b>",
+      "<b>Zanj Coast</b> sold ivory, gold, slaves, tortoise shells, peacock feathers, rhino horns",
+      "Got back <b>Chinese porcelain, Indian cotton, ironwork</b>; rich cities built in stone and coral"
+    ]},
+    {name:"Ghana &amp; Mali", dates:"", items:[
+      "<b>Ghana</b>: founded 400s, peaked 700s to 1000s, capital <b>Kumbai Saleh</b>",
+      "Not in the same spot as modern Ghana",
+      "<b>Mali</b> rose by the 1100s and taxed almost all trade entering West Africa",
+      "<b>Timbuktu</b> and <b>Gao</b> became rich centers of Islamic learning",
+      "<b>Sundiata</b>, the Lion Prince, took the throne in 1235 and built the gold trade"
+    ]},
+    {name:"Mansa Musa", dates:"1324", items:[
+      "Sundiata's grand-nephew, known more for religion than politics",
+      "Hajj to <b>Mecca</b> with 100 camels, thousands of people, and gold to hand out",
+      "Showed the whole world Mali's wealth",
+      "Built schools and mosques in Timbuktu",
+      "Mali declined within 100 years of his death; <b>Songhay</b> took over by the late 1400s"
+    ]},
+    {name:"Zimbabwe", dates:"1100s–1400s", items:[
+      "Strongest East African kingdom, between the Zambezi and Limpopo rivers",
+      "Rich from farming, herding, trade, and above all <b>gold</b>",
+      "Traded with Swahili cities, Persia, India, and China and taxed gold like Ghana",
+      "<b>Great Zimbabwe</b>: wall 30 feet tall and 15 feet thick, built without mortar",
+      "About 20,000 people, abandoned by the end of the 1400s due to <b>overgrazing</b>"
+    ]},
+    {name:"Society", dates:"", items:[
+      "Organized by <b>kinship, age, and gender</b>, not big governments",
+      "<b>Age grades</b>: young people did the labor, elders gave advice",
+      "Men did skilled jobs like blacksmithing; women farmed, gathered, and raised kids",
+      "<b>Matrilineal is not matriarchal</b>, since most places were still patriarchal",
+      "African Muslims mixed more freely and often skipped the <b>hijab</b>"
+    ]},
+    {name:"Slavery &amp; the Zanj", dates:"", items:[
+      "Slavery existed before Islam: prisoners of war, debtors, criminals",
+      "No private property, so slaves were a way to show wealth",
+      "Islam and trade grew the volume; Arabs <b>preferred women</b> as servants and concubines",
+      "Men went to armies or became <b>eunuchs</b> in royal courts",
+      "<b>Zanj Rebellion</b> 869–883: <b>Ali bin Muhammad</b> took Basra"
+    ]},
+    {name:"Culture", dates:"", items:[
+      "Music tied to ancestor veneration, with rhythm, claps, bells, pots, gourds",
+      "<b>Griots</b> kept history by memory and song and advised kings",
+      "<b>Griottes</b> counseled brides",
+      "<b>Swahili</b> = Bantu language + Arabic words",
+      "Ethiopia's 11 <b>rock churches</b> from the 1100s; its Christianity mixed with local beliefs"
+    ]},
+    {name:"Does Africa have history?", dates:"", items:[
+      "<b>Trevor-Roper</b>, 1965: called Africa's past barbarous tribes",
+      "<b>Blyden</b>: Liberian leader who started Pan-Africanism",
+      "<b>Senghor</b>: Senegal's president who pushed pride in African history",
+      "<b>Mazrui</b>: The Africans, A Triple Heritage on TV",
+      "<b>Ross Dunn</b>: book on Ibn Battuta showing Africa linked to Asia and Europe"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"African kingdoms, compared", head:["Kingdom","When","Capital or key cities","How it got rich","How it ended"], rows:[
+      ["Ghana","founded 400s, peak 700s to 1000s","Kumbai Saleh","Selling gold and ivory to Muslim traders","Wars with neighbors weakened it by the 1100s"],
+      ["Mali","1235 to 1400s","Timbuktu and Gao","Gold trade plus taxes on almost all trade","Declined within 100 years of Mansa Musa's death"],
+      ["Songhay","late 1400s on","Gao","Took over Mali's trade","Covered in later chapters"],
+      ["Zimbabwe","1100s to 1400s","Great Zimbabwe","Gold fields, farming, grazing, taxing gold","Overgrazing, capital abandoned by 1500"]
+    ]},
+    {title:"Comparing pack animals", head:["Animal","Where","Good at","Problems"], rows:[
+      ["Camel","North Africa and West Africa","Long trips, thorny plants and salty water, only animal that can cross deserts, does not spook","Needs lots of salt, can be aggressive, cannot use a bit, cannot live in a stall"],
+      ["Ox","Eurasia and the Americas","Stamina, pulls the heaviest loads, hard to steal, eats local grass","Slow, needs more water and food"],
+      ["Horse","Worldwide","Fast, controllable with a bit, good in battle, adapts to most places","Needs grain, spooks and strays easily, easy to steal, hates heat"],
+      ["Llama","Americas","Grip in mountains, calm, needs little water, handles cold","Cannot pull heavy loads, carries less, hates heat"]
+    ]},
+    {title:"Three types of slavery", head:["","Chattel","Domestic","Debt bondage"], rows:[
+      ["What it was","Slaves were legal property","Cooks, cleaners, household workers","Slavery to repay a debt"],
+      ["Examples","The Americas, 1500s to 1800s","Classical Greece and Rome, the Middle East","East Africa before the 1400s, European colonies in the Americas"],
+      ["Permanent?","Yes","Often","Not in theory, but many never got free"],
+      ["Kids born slaves?","Yes","Often","Kids often inherited the debt"],
+      ["Any rights?","No","Some, like laws against selling them","Some, like limits on punishment"]
+    ]},
+    {title:"Empires in the 1200s", head:["","Mali","Al-Andalus","Byzantine Empire","Kievan Rus"], rows:[
+      ["Where","West Africa","Spain","Middle East","Russia"],
+      ["Major city","Timbuktu","Cordoba","Constantinople","Kiev"],
+      ["Peak years","1200s to 1400s","711 to 1492","330 to 1453","900s to 1200s"],
+      ["Key figures","Sundiata and Mansa Musa","Ibn Rushd and Maimonides","Justinian and Heraclius","Vladimir I and Yaroslav I"],
+      ["Legacy","Linked West and North Africa by trade and spread Islam","Tolerant society that saved Greek learning","Trade between Asia, Europe, and Africa; kept Rome's legacy","First big civilization in Russia; spread Christianity east"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["c. 3000 B.C.E.","Bantu-speakers start migrating from West Africa"],
+    ["2000 B.C.E.","Bantu-speakers reach the Great Lakes and start herding"],
+    ["500 B.C.E.","Bantu-speakers are making iron"],
+    ["300–500 B.C.E.","Indonesian sailors bring bananas to Africa"],
+    ["1st century C.E.","Christianity reaches Egypt and Ethiopia"],
+    ["after 300 C.E.","Camels replace horses and donkeys in the Sahara"],
+    ["400 C.E.","Bantu migration reaches South Africa and ends"],
+    ["400s","Kingdom of Ghana founded"],
+    ["600s–700s","Islamic merchants arrive and trans-Saharan trade explodes"],
+    ["700s–1000s","Ghana at its peak"],
+    ["by 700s","Muslim merchants revive Indian Ocean trade; Swahili city-states grow"],
+    ["869–883","Zanj Rebellion in Mesopotamia"],
+    ["800s","Zimbabwe's chiefs start building in stone"],
+    ["after 1000","Bigger kingdoms grow in the Congo River basin"],
+    ["1100s","Ghana weakened; Mali rises; Ethiopia carves its rock churches"],
+    ["1100s–1400s","Zimbabwe is East Africa's strongest kingdom"],
+    ["1235","Sundiata returns and founds Mali"],
+    ["late 1200s","Great Zimbabwe's stone wall finished"],
+    ["1324","Mansa Musa's pilgrimage to Mecca"],
+    ["c. 1352","Ibn Battuta writes about Mali"],
+    ["late 1400s","Songhay replaces Mali; Great Zimbabwe abandoned"],
+    ["1500s","Books in Timbuktu sell for more than most goods"]
+  ];
+
+  var CONTENT_Q = [
+    ["Where was Ibn Battuta from?",["Egypt","Morocco","Mali","Persia"],1],
+    ["What was Ibn Battuta an expert in?",["Astronomy","Islamic law, or shariah","Shipbuilding","Medicine"],1],
+    ["What is the chapter's big theme about Islam in Africa?",["Everyone converted right away","Cultural continuity and tremendous change","Islam was rejected completely","Africa stopped trading"],1],
+    ["Where did the Bantu-speakers start?",["Egypt","Modern Nigeria and Cameroon","South Africa","Ethiopia"],1],
+    ["How much of Africa did Bantu-speakers eventually cover?",["About a tenth","About a third","About half","All of it"],1],
+    ["How did the Bantu migration happen?",["One huge invasion","Small groups moving over time","Forced relocation by Egypt","By sea only"],1],
+    ["Who brought bananas to Africa?",["Arab merchants","Indonesian seafarers","Portuguese sailors","Chinese admirals"],1],
+    ["Why did bananas matter to the Bantu?",["They were a trade currency","They caused a population spike and grew where yams did not","They were used for medicine","They fed camels"],1],
+    ["Which two technologies helped the Bantu migrate?",["Horses and chariots","Canoes and iron-making","Compasses and junks","Wheels and roads"],1],
+    ["Which disease did Bantu-speakers carry and partly resist?",["Smallpox","Malaria","Plague","Measles"],1],
+    ["How did Bantu-speakers worship?",["Directly to many gods","A single creator god reached through spirits","Only through kings","They had no religion"],1],
+    ["What does matrilineal mean?",["Women rule","Family is traced through the mother","Only daughters inherit","Men marry several wives"],1],
+    ["What was the typical inland African political structure?",["A strong central emperor","Kin-based networks led by chiefs","A merit-based bureaucracy","City-state republics"],1],
+    ["Where did bigger, hierarchical kingdoms appear after 1000 C.E.?",["The Sahara","The Congo River basin","Madagascar","The Nile Delta"],1],
+    ["Which animal made trans-Saharan trade practical?",["Horse","Camel","Ox","Llama"],1],
+    ["How much water can a camel drink in three minutes?",["5 gallons","Over 50 gallons","200 gallons","1 gallon"],1],
+    ["What was the most precious good in trans-Saharan trade?",["Salt","Gold","Silk","Spices"],1],
+    ["What did West Africa get in exchange for its gold?",["Porcelain and tea","Salt, textiles, and horses","Guns and cloth","Rice and silk"],1],
+    ["What does Swahili literally mean?",["Traders","Coasters","Islanders","Sailors"],1],
+    ["What did the Zanj Coast import?",["Salt and horses","Chinese porcelain, Indian cotton, and ironwork","Gold and ivory","Slaves and spices"],1],
+    ["What shows the wealth of Swahili cities like Kilwa?",["Paper money","Mosques and homes made of stone or coral","Pyramids","Giant statues"],1],
+    ["What was Ghana's capital?",["Timbuktu","Kumbai Saleh","Gao","Kilwa"],1],
+    ["Is the old kingdom of Ghana in the same place as modern Ghana?",["Yes, exactly","No, it was in a different location","It was in East Africa","It was on Madagascar"],1],
+    ["How did Mali get richer than Ghana?",["It had more farms","It taxed nearly all trade entering West Africa","It conquered Egypt","It sold slaves to Europe"],1],
+    ["Which Mali city became a world-famous center of Islamic learning?",["Kilwa","Timbuktu","Mombasa","Axum"],1],
+    ["What was Sundiata's nickname?",["The Golden King","The Lion Prince","The Wanderer","The Scholar"],1],
+    ["Why did Sundiata's enemies not kill him as a boy?",["He hid in Mecca","He was crippled and seemed harmless","He was a girl in disguise","He was away at school"],1],
+    ["What is Mansa Musa most famous for?",["Conquering Egypt","His 1324 pilgrimage to Mecca","Building Great Zimbabwe","Inventing the camel saddle"],1],
+    ["What did Mansa Musa's pilgrimage show the world?",["Mali's army","Mali's wealth","Mali's navy","Mali's poverty"],1],
+    ["Which kingdom replaced Mali by the late 1400s?",["Ghana","Songhay","Zimbabwe","Kongo"],1],
+    ["Where was Zimbabwe located?",["Between the Niger and Senegal rivers","Between the Zambezi and Limpopo rivers","Along the Nile","On the Red Sea"],1],
+    ["What was special about Great Zimbabwe's wall?",["It was made of gold","It was the first large one in Africa built without mortar","It was built by the Romans","It was made of wood"],1],
+    ["Why was Great Zimbabwe abandoned?",["An earthquake","Overgrazing damaged the land","A Mongol invasion","A plague"],1],
+    ["What are age grades?",["School grades","Groups that divide work by age","Military ranks","Tax brackets"],1],
+    ["Most Sub-Saharan societies were what, even if matrilineal?",["Matriarchal","Patriarchal","Egalitarian","Democratic"],1],
+    ["Why did many African Muslim women not wear the hijab?",["It was banned","It was a Southwest Asian custom, not seen as a religious rule","It was too expensive","Only queens wore it"],1],
+    ["Why did some Africans collect slaves before Islam arrived?",["For plantation work","Private property did not exist, so slaves showed wealth and status","To trade with Europe","To build pyramids"],1],
+    ["Which slaves did Arab traders prefer?",["Men for farming","Women for household work","Children for mining","Soldiers for armies only"],1],
+    ["Who led the Zanj Rebellion?",["Mansa Musa","Ali bin Muhammad","Sundiata","Ibn Battuta"],1],
+    ["Which city did the Zanj rebels capture?",["Baghdad","Basra","Mecca","Cairo"],1],
+    ["What were griots?",["Priests","Storytellers who kept a community's history","Tax collectors","Merchants"],1],
+    ["What instrument did griots play?",["Sitar","Kora, a 12-string harp","Violin","Bagpipes"],1],
+    ["How was the Swahili language formed?",["Latin mixed with Greek","A Bantu language mixed with Arabic words","Persian mixed with Hindi","Arabic mixed with Chinese"],1],
+    ["Why did Ethiopian Christianity develop differently?",["The Pope ordered it","It was isolated from both Rome and Constantinople","It was banned","It merged with Buddhism"],1],
+    ["How many rock churches did Ethiopia build in the 1100s?",["3","11","50","100"],1],
+    ["Which historian called Africa's past barbarous tribes in 1965?",["Ross Dunn","Hugh Trevor-Roper","Ali Mazrui","Leopold Senghor"],1],
+    ["Edward Wilmot Blyden was a leader of which movement?",["Enlightenment","Pan-Africanism","Abolition in Britain","Communism"],1],
+    ["What did Ali Mazrui say African culture came from?",["Only Islam","African geography plus Christianity and Islam","European colonizers","Chinese traders"],1],
+    ["Ross Dunn's 1986 book was about whom?",["Mansa Musa","Ibn Battuta","Sundiata","Marco Polo"],1]
+  ];
+
+  var TF_Q = [
+    ["Ibn Battuta was from Morocco.",true,"He was an expert in Islamic law.","Culture"],
+    ["Islam's arrival caused massive conversions all across Africa.",false,"It did not produce massive conversions, but it changed politics, trade, and culture.","Culture"],
+    ["The Bantu migration was one huge invasion.",false,"It was small groups moving from place to place over time.","State-Building"],
+    ["Bantu-speakers started migrating around 3000 B.C.E.",true,"","State-Building"],
+    ["Bananas were brought to Africa by Indonesian seafarers.",true,"Between 300 and 500 B.C.E.","Environment"],
+    ["Madagascar's language today is part of the Austronesian family.",true,"Because Indonesians settled there.","Environment"],
+    ["Bantu-speakers had iron-making by 500 B.C.E.",true,"It gave them better tools and weapons.","State-Building"],
+    ["The forest peoples the Bantu met were immune to malaria.",false,"The Bantu had some immunity, but the forest peoples did not.","Environment"],
+    ["Bantu societies were matrilineal.",true,"Ancestry was traced through mothers.","Social Structure"],
+    ["Bantu-speakers worshipped their creator god directly.",false,"They sent messages to the god through spirits.","Culture"],
+    ["Most Sub-Saharan African states centralized power under one ruler.",false,"Most used kin-based networks led by chiefs.","State-Building"],
+    ["Camels began replacing horses and donkeys in the Sahara after 300 C.E.",true,"","Economics"],
+    ["People developed as many as 15 types of camel saddles.",true,"","Culture"],
+    ["Salt was the most precious good in trans-Saharan trade.",false,"Gold was. Salt was one of the things traded for it.","Economics"],
+    ["West African gold came from near the Senegal River.",true,"","Economics"],
+    ["Indian Ocean trade on the East African coast began only after Islam arrived.",false,"Cities like Kilwa traded long before Islam.","Economics"],
+    ["Swahili literally means coasters.",true,"","Economics"],
+    ["Chinese porcelain is a common find in Swahili city ruins.",true,"Trade with East Asia was that busy.","Economics"],
+    ["The old kingdom of Ghana was in the same place as modern Ghana.",false,"It was in a different location.","State-Building"],
+    ["Ghana's capital was Kumbai Saleh.",true,"","State-Building"],
+    ["Mali was poorer than Ghana had been.",false,"Mali taxed nearly all trade and got even richer.","State-Building"],
+    ["Most of Mali's people were farmers growing sorghum and rice.",true,"","State-Building"],
+    ["Sundiata came back from exile and took the throne in 1235.",true,"","State-Building"],
+    ["Mansa Musa was known more for politics than religion.",false,"He was known more for his religious leadership.","State-Building"],
+    ["Mansa Musa's caravan to Mecca had about 100 camels.",true,"Plus thousands of slaves and soldiers and gold to give away.","State-Building"],
+    ["Mali lasted for centuries after Mansa Musa died.",false,"It was declining within 100 years of his death.","State-Building"],
+    ["Great Zimbabwe's wall was built without mortar.",true,"30 feet tall and 15 feet thick.","State-Building"],
+    ["Great Zimbabwe was abandoned because of overgrazing.",true,"","Environment"],
+    ["In age grades, elders did the hardest physical labor.",false,"Younger people did the labor and elders gave advice.","Social Structure"],
+    ["Matrilineal societies were always matriarchal.",false,"Most were still patriarchal.","Social Structure"],
+    ["Many African Muslim women did not veil themselves.",true,"The hijab was a Southwest Asian custom from before Muhammad.","Social Structure"],
+    ["Slavery existed in Africa before Europeans arrived.",true,"Prisoners of war, debtors, and criminals became slaves.","Social Structure"],
+    ["Arab traders preferred male slaves for farm work.",false,"They preferred women as servants.","Social Structure"],
+    ["The Zanj Rebellion lasted from 869 to 883 C.E.",true,"","Culture"],
+    ["The Indian Ocean slave trade ended before the Atlantic slave trade.",false,"It lasted into the 1800s, longer than the Atlantic trade.","Social Structure"],
+    ["Griots played an instrument called the kora.",true,"A 12-string harp.","Culture"],
+    ["Only men could be griots.",false,"Women were trained as griottes.","Culture"],
+    ["Swahili is an official language of the African Union.",true,"","Culture"],
+    ["Ethiopian Christianity followed the Pope in Rome.",false,"It was cut off from both Rome and Constantinople and grew on its own.","Culture"],
+    ["Ethiopia's rock churches are still used today.",true,"","Culture"],
+    ["Hugh Trevor-Roper defended African history.",false,"He dismissed it as barbarous tribes.","Culture"],
+    ["Leopold Senghor was president of Senegal for 21 years.",true,"","Culture"]
+  ];
+
+  var PACKET = [
+    {section:"Introduction", items:[
+      {q:"Who was Ibn Battuta?", a:"A Moroccan scholar and expert in Islamic law who traveled across Africa and Asia in the 1300s and wrote about places like Mali."},
+      {q:"Analysis: What does his travelogue tell us about the Islamic world during Period 3?", a:"Islam connected Asia, Africa, and southern Europe, but people who took on Islam still kept a lot of their old traditions."}
+    ]},
+    {section:"The Migrations of Bantu-Speakers", items:[
+      {q:"Describe the migration of the Bantu peoples.", a:"Small groups slowly moved east and south from modern Nigeria and Cameroon until they covered about a third of Africa."},
+      {q:"What were the main agricultural products of the Bantu?", a:"Yams, oil palms, millet, and sorghum."},
+      {q:"How did bananas get introduced into the African diet?", a:"Indonesian sailors brought them across the Indian Ocean between 300 and 500 B.C.E."},
+      {q:"What types of technology allowed the Bantu to migrate?", a:"Canoes for river travel and iron-making for better tools and weapons."},
+      {q:"Describe Bantu society.", a:"They lived in small, close villages that were matrilineal, and some switched to herding or foraging depending on the land."},
+      {q:"Describe Bantu religion.", a:"They believed one god created the world but reached him through spirits, and they practiced ancestor veneration."},
+      {q:"Describe Bantu art.", a:"They made masks and figures of ancestors, played drums, flutes, and horns, and passed down stories by word of mouth."},
+      {q:"Analysis: What types of causes led them to possibly migrate?", a:"Extra food made the population grow, and the land may have worn out from overuse, so people moved on."},
+      {q:"Analysis: How did the spread of malaria by the Bantu compare with the spread of disease by Europeans in the Americas after Columbus?", a:"Both brought disease to people with no immunity, but the Bantu spread it slowly over centuries while Europeans killed huge numbers in just decades."}
+    ]},
+    {section:"Political Structures in Inland Africa", items:[
+      {q:"Describe the typical political structure of inland Africa.", a:"There was no central government, just kin-based networks led by chiefs, with groups of chiefs handling district problems."},
+      {q:"Analysis: How will this decentralized system impact Africa as centralized European governments grow and expand?", a:"Small separate groups would have a hard time uniting to fight off strong, organized European states."}
+    ]},
+    {section:"Islam's Impact on Trade", items:[
+      {q:"The introduction of what, by who, finally allowed for the expansion of trans-Saharan trade? Why?", a:"Merchants from Southwest Asia brought camels, which can drink over 50 gallons at once and then go a long time without water."},
+      {q:"What was the most important commodity of the trans-Saharan trade?", a:"Gold."},
+      {q:"What other commodities were exchanged in the trans-Saharan trade?", a:"Ivory and slaves went out, and salt, textiles, and horses came in."},
+      {q:"What were the primary East African cities that became part of the Indian Ocean trade?", a:"Kilwa, Malindi, Mogadishu, Mombasa, and Zanzibar."},
+      {q:"What were the primary products traded between East African merchants and Asian merchants?", a:"Africa sold ivory, gold, slaves, tortoise shells, peacock feathers, and rhino horns for Chinese porcelain, Indian cotton, and ironwork."},
+      {q:"Analysis: Looking at the pack animal chart, what role did pack animals play in political control of the world?", a:"Whoever had the right animal for their land controlled the trade routes, like camels making Ghana and Mali rich from the Sahara trade."}
+    ]},
+    {section:"Political Structures of West and East Africa", items:[
+      {q:"Describe the western kingdom of Ghana.", a:"A West African kingdom that peaked from the 700s to 1000s, sold gold and ivory to Muslim traders, and was ruled from Kumbai Saleh."},
+      {q:"What government practice led to Mali's prosperity?", a:"Taxing nearly all the trade coming into West Africa."},
+      {q:"What were the two main cities of Mali?", a:"Timbuktu and Gao."},
+      {q:"Who was Sundiata?", a:"The Lion Prince who survived his family's murder, came back from exile in 1235, founded Mali, and built its gold trade."},
+      {q:"What did Mansa Musa do that would make him famous?", a:"He went on a huge pilgrimage to Mecca in 1324 and gave away so much gold that the whole world learned how rich Mali was."},
+      {q:"What products led to the prosperity of Zimbabwe?", a:"Farming, grazing, trade, and most of all gold."},
+      {q:"What makes the city of Great Zimbabwe unique?", a:"Its stone wall was 30 feet tall and 15 feet thick and was the first large one in Africa built without mortar."}
+    ]},
+    {section:"Social Structures of Sub-Saharan Africa", items:[
+      {q:"Describe what is meant by age grades or age sets.", a:"Groups that split up work by age, with younger people doing hard labor and elders giving advice."},
+      {q:"Describe the role of women in Sub-Saharan Africa.", a:"Women farmed, gathered food, and raised kids, and even though some societies were matrilineal, most were still run by men."},
+      {q:"What about African tradition led to Africans becoming a primary ethnicity of slaves?", a:"Slavery was already common for prisoners, debtors, and criminals, and since there was no private property, people collected slaves to show wealth."},
+      {q:"What gender of slave was preferred by Arabs? Why possibly?", a:"Women, because Arabs wanted household servants and concubines, not farm workers."},
+      {q:"What were the roles of the different genders of slaves?", a:"Women were servants and concubines, and men served in the military or became eunuchs in royal courts."},
+      {q:"What was important about the Zanj Rebellion?", a:"East African slaves in Mesopotamia revolted from 869 to 883, took Basra, and lasted about ten years, making it one of the most successful slave revolts ever."}
+    ]},
+    {section:"Cultural Life in Sub-Saharan Africa", items:[
+      {q:"Describe African music.", a:"It had a special rhythm with claps, bells, pots, and gourds and was used to talk to the spirit world at events like weddings and funerals."},
+      {q:"Who were griots and what role did they play in African life?", a:"Storytellers who memorized a community's history and family lines, sang it with music, and advised kings."},
+      {q:"How was the Swahili language formed?", a:"Muslim merchants on the Indian Ocean coast mixed Arabic words into a Bantu language."},
+      {q:"What makes Ethiopian Christianity different from both the Roman Catholic Church and the Eastern Orthodox Church?", a:"It was cut off from both, so it grew on its own and mixed with local beliefs like spirits and ancestor veneration."}
+    ]}
+  ];
+
+  return {
+    id:"9", num:9, short:"Africa",
+    title:"Expansion of African Trade", years:"600–1450 C.E.",
+    heading:"Chapter 9 Study Hub",
+    blurb:"Bantu migrations, camels and gold across the Sahara, Swahili ports on the Indian Ocean, and the kingdoms of Ghana, Mali, and Zimbabwe. Cheat sheet, full vocabulary, flashcards, and a quiz you can set up however you study best.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
+  };
+})());
+
+CH.push((function(){
   var CATS = ["Economics","Social","State-Building","Culture"];
 
   var VOCAB = [
