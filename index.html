@@ -150,6 +150,12 @@
   .tab-ink{ position:absolute; z-index:0; left:0; top:0; height:100%; width:0; border-radius:9px 9px 0 0; background:var(--accent);
     box-shadow:0 -6px 24px var(--glow-1); transition:transform .45s var(--ease-out), width .45s var(--ease-out); }
 
+  .tabs-scroll{ position:relative; }
+  @media (max-width:640px){
+    .tabs-scroll::after{ content:""; position:absolute; right:0; top:0; bottom:1px; width:36px; pointer-events:none;
+      background:linear-gradient(90deg, transparent, var(--bg)); }
+  }
+  .quiz-tools{ display:inline-flex; align-items:center; gap:10px; }
   main{ padding-top:26px; }
 
   /* panel transitions */
@@ -178,7 +184,7 @@
     backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
   .settings-row{ display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-start; }
   .setting{ display:flex; flex-direction:column; gap:7px; min-width:0; }
-  .setting > span.label, .setting > label.label{ font-family:var(--font-mono); font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); }
+  .setting > span.label, .setting > label.label{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); }
   .seg{ display:flex; gap:4px; flex-wrap:wrap; }
   .seg button{ font-family:var(--font-body); font-size:0.82rem; font-weight:500; padding:6px 12px; border-radius:8px;
     border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; transition:all .2s; }
@@ -458,7 +464,7 @@
   </header>
 
   <div class="tabbar rise" style="--d:480ms">
-    <nav class="tabs" role="tablist" aria-label="Study mode" id="tabs">
+    <div class="tabs-scroll"><nav class="tabs" role="tablist" aria-label="Study mode" id="tabs">
       <span class="tab-ink" id="tabInk" aria-hidden="true"></span>
       <button role="tab" id="tab-sheet" aria-selected="true" aria-controls="panel-sheet">Cheat Sheet</button>
       <button role="tab" id="tab-vocab" aria-selected="false" aria-controls="panel-vocab" tabindex="-1">Vocabulary</button>
@@ -466,7 +472,7 @@
       <button role="tab" id="tab-quiz" aria-selected="false" aria-controls="panel-quiz" tabindex="-1">Quiz</button>
       <button role="tab" id="tab-time" aria-selected="false" aria-controls="panel-time" tabindex="-1">Timeline</button>
       <button role="tab" id="tab-packet" aria-selected="false" aria-controls="panel-packet" tabindex="-1">Packet Answers</button>
-    </nav>
+    </nav></div>
   </div>
 
   <main>
@@ -584,7 +590,7 @@
         <div class="quiz-bar"><div class="quiz-bar-fill" id="quizBarFill"></div></div>
         <div class="quiz-meta">
           <span id="quizCount"></span>
-          <span id="quizScore"></span>
+          <span class="quiz-tools"><span id="quizScore"></span><button class="btn small" id="quizQuit">Quit</button></span>
         </div>
         <p class="quiz-q" id="quizQuestion"></p>
         <div id="quizBody"></div>
@@ -1008,8 +1014,8 @@ CH.push((function(){
   return {
     id:"9", num:9, short:"Africa",
     title:"Expansion of African Trade", years:"600–1450 C.E.",
-    heading:"Chapter 9 Study Hub",
-    blurb:"Bantu migrations, camels and gold across the Sahara, Swahili ports on the Indian Ocean, and the kingdoms of Ghana, Mali, and Zimbabwe. Cheat sheet, full vocabulary, flashcards, and a quiz you can set up however you study best.",
+    pages:"161–174", heading:"Chapter 9 Study Hub",
+    blurb:"Bantu migrations, camels and gold across the Sahara, Swahili ports on the Indian Ocean, and the kingdoms of Ghana, Mali, and Zimbabwe.",
     cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
     timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
   };
@@ -1409,8 +1415,8 @@ CH.push((function(){
   return {
     id:"10", num:10, short:"East Asia",
     title:"East Asia in the Post-Classical Period", years:"600–1450 C.E.",
-    heading:"Chapter 10 Study Hub",
-    blurb:"Tang & Song China, plus Japan, Korea, and Vietnam in their orbit. Cheat sheet, full vocabulary, flashcards, and a quiz you can set up however you study best.",
+    pages:"180–200", heading:"Chapter 10 Study Hub",
+    blurb:"Tang & Song China, plus Japan, Korea, and Vietnam in their orbit.",
     legacyPrefix:"mk.",
     cats:CATS, vocab:VOCAB, sheet:SHEET,
     tables:[
@@ -1805,8 +1811,355 @@ CH.push((function(){
   return {
     id:"11", num:11, short:"South & Southeast Asia",
     title:"South Asia and Southeast Asia", years:"600–1450 C.E.",
-    heading:"Chapter 11 Study Hub",
-    blurb:"The Delhi Sultanate, the Chola and Vijayanagar, Angkor and Melaka, all tied together by Indian Ocean trade. Cheat sheet, full vocabulary, flashcards, and a quiz you can set up however you study best.",
+    pages:"202–213", heading:"Chapter 11 Study Hub",
+    blurb:"The Delhi Sultanate, the Chola and Vijayanagar, Angkor and Melaka, all tied together by Indian Ocean trade.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
+  };
+})());
+
+CH.push((function(){
+
+  var CATS = ["State-Building","Technology","Environment","Culture"];
+
+  var VOCAB = [
+    // ---- State-Building ----
+    ["Mongols","Clans of nomadic herders from north of the Gobi Desert who built the biggest land empire in history during the 1200s.","State-Building"],
+    ["khan","Mongol word for king or ruler.","State-Building"],
+    ["kuriltai","A meeting of Mongol chiefs. One in 1206 elected Temujin as khan and he took the name Genghis Khan.","State-Building"],
+    ["Temujin","Genghis Khan's birth name. Born in 1162, he united the Mongol clans through alliances, marriages, and wars.","State-Building"],
+    ["Genghis Khan","Title meaning ruler of all, taken by Temujin in 1206. He built the Mongol Empire and died in 1227 fighting the Tangut.","State-Building"],
+    ["Jurchens","People who set up the Jin Empire in Manchuria and northern China. Genghis Khan attacked them first in 1210.","State-Building"],
+    ["khanate","A kingdom ruled by a khan. After Genghis Khan, the empire split into four big khanates.","State-Building"],
+    ["Kara Khitai Empire","Central Asian empire Genghis Khan conquered in 1219.","State-Building"],
+    ["Khwarazm Empire","Islamic empire farther west that Genghis Khan also conquered in 1219.","State-Building"],
+    ["Pax Mongolica","The Mongolian peace of the 1200s and 1300s, when the Mongols kept trade routes safe across Eurasia.","State-Building"],
+    ["Karakorum","Genghis Khan's capital near the center of modern Mongolia. Ogodei built it up into a real city.","State-Building"],
+    ["Tangut Empire","Kingdom south of the Gobi Desert. Genghis Khan died fighting it in 1227.","State-Building"],
+    ["Ogodei","Genghis Khan's third son and chosen successor, elected in 1229. He pushed into Georgia, Armenia, Azerbaijan, the Indus Valley, and southern China and invaded Korea in 1231.","State-Building"],
+    ["Batu","Grandson of Genghis Khan who led 100,000 soldiers into Russia in 1236 and founded the Golden Horde.","State-Building"],
+    ["Golden Horde","Batu's army and khanate in Russia. It made Russian kingdoms pay tribute and ruled from Sarai.","State-Building"],
+    ["Sarai","The Golden Horde's capital on the Volga River.","State-Building"],
+    ["Kiev","Russian capital city the Golden Horde destroyed and looted in 1240.","State-Building"],
+    ["Moscow","Russian city-state that saved up tribute money to build an army and led the coalition that beat the Golden Horde.","State-Building"],
+    ["Battle of Kulikovo","Battle in 1380 where Moscow's coalition defeated the Golden Horde and Mongol power in Russia started to fade.","State-Building"],
+    ["Hulegu","Grandson of Genghis Khan who destroyed Baghdad in 1258 and founded the Il-khanate.","State-Building"],
+    ["Baibars","Leader of the Muslim Mamluks whose army stopped Hulegu's Mongols in 1260.","State-Building"],
+    ["Mamluks","Muslim military group in Egypt that teamed up with Crusaders to defeat the Mongols in 1260.","State-Building"],
+    ["Il-khanate","Hulegu's kingdom in Persia and the Middle East. Persians ran the local government and the Mongols there converted to Islam.","State-Building"],
+    ["Chaghatai Khanate","The Mongol khanate in Central Asia, one of the four that the empire split into.","State-Building"],
+    ["Kublai Khan","Grandson of Genghis Khan who became Great Khan in 1260, conquered the Song, and started the Yuan Dynasty.","State-Building"],
+    ["Yuan Dynasty","The Mongol dynasty in China founded by Kublai Khan. It lasted until 1368.","State-Building"],
+    ["Dadu","Kublai Khan's capital, rebuilt from Zhongdu after the Mongols wrecked it in 1215. It is modern Beijing.","State-Building"],
+    ["White Lotus Society","Secret Chinese group that started organizing in the 1350s to end Yuan rule.","State-Building"],
+    ["Zhu Yuanzhang","Buddhist monk from a poor family who led the 1368 revolt that ended the Yuan and started the Ming.","State-Building"],
+    ["Ming Dynasty","The Chinese dynasty that replaced the Yuan, ruling from 1368 to 1644.","State-Building"],
+    ["Tamerlane","Also called Timur the Lame. He conquered the Central Asian Mongol lands around 1369.","State-Building"],
+
+    // ---- Technology ----
+    ["tumens","Mongol army units of 10,000 soldiers, made from groups of 10, then 100, then 1,000.","Technology"],
+    ["siege weapons","Weapons for attacking walled cities, like portable towers and catapults. The Mongols got them from captured Chinese and Persian engineers.","Technology"],
+    ["short bow","The bow Mongol soldiers used while riding, which made them deadly mounted archers.","Technology"],
+    ["heavy and light cavalry","The two kinds of Mongol horse units. Heavy cavalry wore more armor and carried more weapons.","Technology"],
+    ["messenger riders","Riders who carried oral messages for days without stopping, even sleeping on their horses, like a pony express.","Technology"],
+    ["yam system","The Mongol relay and postal system that, with bronze passports, made travel across the empire easier.","Technology"],
+    ["feigned retreat","Mongol trick where a small group pretended to run away, then a bigger force surrounded the enemy that chased them.","Technology"],
+    ["cannon","Weapon some credit to the Mongols, made by mixing Chinese gunpowder, Muslim flamethrowers, and European bell-casting.","Technology"],
+
+    // ---- Environment ----
+    ["Gobi Desert","Desert in East Asia. The Mongols lived on the harsh steppes north of it.","Environment"],
+    ["yurt","A round, felt-covered tent the nomadic Mongols lived in.","Environment"],
+    ["steppes","The dry grasslands of Central Asia. Their harsh life shaped tough Mongol culture.","Environment"],
+    ["Volga River","Russian river where Batu built the Golden Horde's capital, Sarai.","Environment"],
+    ["Black Death","The bubonic plague. Fleas carried it along Mongol trade and war routes from China to Central Asia, Southeast Asia, and Europe.","Environment"],
+    ["typhoon","Storm that wrecked the Yuan fleet when the Mongols tried to invade Japan.","Environment"],
+
+    // ---- Culture ----
+    ["The Romance of the West Chamber","Still-popular Yuan Dynasty play by Wang Shifu about two young lovers who beat the odds and get married.","Culture"],
+    ["Marco Polo","Venetian who first visited China at 17. His book after returning in 1295 described China's size and wealth, but many Europeans did not believe it.","Culture"],
+    ["religious tolerance","Mongol policy of letting people practice any religion, unusual for the 1200s.","Culture"],
+    ["shamanism","The Mongols' own religion based on nature spirits. They did not force it on anyone.","Culture"],
+    ["Matthew Paris","English monk who wrote about Mongol destruction in 1240 without ever seeing it himself.","Culture"],
+    ["Mongol women","Women who tended herds, rode horses, wore leather pants like men, could remarry, and could start a divorce.","Culture"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Before the conquests", dates:"1100s", items:[
+      "Clans of <b>nomadic herders</b> north of the <b>Gobi Desert</b>",
+      "Harsh <b>steppe</b> life made them tough; everyone, men and women, rode horses",
+      "Lived in <b>yurts</b> and owned little: horses, tools, felt tents",
+      "Wanted the wealth of people closer to the <b>Silk Roads</b>",
+      "Neighbors: Tatars, Naimans, Merkits, and the <b>Jurchens</b> in northern China"
+    ]},
+    {name:"Genghis Khan rises", dates:"1162–1227", items:[
+      "<b>Temujin</b> born 1162, built alliances and married his son into a khan's family",
+      "Picked talented people over family and could be ruthless",
+      "1206 <b>kuriltai</b> elected him khan; took the name <b>Genghis Khan</b>, ruler of all",
+      "1210 attacked the <b>Jin</b>; 1219 took <b>Kara Khitai</b> and <b>Khwarazm</b>",
+      "By 1227 his <b>khanate</b> ran from the North China Sea to eastern Persia"
+    ]},
+    {name:"How they fought", dates:"", items:[
+      "Mounted archers with the <b>short bow</b>, super disciplined",
+      "<b>Tumens</b>: units of 10, up to 10 groups of 1,000",
+      "Messengers rode for days and slept on their horses",
+      "<b>Feigned retreat</b>, mapping units, and surprise attacks",
+      "Surrender or else; skilled captives kept, captured engineers built <b>siege weapons</b>"
+    ]},
+    {name:"Pax Mongolica", dates:"1200s–1300s", items:[
+      "Capital at <b>Karakorum</b> in Mongolia, built with Chinese and Islamic experts",
+      "Maybe built more <b>bridges</b> than any ruler ever",
+      "<b>Religious tolerance</b> across the empire",
+      "Soldiers guarded the <b>Silk Road</b> and trade linked Asia, the Middle East, Africa, Europe",
+      "Trade routes used again for the first time since the Romans and Han"
+    ]},
+    {name:"Ogodei", dates:"1229", items:[
+      "Third son and chosen successor, elected by the chiefs in 1229",
+      "Not as great a general, but the empire kept growing",
+      "Took land in Georgia, Armenia, Azerbaijan, the Indus Valley, southern China",
+      "Invaded <b>Korea</b> in 1231",
+      "Built a better bureaucracy and turned <b>Karakorum</b> into a permanent city"
+    ]},
+    {name:"Batu &amp; the Golden Horde", dates:"Russia", items:[
+      "1236: <b>Batu</b> leads 100,000 soldiers into Russia",
+      "1240: <b>Kiev</b> destroyed; 1241: beat Polish, German, French, and Hungarian knights",
+      "Turned back when <b>Ogodei</b> died; set up capital at <b>Sarai</b> on the Volga",
+      "Ruled <b>indirectly</b> through Russian princes who paid tribute",
+      "<b>Moscow</b> built an army and won at <b>Kulikovo</b> in 1380"
+    ]},
+    {name:"Hulegu &amp; the Il-khanate", dates:"Middle East", items:[
+      "1258: <b>Hulegu</b> destroys <b>Baghdad</b>, kills the caliph and maybe 200,000 people",
+      "1260: stopped by the <b>Mamluks</b> under <b>Baibars</b> teamed up with Crusaders",
+      "Mongols ruled, but <b>Persians</b> ran the government, which maxed out taxes",
+      "Converted to <b>Islam</b> and then backed massacres of Jews and Christians"
+    ]},
+    {name:"Kublai &amp; the Yuan", dates:"China", items:[
+      "<b>Kublai Khan</b> fought the Song from 1235 to 1271; Great Khan in 1260",
+      "Founded the <b>Yuan Dynasty</b> and rebuilt Zhongdu as <b>Dadu</b>",
+      "Followed Chinese traditions and tolerated Buddhists, Daoists, Muslims, Christians",
+      "Trade and culture boomed: <b>The Romance of the West Chamber</b>",
+      "<b>Marco Polo</b> visited and wrote about China after getting home in 1295"
+    ]},
+    {name:"Yuan collapse", dates:"1368", items:[
+      "Hired foreigners instead of Chinese and stayed separate",
+      "Ended the <b>civil service exam</b>, which angered the Confucian scholar-gentry",
+      "Failed to take Japan, Indochina, Burma, and Java starting in 1274",
+      "<b>White Lotus Society</b> organized in the 1350s",
+      "<b>Zhu Yuanzhang</b> overthrew the Yuan in 1368 and started the <b>Ming</b>"
+    ]},
+    {name:"Long-term impact", dates:"", items:[
+      "Conquered more land than the Romans, and the bloody reputation was earned",
+      "Revived trade with roads and guarded routes",
+      "One law code everywhere; later states copied <b>centralized power</b>",
+      "Spread the <b>Black Death</b>, which killed a third of Europe",
+      "Ended European knights and walled cities; maybe the <b>cannon</b>; pants and jackets"
+    ]},
+    {name:"Mongol women", dates:"", items:[
+      "More independent than women in most societies then",
+      "Herded sheep and goats, raised kids, made meals",
+      "Rode horses and wore the same leather pants as men",
+      "Could <b>remarry</b> after being widowed and could <b>start a divorce</b>",
+      "Toregene Khatun ran the empire until a new khan was picked"
+    ]},
+    {name:"How brutal was Genghis?", dates:"debate", items:[
+      "<b>The Destroyer</b>: tens of millions killed; Steven Ward says three-fourths of the Iranian Plateau",
+      "<b>The Empire Builder</b>: united China, renewed Eurasian trade, tolerant, merit-based",
+      "Gave the empire one writing system and opened the way for new laws and trade",
+      "<b>A Man of Energy</b>: a Persian historian says he was a genius and a cruel butcher at once"
+    ]},
+    {name:"Crash Course #17", dates:"video", items:[
+      "Took more land in 25 years than Rome did in 400, over 11 million square miles",
+      "Nomads need trade, live near settled people, and tend to be more <b>equal</b> for women",
+      "Genghis promoted by <b>merit</b> and pulled conquered commoners into his tribe",
+      "Army never over 130,000; learned <b>siege warfare</b> from prisoners",
+      "Split into 4 khanates; <b>yam</b> relay, bronze passports, religious tolerance, plague spread"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"The four khanates", head:["Khanate","Region","Founder or key ruler","What happened","How it ended"], rows:[
+      ["Golden Horde","Russia","Batu","Destroyed Kiev in 1240, ruled through Russian princes from Sarai","Lost power after Kulikovo in 1380; Russia beat the last khans by the mid-1500s"],
+      ["Il-khanate","Persia and the Middle East","Hulegu","Destroyed Baghdad in 1258, used Persian officials, converted to Islam","Blended into Persian society"],
+      ["Chaghatai Khanate","Central Asia","Chaghatai, a son of Genghis Khan","Held the Silk Road heartland","Conquered by Tamerlane around 1369"],
+      ["Yuan Dynasty","China","Kublai Khan","Followed Chinese traditions, booming trade and arts, Marco Polo visits","Overthrown by Zhu Yuanzhang in 1368"]
+    ]},
+    {title:"Transfer of knowledge by the Mongols and the Crusaders", head:["","Mongols","Crusaders"], rows:[
+      ["Areas connected","East Asia, Europe, and the Middle East","Europe and the Middle East"],
+      ["Science and technology","Better bridges, printing methods, gunpowder, astronomy","Chemistry, algebra, pain medicine, tunneling, new siege weapons"],
+      ["Ideas","Religious tolerance, more respect for artisans and merchants, Islam","Islam, Christianity, Arabic numerals, chess, romantic literature"]
+    ]},
+    {title:"Deadliest conflicts in world history", head:["Conflict","Years","About how many deaths"], rows:[
+      ["World War II","1937–1945","60 million"],
+      ["Mongol Conquests","1206–1294","40 million"],
+      ["Fall of the Ming Dynasty","1618–1644","25 million"],
+      ["Taiping Rebellion","1850–1864","20 million"],
+      ["Timur's Conquests","1370–1405","17 million"],
+      ["World War I","1914–1918","15 million"],
+      ["Conquest of the Americas","1492–c. 1900","15 million"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["1100s","Mongol clans live as nomadic herders north of the Gobi"],
+    ["1162","Temujin is born"],
+    ["1206","Kuriltai elects Temujin; he becomes Genghis Khan"],
+    ["1210","Genghis Khan attacks the Jin Empire of the Jurchens"],
+    ["1215","Mongols destroy Zhongdu"],
+    ["1219","Kara Khitai and Khwarazm conquered"],
+    ["1227","Genghis Khan dies fighting the Tangut"],
+    ["1229","Ogodei elected khan"],
+    ["1231","Mongols invade Korea"],
+    ["1236","Batu leads 100,000 soldiers into Russia"],
+    ["1240","Kiev destroyed by the Golden Horde"],
+    ["1241","Batu beats European knights, then turns back when Ogodei dies"],
+    ["1258","Hulegu destroys Baghdad"],
+    ["1260","Mamluks under Baibars stop the Mongols; Kublai becomes Great Khan"],
+    ["1271","Kublai finishes beating the Chinese and founds the Yuan"],
+    ["1274","Yuan starts failed attacks on Japan and Southeast Asia"],
+    ["1295","Marco Polo returns to Italy and writes his book"],
+    ["1300s","Black Death spreads along Mongol routes"],
+    ["1350s","White Lotus Society organizes against the Yuan"],
+    ["1368","Zhu Yuanzhang overthrows the Yuan and starts the Ming"],
+    ["c. 1369","Golden Horde loses territory; Tamerlane takes Central Asia"],
+    ["1380","Moscow beats the Golden Horde at Kulikovo"]
+  ];
+
+  var CONTENT_Q = [
+    ["Where did the Mongols live in the 1100s?",["Along the Silk Road cities","North of the Gobi Desert","In northern India","On the Black Sea coast"],1],
+    ["What was a yurt?",["A Mongol bow","A round felt-covered tent","A tax","A war council"],1],
+    ["What was Genghis Khan's birth name?",["Ogodei","Temujin","Batu","Hulegu"],1],
+    ["What is a kuriltai?",["A cavalry unit","A meeting of Mongol chiefs","A Mongol capital","A trade passport"],1],
+    ["What does Genghis Khan mean?",["Son of heaven","Ruler of all","Lord of horses","Great warrior"],1],
+    ["Which empire did Genghis Khan attack first in 1210?",["Song","Jin, set up by the Jurchens","Abbasid","Khwarazm"],1],
+    ["What was a tumen?",["A unit of 10,000 soldiers","A siege tower","A tent","A tax collector"],0],
+    ["How did the Mongols get siege weapons?",["They invented them alone","From captured Chinese and Persian engineers","They bought them from Venice","From the Romans"],1],
+    ["What was the feigned retreat?",["Surrendering to buy time","Pretending to run so enemies chased into a trap","Retreating to Mongolia in winter","Hiding in yurts"],1],
+    ["What happened to settlements that refused to surrender?",["They were left alone","The Mongols killed the aristocrats or worse","They paid double tax","They were moved to Karakorum"],1],
+    ["What does Pax Mongolica mean?",["Mongol war","Mongolian peace","Mongol trade law","Mongol religion"],1],
+    ["Where was Genghis Khan's capital?",["Sarai","Karakorum","Dadu","Baghdad"],1],
+    ["Which policy of Genghis Khan was unusual for the 1200s?",["Forced conversion","Religious tolerance","Banning trade","Burning books"],1],
+    ["How did Genghis Khan die?",["Poisoned at a feast","Fighting the Tangut in 1227","Falling off a horse in Russia","Of plague"],1],
+    ["Who succeeded Genghis Khan?",["Kublai","Ogodei","Batu","Temujin"],1],
+    ["Which country did Ogodei invade in 1231?",["Japan","Korea","Vietnam","India"],1],
+    ["Which grandson led the Golden Horde into Russia?",["Hulegu","Batu","Kublai","Ogodei"],1],
+    ["Which Russian city did the Golden Horde destroy in 1240?",["Moscow","Kiev","Novgorod","Sarai"],1],
+    ["Why did Batu stop invading Europe?",["He lost a huge battle","Ogodei died and he went home","The Pope paid him off","Plague hit his army"],1],
+    ["Where was the Golden Horde's capital?",["Karakorum","Sarai on the Volga","Moscow","Kiev"],1],
+    ["How did the Mongols rule Russia?",["Directly with Mongol governors","Indirectly through Russian princes who paid tribute","By moving to Russian cities","Through the Pope"],1],
+    ["Which city led the coalition that beat the Golden Horde?",["Kiev","Moscow","Constantinople","Novgorod"],1],
+    ["In what year was the Battle of Kulikovo?",["1240","1380","1258","1453"],1],
+    ["Which long-term effect did the Mongols have on Russia?",["Russia became Catholic","It was cut off from Western Europe and built a stronger, more Russian identity","Russia became a Mongol colony forever","Russia adopted Chinese writing"],1],
+    ["Which city did Hulegu destroy in 1258?",["Damascus","Baghdad","Cairo","Samarkand"],1],
+    ["Who stopped Hulegu's Mongols in 1260?",["The Byzantines","The Mamluks under Baibars","The Song","The Golden Horde"],1],
+    ["Who ran the local government in the Il-khanate?",["Mongols only","Persians","Chinese officials","Crusaders"],1],
+    ["Which religion did Hulegu's Mongols convert to?",["Buddhism","Islam","Christianity","Daoism"],1],
+    ["Which dynasty did Kublai Khan start?",["Song","Yuan","Ming","Tang"],1],
+    ["What was Kublai Khan's capital?",["Karakorum","Dadu","Hangzhou","Sarai"],1],
+    ["Which groups liked Kublai's religious tolerance?",["Only Confucians","Buddhists and Daoists, plus Muslims and Christians","Only Muslims","Nobody"],1],
+    ["Why did most Chinese first enjoy Yuan rule?",["Lower taxes for nobles","Prosperity from cultural exchange and better trade","The exam got easier","Mongols left China alone"],1],
+    ["Which Yuan play is still popular?",["The Tale of Genji","The Romance of the West Chamber","The Ramayana","Journey to the West"],1],
+    ["What did many Europeans think of Marco Polo's book at first?",["They loved and believed it","They refused to believe it","They banned it","They thought it was too short"],1],
+    ["Which Yuan move angered the Confucian scholar-gentry?",["Building canals","Ending the civil service exam","Lowering taxes","Trading with Europe"],1],
+    ["Which places did the Yuan fail to conquer?",["Korea and Manchuria","Japan, Indochina, Burma, and Java","India and Persia","Russia and Poland"],1],
+    ["Who led the revolt that ended the Yuan in 1368?",["Kublai Khan","Zhu Yuanzhang","Tamerlane","Baibars"],1],
+    ["Which dynasty replaced the Yuan?",["Song","Ming","Qing","Tang"],1],
+    ["Who took over the Mongols' Central Asian lands around 1369?",["Batu","Tamerlane","Ogodei","Marco Polo"],1],
+    ["How did the Black Death spread from China to Europe?",["By Viking ships","Fleas along Mongol trade and war routes","Through India only","It started in Europe"],1],
+    ["About how much of Europe's population did the Black Death kill?",["A tenth","A third","Half","Almost everyone"],1],
+    ["Which European military tradition did Mongol tactics help end?",["Archery","Knights in armor","Naval warfare","Castles in Japan"],1],
+    ["What could Mongol women do that was rare at the time?",["Become khan automatically","Remarry when widowed and start a divorce","Never work","Vote"],1],
+    ["How did the Mongols rule so well, according to the textbook?",["They let every city govern itself","They understood centralized power and used one law code","They hired the Pope","They banned all religions but one"],1],
+    ["What does the textbook say about how the Silk Road trade was revived?",["Marco Polo built it","Genghis Khan's conquests started the Pax Mongolica, which made trade routes safer and cheaper","Venice invented paper money","Silk was invented by the Mongols"],1],
+    ["According to Crash Course, how did Genghis Khan win loyalty?",["By paying everyone gold","By promoting by merit and bringing conquered commoners into his tribe","By converting to Islam","By marrying into every family"],1],
+    ["According to Crash Course, what stopped the Mongol invasion of Japan?",["Samurai cannons","A typhoon","The Chinese navy","A peace treaty"],1],
+    ["How many direct descendants of Genghis Khan are alive today, according to Crash Course?",["About 16,000","About 16 million","About 1 billion","None"],1]
+  ];
+
+  var TF_Q = [
+    ["The Mongols were settled farmers before Genghis Khan.",false,"They were nomadic herders and hunter-foragers.","Environment"],
+    ["Mongols expected both men and women to be skilled horse riders.",true,"","Culture"],
+    ["Temujin was born in 1162.",true,"","State-Building"],
+    ["Temujin always gave the top jobs to his own family.",false,"He sometimes picked talented non-family members over family.","State-Building"],
+    ["A kuriltai elected Temujin khan in 1206.",true,"","State-Building"],
+    ["The Mongol army was poorly organized.",false,"It was highly disciplined, with units of 10, 100, 1,000, and 10,000.","Technology"],
+    ["Mongol messengers sometimes slept on their horses while riding.",true,"","Technology"],
+    ["The Mongols destroyed every skilled worker they captured.",false,"Craftsworkers, miners, and people who could read were recruited.","State-Building"],
+    ["Genghis Khan's riders carried written letters across the empire.",false,"They carried oral messages.","Technology"],
+    ["The Pax Mongolica made the Silk Road safer for trade.",true,"Mongol soldiers protected it.","State-Building"],
+    ["Genghis Khan's capital was Karakorum.",true,"Near the center of modern Mongolia.","State-Building"],
+    ["Genghis Khan forced everyone to follow the Mongol religion.",false,"He had a policy of religious tolerance.","Culture"],
+    ["Ogodei was a better military leader than his father.",false,"His skills could not compare, but the empire still grew.","State-Building"],
+    ["Ogodei wanted Karakorum to be a permanent city.",true,"With real buildings instead of yurts.","State-Building"],
+    ["Batu destroyed Kiev in 1240.",true,"","State-Building"],
+    ["Batu conquered Italy and Austria.",false,"He turned back when Ogodei died.","State-Building"],
+    ["The Mongols ruled Russia directly because they loved its forests.",false,"They ruled indirectly because they did not want to live in the forests.","State-Building"],
+    ["Moscow saved up extra tribute to build an army against the Mongols.",true,"","State-Building"],
+    ["The Golden Horde won the Battle of Kulikovo.",false,"Moscow's coalition beat the Golden Horde in 1380.","State-Building"],
+    ["Mongol rule cut Russia off from much of Western Europe.",true,"That helped Russia build a more distinct culture.","Culture"],
+    ["Hulegu destroyed Baghdad in 1258.",true,"Killing the caliph and maybe 200,000 people.","State-Building"],
+    ["Muslim Mamluks and Christian Crusaders teamed up against the Mongols.",true,"In 1260, under Baibars.","State-Building"],
+    ["In the Il-khanate, Mongols filled every government job.",false,"Persians served as ministers and local officials.","State-Building"],
+    ["The Il-khanate Mongols became more tolerant after converting to Islam.",false,"After converting, they supported massacres of Jews and Christians.","Culture"],
+    ["China was easier for the Mongols to conquer than other lands.",false,"It took from 1235 to 1271.","State-Building"],
+    ["Kublai Khan rebuilt Zhongdu and called it Dadu.",true,"","State-Building"],
+    ["Kublai Khan followed many Chinese traditions.",true,"","State-Building"],
+    ["Marco Polo first visited China at age 17.",true,"","Culture"],
+    ["The Yuan kept the civil service exam.",false,"They dismantled it, which angered the scholar-gentry.","State-Building"],
+    ["The Yuan conquered Japan.",false,"It failed, and a typhoon wrecked the fleet.","State-Building"],
+    ["The White Lotus Society worked to end the Yuan.",true,"Starting in the 1350s.","State-Building"],
+    ["Zhu Yuanzhang came from a rich noble family.",false,"He was a Buddhist monk from a poor peasant family.","State-Building"],
+    ["The Ming Dynasty lasted from 1368 to 1644.",true,"","State-Building"],
+    ["The Mongols conquered a larger area than the Romans.",true,"","State-Building"],
+    ["The Black Death killed about a third of Europe.",true,"","Environment"],
+    ["South Asia and Sub-Saharan Africa were hit hardest by the Black Death.",false,"They were spared because they had few trading ports.","Environment"],
+    ["Mongol women could start a divorce.",true,"They could also remarry after being widowed.","Culture"],
+    ["Walls became more useful in Europe after the Mongols.",false,"Walls proved useless against Mongol siege technology.","Technology"],
+    ["Western European men started wearing pants and jackets because of the Mongols.",true,"","Culture"],
+    ["All historians agree Genghis Khan was only a destroyer.",false,"Others see him as an empire builder, and one view says he was both.","Culture"]
+  ];
+
+  var PACKET = [
+    {section:"The Mongols and Their Surroundings", items:[
+      {q:"Describe the life of the pastoralist Mongols of the 12th century.", a:"They were nomadic clans north of the Gobi Desert who herded goats and sheep, hunted, lived in yurts, owned very little, and expected everyone to ride horses."},
+      {q:"Analysis: What about this lifestyle would make them the perfect candidates to create a huge empire?", a:"Their harsh life made them tough, they were all expert riders and hunters, and they could move fast with almost nothing to slow them down."}
+    ]},
+    {section:"Genghis Khan", items:[
+      {q:"How did Temujin get the name Genghis Khan?", a:"A kuriltai of Mongol chiefs elected him khan in 1206, and he took the name Genghis Khan, meaning ruler of all."},
+      {q:"What methods did Genghis use to create his khanate?", a:"He made alliances and marriages, beat rival groups one by one, picked talented people over family, and was ruthless when he needed to be."},
+      {q:"Describe the Mongolian military forces.", a:"Disciplined mounted archers with short bows, organized in units of 10 up to tumens of 10,000, with heavy and light cavalry, fast messengers, and tricks like fake retreats."},
+      {q:"Where did Genghis establish the capital of his empire?", a:"Karakorum, near the center of modern Mongolia."},
+      {q:"Why is the period between the 13th and 14th centuries often called the Pax Mongolica?", a:"The Mongols kept the peace, protected the Silk Road, and tolerated all religions, so trade across Eurasia boomed."},
+      {q:"Who succeeded Genghis? How did he help expand the empire further?", a:"His son Ogodei, who pushed into Georgia, Armenia, Azerbaijan, the Indus Valley, and southern China, invaded Korea, and built up the government and Karakorum."}
+    ]},
+    {section:"Mongolian Empire Expands", items:[
+      {q:"What area did Batu and his Golden Horde conquer?", a:"Russia, plus raids into Poland and Hungary."},
+      {q:"What city would Batu destroy, forever ending its power in the region?", a:"Kiev, in 1240."},
+      {q:"What city would rise up and defeat the Golden Horde, leading to its rise in power in the region?", a:"Moscow, at the Battle of Kulikovo in 1380."},
+      {q:"What long-lasting impact did the Mongols have on Russia?", a:"Russia got a stronger military and centralized leadership, got cut off from Western Europe, and built its own culture, which set up the modern Russian state."},
+      {q:"What region did Hulegu and the Il-khanate conquer?", a:"The Middle East and Persia, including Baghdad."},
+      {q:"What religion would Hulegu and most of the other Mongols in this region convert to? What effect would this conversion have?", a:"Islam, and after converting they stopped tolerating everyone and supported massacres of Jews and Christians."},
+      {q:"What dynasty would Kublai Khan establish in China?", a:"The Yuan Dynasty."},
+      {q:"What groups would Kublai gain loyalty from due to his policy of religious tolerance?", a:"Buddhists and Daoists mainly, plus Muslims and Christians."},
+      {q:"Why did most Chinese initially enjoy the rule of the Great Khan?", a:"His reforms and armies brought peace, more trade, and cultural exchange, so China got rich and the arts did great."},
+      {q:"What factors led many Chinese to turn against Mongol rule?", a:"The Mongols hired foreigners, ended the civil service exam, stayed separate from the Chinese, and kept losing wars abroad."}
+    ]},
+    {section:"Long-Term Impact of the Mongolian Invasions", items:[
+      {q:"Out of the eight long-term impacts, which four do you think were most important and why?", a:"Reviving trade, since it reconnected Eurasia. The Black Death, since it killed a third of Europe. Spreading centralized power, since later states copied it. Ending knights and walled cities, since it changed how war worked in Europe."},
+      {q:"Which perspective on Genghis Khan in the Historical Perspectives do you most agree with and why?", a:"The man of energy view, because he really did kill millions but also built a huge empire that brought trade, tolerance, and new laws, so he was both."}
+    ]},
+    {section:"Textbook Short-Answer Practice", items:[
+      {q:"SAQ 1A: Identify and explain two reasons why Mongol nobles would accept the political leadership of a woman.", a:"Mongol women already had more independence than most women at the time, and Toregene Khatun was the mother of the eldest sons and known as smart, so she could keep the state running until a new khan was picked."},
+      {q:"SAQ 1B: Identify and explain one difference between women in Islamic society and Mongol women in the 1200s.", a:"Mongol women could start a divorce and remarry and rode and dressed like men, while women in Islamic society usually lived in a more separate, limited sphere."},
+      {q:"SAQ 2A: Identify and explain one similarity in the political structure of the Yuan Dynasty and the Il-khanate.", a:"In both, a small Mongol ruling class sat on top of a much bigger conquered population and used existing ways of running things to collect taxes."},
+      {q:"SAQ 2B: Identify and explain one difference between the political structure of the Yuan Dynasty and the Golden Horde.", a:"The Yuan ruled China directly from Dadu, while the Golden Horde ruled Russia indirectly through Russian princes who paid tribute."},
+      {q:"SAQ 2C: Identify and explain one change in China's social structure because of the Yuan Dynasty.", a:"The Confucian scholar-gentry lost status because the Mongols ended the civil service exam and hired foreigners instead."}
+    ]}
+  ];
+
+  return {
+    id:"13", num:13, short:"Mongols",
+    title:"The Mongols and Interregional Empires", years:"1200–1450 C.E.",
+    pages:"240–253", heading:"Chapter 13 Study Hub",
+    blurb:"Genghis Khan and his grandsons build the biggest land empire ever, then split it into the Golden Horde, the Il-khanate, the Chaghatai Khanate, and the Yuan.",
     cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
     timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
   };
@@ -2522,6 +2875,7 @@ CH.push((function(){
     } else { wrap.hidden = true; }
   }
   $("quizRetake").addEventListener("click", function(){ $("quizStart").click(); });
+  $("quizQuit").addEventListener("click", function(){ quizActive.hidden = true; quizDone.hidden = true; quizSetup.hidden = false; replay(quizSetup, "enter-q"); });
   $("quizBack").addEventListener("click", function(){ quizDone.hidden = true; quizActive.hidden = true; quizSetup.hidden = false; replay(quizSetup, "enter-q"); });
 
   /* =======================  TIMELINE  ======================= */
