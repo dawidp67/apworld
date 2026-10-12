@@ -2165,6 +2165,388 @@ CH.push((function(){
   };
 })());
 
+CH.push((function(){
+
+  var CATS = ["State-Building","Environment","Social Structure","Economy","Culture"];
+
+  var VOCAB = [
+    // ---- State-Building ----
+    ["Mississippian","The first large-scale civilization in North America, from the 700s to the 1500s in the Mississippi River valley and spreading east. Known for giant earthen mounds.","State-Building"],
+    ["Great Sun","The chief who ruled each large Mississippian town, at the top of the class structure.","State-Building"],
+    ["Toltec","Warrior civilization in central Mexico, about 950 to 1150, ruled by landholders who were also military leaders. Capital at Tula.","State-Building"],
+    ["Aztec","Also called the Mexica. Hunter-gatherers from the north who moved to central Mexico in the 1200s and built an empire from the Gulf of Mexico to the Pacific.","State-Building"],
+    ["Mexica","Another name for the Aztecs.","State-Building"],
+    ["tribute system","Aztec way of controlling conquered people by making them pay tribute, give up land, and serve in the army, while local rulers stayed on as tribute collectors.","State-Building"],
+    ["Great Speaker","The Aztec emperor, who was both the political ruler and the gods' representative.","State-Building"],
+    ["theocracy","Rule by religious leaders. Aztec government was one.","State-Building"],
+    ["Inca","Huge Andes empire from Ecuador to Chile, 1200s to 1572, known for its roads, the mita labor system, and farming.","State-Building"],
+    ["Pachacuti","Inca ruler from 1438 to 1471 whose name means transformer or shaker of the earth. He beat the Chanca and turned the Inca into a real empire.","State-Building"],
+    ["Yupanqui","Pachacuti's son who ruled from 1471 to about 1493 and conquered the Chimu in the north.","State-Building"],
+    ["Huayna Capac","Inca ruler after Yupanqui who focused on holding the empire together. His death started a civil war.","State-Building"],
+    ["Hernán Cortés","Spanish conquistador who invaded the Aztec Empire in 1519.","State-Building"],
+    ["Francisco Pizarro","Spanish conquistador who arrived in 1532 while the Inca were in a civil war.","State-Building"],
+    ["Chimu","Andean state in the north that Yupanqui conquered.","State-Building"],
+
+    // ---- Environment ----
+    ["Cahokia","Biggest Mississippian town, in present-day Illinois. About 40,000 people lived there around 1250, more than London. It was a trading city, abandoned around 1450.","Environment"],
+    ["Tula","The Toltec capital, built around 950 in northern Mesoamerica, with about 60,000 people at its peak.","Environment"],
+    ["Tenochtitlan","Aztec capital founded in 1325 on an island in Lake Texcoco. It grew to almost 200,000 people, and Mexico City sits on top of it today.","Environment"],
+    ["Lake Texcoco","Swampy lake in the Valley of Mexico where the Aztecs built Tenochtitlan and their floating gardens.","Environment"],
+    ["chinampas","Aztec floating gardens built by fencing off parts of the lake with woven sticks and filling them with mud and weeds to make farmland.","Environment"],
+    ["Cuzco","City in modern Peru that went from a small tribal center to the Inca capital in about 55 years.","Environment"],
+    ["Carpa Nan","The textbook's name for the Inca road system, about 25,000 miles built with captive labor and used mostly by the government and army.","Environment"],
+    ["earthen mounds","Huge Mississippian dirt mounds, some 100 feet tall and as big as 12 football fields, shaped like pyramids, ovals, or animals.","Environment"],
+    ["terraces","Flat steps cut into mountainsides for farming. Both the Aztecs and the Inca used them to stop erosion.","Environment"],
+    ["Machu Picchu","Inca mountain site near Cuzco shown on the textbook's Inca map.","Environment"],
+
+    // ---- Social Structure ----
+    ["matrilineal society","A society where your status comes from your mother's side. When a Mississippian Great Sun died, his sister's son took over, not his own son.","Social Structure"],
+    ["mita system","Inca mandatory public service. Men from 15 to 50 did farm work, built roads, and other labor for the government instead of paying tribute.","Social Structure"],
+    ["Aztec social classes","Great Speaker, then land-owning nobles, scribes and healers, craftspeople and traders, the pochteca, peasants and soldiers, and slaves at the bottom.","Social Structure"],
+    ["Aztec slaves","Mostly war captives, plus Aztecs who did not pay debts or committed crimes. Some were used as human sacrifices.","Social Structure"],
+    ["Aztec women","They wove the cloth demanded as tribute, so some husbands took more than one wife. A few were priestesses, midwives, healers, merchants, or scribes.","Social Structure"],
+
+    // ---- Economy ----
+    ["pochteca","Special Aztec merchant class that traded luxury goods.","Economy"],
+    ["Aztec trade","Trade reached from present-day San Luis Obispo to Costa Rica, swapping cloth, cacao, and rubber balls for shells, feathers, and precious stones.","Economy"],
+    ["Inca warehouses","Storehouses where rulers kept part of everyone's crops to feed people during famines.","Economy"],
+
+    // ---- Culture ----
+    ["Quetzalcoatl","God of wind and knowledge, shown as a feathered serpent. The Toltec borrowed his cult from the Maya and the Aztecs worshipped him too.","Culture"],
+    ["Chichén Itzá","Mayan city whose buildings look a lot like Tula's, a sign of Toltec and Maya borrowing.","Culture"],
+    ["Great Pyramid","The 150-foot stone pyramid in the center of Tenochtitlan.","Culture"],
+    ["human sacrifice","Killing people as offerings to gods. The Aztecs saw it as repaying the gods who sacrificed themselves to make the world, and it also showed off Aztec power.","Culture"],
+    ["Huitzilopochtli","Aztec sun god and god of war.","Culture"],
+    ["Tlaloc","Aztec rain god.","Culture"],
+    ["Xipe Totec","Aztec god of agriculture and fertility.","Culture"],
+    ["Quechua","The Inca language, taught to conquered people and still spoken in Peru today.","Culture"],
+    ["royal ancestor veneration","Inca practice of mummifying dead rulers who kept owning their land and stuff. New rulers had to conquer more land, which pushed expansion. Also called the royal ancestor cult.","Culture"],
+    ["Inti","The Inca sun god and their most important god. Inca means people of the sun.","Culture"],
+    ["Temple of the Sun","Temple in Cuzco that was the center of Inca religion.","Culture"],
+    ["huaca","Things in nature or built objects that the Inca believed had supernatural power, like rivers, mountain peaks, stones, or bridges.","Culture"],
+    ["animism","Belief that the natural world is full of spirits. The Mississippians practiced it and the Inca had parts of it.","Culture"],
+    ["quipu","Inca knotted strings used to record numbers for trade and engineering and to send messages.","Culture"],
+    ["waru waru","Inca raised farming beds with channels that redirected rain to stop flood erosion and saved water for dry times.","Culture"],
+    ["Fray Bernardino de Sahagún","Spanish missionary who came to Mexico in 1529, learned the Aztec language, and studied Aztec culture for about 30 years.","Culture"],
+    ["Florentine Codex","Sahagún's 1577 record of Aztec life, an early example of anthropology.","Culture"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Big picture", dates:"", items:[
+      "Toltecs and <b>Aztecs</b> follow the Olmecs and Maya; the <b>Inca</b> follow the Moche",
+      "<b>Mississippian</b> = first big civilization in North America",
+      "All had big cities, bureaucracies, and detailed religions",
+      "Most of what we know comes from archaeology and <b>European writers</b>",
+      "<b>Sahagún</b> came in 1529 and studied the Aztecs for about 30 years"
+    ]},
+    {name:"Mississippian mounds", dates:"700s–1500s", items:[
+      "Started in the Mississippi River valley and spread east",
+      "Giant <b>earthen mounds</b>, some 100 feet tall and the size of 12 football fields",
+      "Shapes: pyramids, ovals, animals, even a man in Wisconsin",
+      "Crops: corn, beans, squash, tobacco",
+      "Some possible contact with the Maya, never proven"
+    ]},
+    {name:"Cahokia &amp; trade", dates:"c. 1250", items:[
+      "<b>Cahokia</b> in Illinois had about 40,000 people, more than London",
+      "Towns built around a plaza with mounds and wooden temples on top",
+      "Crafts: pottery, engraved shells, copper, feathers",
+      "Bear teeth from the Rockies and turtle shells from the Gulf show wide trade",
+      "<b>Animism</b>: spirits in nature, priests were healers"
+    ]},
+    {name:"Mississippian society", dates:"", items:[
+      "<b>Great Sun</b> on top, then priests and nobles, commoners, then slaves",
+      "Women farmed and men hunted",
+      "<b>Matrilineal</b>: the Great Sun's sister's son took over",
+      "Cahokia abandoned around 1450",
+      "Decline theories: floods or bad weather, or European diseases"
+    ]},
+    {name:"Toltec", dates:"950–1150", items:[
+      "Capital at <b>Tula</b>, about 60,000 people",
+      "Ruled by a <b>warrior aristocracy</b> that collected tribute",
+      "Conquered Maya settlements in the 900s",
+      "Borrowed the cult of <b>Quetzalcoatl</b> from the Maya",
+      "Tula looks a lot like <b>Chichén Itzá</b>; declined by 1150"
+    ]},
+    {name:"Aztec rise", dates:"1200s–1400s", items:[
+      "Also called the <b>Mexica</b>; claimed the Toltec legacy",
+      "Hunter-gatherers who moved down from the north in the 1200s",
+      "Founded <b>Tenochtitlan</b> in 1325 on an island in <b>Lake Texcoco</b>",
+      "Within 100 years they ruled from the Gulf of Mexico to the Pacific",
+      "Tenochtitlan reached almost 200,000 with a 150-foot <b>Great Pyramid</b>"
+    ]},
+    {name:"Aztec farming &amp; tech", dates:"", items:[
+      "<b>Chinampas</b>: floating gardens made of mud and weeds on the lake",
+      "Irrigation ditches, fertilizer, and stone <b>terraces</b>",
+      "Only hand tools, <b>no wheels</b>, no pack animals",
+      "Grinding maize took 30 to 40 hours a week per family"
+    ]},
+    {name:"Aztec government", dates:"theocracy", items:[
+      "<b>Tribute system</b>: conquered people paid goods, gave land, and served in the army",
+      "Local rulers kept their jobs as tribute collectors",
+      "City-states grouped into <b>provinces</b> with Aztec warriors and an official",
+      "<b>Great Speaker</b> = emperor and the gods' representative",
+      "Short-term control without running everything directly"
+    ]},
+    {name:"Aztec society", dates:"", items:[
+      "Land-owning nobles also led the army",
+      "Then scribes and healers, craftspeople and traders",
+      "<b>Pochteca</b> traded luxury goods",
+      "Peasants and soldiers, then <b>slaves</b> who were war captives, debtors, criminals",
+      "Women wove tribute cloth; some were priestesses, midwives, healers, merchants"
+    ]},
+    {name:"Aztec religion &amp; culture", dates:"", items:[
+      "Hundreds of gods: <b>Huitzilopochtli</b>, <b>Tlaloc</b>, <b>Quetzalcoatl</b>, <b>Xipe Totec</b>",
+      "<b>Human sacrifice</b> repaid the gods and showed off Aztec power",
+      "Spanish writers may have exaggerated it",
+      "365-day calendar from the Maya, picture writing, gold and silver work",
+      "Traded cloth, cacao, rubber balls for shells, feathers, stones"
+    ]},
+    {name:"Aztec decline", dates:"late 1400s", items:[
+      "Low tech made farming slow and hard",
+      "Needed more sacrifice victims, so they expanded too far",
+      "Conquered people <b>resented</b> the tribute and sacrifices",
+      "<b>Cortés</b> invaded in 1519",
+      "Disease plus Spanish troops plus rebels = fast collapse"
+    ]},
+    {name:"Inca rise", dates:"1438–1493", items:[
+      "<b>Cuzco</b> went from small tribal town to capital in about 55 years",
+      "Empire from Ecuador to Chile",
+      "<b>Pachacuti</b>, 1438 to 1471: beat the Chanca, built the empire",
+      "<b>Yupanqui</b>, 1471: conquered the Chimu",
+      "<b>Huayna Capac</b>, about 1493: held it all together"
+    ]},
+    {name:"Inca government", dates:"", items:[
+      "Four provinces, each with a governor and bureaucracy",
+      "No tribute; instead the <b>mita system</b> for men 15 to 50",
+      "Schools taught <b>Quechua</b>, religion, and history",
+      "Moved conquered people far away to stop revolts",
+      "Few markets; government stored crops in <b>warehouses</b> for famines"
+    ]},
+    {name:"Inca religion", dates:"", items:[
+      "<b>Royal ancestor veneration</b>: dead rulers kept their land, so new ones conquered more",
+      "<b>Inti</b> the sun god; rulers were his representatives",
+      "Temple of the Sun in Cuzco was the center",
+      "Priests read coca leaves or spiders; sacrificed corn, guinea pigs, llamas",
+      "Human sacrifice only for big crises; <b>huaca</b> = sacred objects"
+    ]},
+    {name:"Inca achievements &amp; fall", dates:"1532–1572", items:[
+      "<b>Quipu</b> knotted strings for numbers and messages",
+      "Mortarless stonework, copper and bronze tools",
+      "<b>Waru waru</b> raised beds and mountain terraces",
+      "<b>Carpa Nan</b> roads, about 25,000 miles",
+      "<b>Pizarro</b> arrived in 1532 during a civil war; empire done by 1572"
+    ]},
+    {name:"How many people in 1491?", dates:"debate", items:[
+      "Early settlers like Bradford saw disease had already wiped out natives",
+      "<b>Kroeber</b>, 1934: about 8.4 million",
+      "<b>Dobyns</b>: 90 to 112 million using the depopulation rate",
+      "<b>Henige</b>, a low counter: no real data for high numbers",
+      "<b>Charles Mann</b>, a high counter: maybe 200 million"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"Comparing three American civilizations", head:["","Maya","Aztec","Inca"], rows:[
+      ["Region","Southern Mexico and Central America","Central Mexico","Andes in South America"],
+      ["Period","400 B.C.E. to 1517 C.E.","1200 to 1521","1200 to 1572"],
+      ["Crops","Corn, beans, squash","Corn, beans, squash, tomatoes","Corn, cotton, potatoes"],
+      ["Trade","Moderate","Extensive","Limited"],
+      ["Religion","Polytheistic, sacred king, some human sacrifice","Polytheistic, sun god is the main god, human sacrifice","Polytheistic, some human sacrifice"],
+      ["Government","City-states each with a king, war for tribute","Powerful king, centralized, war for captives and tribute","King at the center, war for conquest, mita system"],
+      ["Tech and ideas","Math, writing, step pyramids, accurate calendar","Step pyramids, chinampas, accurate calendar","Terraces, irrigation, waru waru, roads, medicine, masonry"],
+      ["Why it declined","Cities abandoned, maybe drought and deforestation","Disease, and conquered people rebelled when Cortés attacked","Disease, civil war, and Spanish killing and enslaving people"]
+    ]},
+    {title:"How the Aztecs and Inca ruled conquered people", head:["","Aztec","Inca"], rows:[
+      ["What conquered people owed","Tribute goods, land, and military service","Mita labor instead of tribute"],
+      ["Local rulers","Kept their jobs as tribute collectors","Rewarded if they stayed loyal"],
+      ["Culture","Left mostly alone","Had to learn Quechua and Inca religion"],
+      ["Control","Warriors and an official in each province capital","Four provinces with governors; rebels moved far away"],
+      ["Result","Resentment that helped the Spanish","Tighter control, but a civil war over succession"]
+    ]},
+    {title:"Estimates of the Americas' population before Columbus", head:["Who","When","Estimate"], rows:[
+      ["A. L. Kroeber","1934","About 8.4 million"],
+      ["Henry Dobyns","1960s","90 to 112 million"],
+      ["David Henige","1998","Says the high numbers have no real data behind them"],
+      ["Charles Mann","2000s","Maybe as high as 200 million"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["700s","Mississippian culture begins in the Mississippi River valley"],
+    ["c. 950","Toltecs build Tula"],
+    ["900s","Toltecs conquer Maya settlements in southern Mexico"],
+    ["1150","Toltecs decline"],
+    ["1200s","Aztecs migrate into central Mexico from the north"],
+    ["c. 1250","Cahokia reaches about 40,000 people"],
+    ["1325","Aztecs found Tenochtitlan on Lake Texcoco"],
+    ["1325–1425","Aztecs conquer from the Gulf of Mexico to the Pacific"],
+    ["early 1400s","Cuzco is still a small tribal center"],
+    ["1438","Pachacuti takes over and builds the Inca Empire"],
+    ["c. 1450","Cahokia abandoned"],
+    ["1471","Yupanqui takes over and conquers the Chimu"],
+    ["c. 1493","Huayna Capac becomes Inca ruler"],
+    ["late 1400s","Aztec Empire in decline"],
+    ["1519","Cortés invades the Aztec Empire"],
+    ["1521","Aztec Empire falls"],
+    ["1529","Sahagún arrives in Mexico"],
+    ["1532","Pizarro arrives during the Inca civil war"],
+    ["1572","Spanish end the Inca Empire"],
+    ["1577","Sahagún's Florentine Codex"]
+  ];
+
+  var CONTENT_Q = [
+    ["Where does most of our knowledge of the Aztecs and Inca come from?",["Their own printed books","Archaeology and writings by Europeans","Chinese travelers","Mississippian records"],1],
+    ["What is the Mississippian culture best known for?",["Stone pyramids","Giant earthen mounds","Floating gardens","Knotted strings"],1],
+    ["Around 1250, how did Cahokia's population compare to London's?",["Much smaller","Bigger, at about 40,000","Exactly the same","Ten times smaller"],1],
+    ["What do bear teeth and turtle shells found at Mississippian sites suggest?",["They hunted bears for fur","Trade covered a wide area","They lived near oceans","They traded with Europe"],1],
+    ["What religion did the Mississippians practice?",["Monotheism","Animism","Buddhism","Ancestor cults only"],1],
+    ["Who ruled each large Mississippian town?",["The Great Speaker","The Great Sun","A council of priests","Pachacuti"],1],
+    ["When a Great Sun died, who took over?",["His oldest son","His sister's son","His wife","An elected priest"],1],
+    ["Which is a theory for the Mississippian decline?",["Mongol invasion","Floods or bad weather causing crop failures","Too many wheeled carts","A volcano in Peru"],1],
+    ["What was the Toltec capital?",["Tenochtitlan","Tula","Cuzco","Cahokia"],1],
+    ["Who ruled the Toltecs?",["Merchants","A warrior aristocracy","Priests only","Women"],1],
+    ["Which god's cult did the Toltec borrow from the Maya?",["Inti","Quetzalcoatl","Huitzilopochtli","Tlaloc"],1],
+    ["Which Mayan city looks a lot like Tula?",["Tikal","Chichén Itzá","Copán","Palenque"],1],
+    ["What is another name for the Aztecs?",["Mexica","Moche","Chimu","Toltec"],0],
+    ["Where did the Aztecs originally come from?",["The Andes","Hunter-gatherers from the north","The Yucatán","Europe"],1],
+    ["When was Tenochtitlan founded?",["950","1325","1438","1519"],1],
+    ["Why did the Aztecs build Tenochtitlan on an island?",["For fishing only","Protection and defense","To be near the ocean","Because of earthquakes"],1],
+    ["About how many people lived in Tenochtitlan at its peak?",["20,000","200,000","2 million","60,000"],1],
+    ["What were chinampas?",["Aztec temples","Floating gardens made from mud and weeds on the lake","Inca roads","Knotted strings"],1],
+    ["Which technology did the Aztecs NOT have?",["Irrigation","Wheeled vehicles","Terraces","Stone pyramids"],1],
+    ["What did the Aztec tribute system require from conquered people?",["Only prayers","Tribute, land, and military service","Learning Quechua","Mita labor"],1],
+    ["What happened to local rulers under the Aztecs?",["They were all killed","They stayed on as tribute collectors","They became pochteca","They were sent to Cuzco"],1],
+    ["What was the Aztec emperor called?",["Great Sun","Great Speaker","Sapa Inca","Khan"],1],
+    ["What type of government did the Aztecs have?",["Democracy","Theocracy","Republic","Feudal monarchy"],1],
+    ["Who were the pochteca?",["Aztec priests","Aztec merchants who traded luxury goods","Inca runners","Toltec warriors"],1],
+    ["Who were at the bottom of Aztec society?",["Pochteca","Slaves","Scribes","Soldiers"],1],
+    ["Why did the Aztecs believe in human sacrifice?",["To scare the Spanish","To repay the gods who sacrificed themselves to create the world","To lower the population","Because the Maya forced them"],1],
+    ["Which god was the Aztec sun and war god?",["Tlaloc","Huitzilopochtli","Xipe Totec","Inti"],1],
+    ["Why might the Spanish have exaggerated Aztec human sacrifice?",["To sell more books","To make the Aztecs seem more deserving of conquest","They didn't understand numbers","The Aztecs asked them to"],1],
+    ["Why did some Aztec husbands take more than one wife?",["Religious law required it","To weave more cloth for tribute","To get more land","To avoid war"],1],
+    ["Which is a reason the Aztecs declined?",["Too much technology","Conquered people resented tribute and sacrifice","They converted to Christianity","They lost their navy"],1],
+    ["Who invaded the Aztec Empire in 1519?",["Pizarro","Cortés","Columbus","Magellan"],1],
+    ["What was the Inca capital?",["Tenochtitlan","Cuzco","Tula","Lima"],1],
+    ["Which Inca ruler turned the Inca into a full empire?",["Huayna Capac","Pachacuti","Yupanqui","Atahualpa"],1],
+    ["What does Pachacuti mean?",["Son of the sun","Transformer or shaker of the earth","Great Speaker","Lord of the roads"],1],
+    ["Which state did Yupanqui conquer?",["Chanca","Chimu","Toltec","Aztec"],1],
+    ["What was the mita system?",["A tax in gold","Mandatory public labor for men 15 to 50","A calendar","A merchant class"],1],
+    ["How many provinces did the Inca split their empire into?",["Two","Four","Ten","Twenty"],1],
+    ["What language did the Inca make conquered people learn?",["Nahuatl","Quechua","Spanish","Mayan"],1],
+    ["What did the Inca economy mostly revolve around?",["Trade by merchants","Agriculture","Mining silver","Fishing"],1],
+    ["How did royal ancestor veneration push Inca expansion?",["Dead rulers needed temples everywhere","Dead rulers kept their land, so new rulers had to conquer more","It required more sacrifices","It banned farming"],1],
+    ["Who was the most important Inca god?",["Quetzalcoatl","Inti","Tlaloc","Huitzilopochtli"],1],
+    ["How did Inca priests figure out what the gods wanted?",["Reading books","Studying coca leaves or watching a spider","Asking the Great Speaker","Looking at the stars only"],1],
+    ["What is a huaca?",["An Inca priest","An object or place with supernatural power","A road","A farm"],1],
+    ["What was waru waru?",["A war tactic","Raised farm beds with channels to control water","A god","A dance"],1],
+    ["What was the quipu used for?",["Weaving","Recording numbers and messages with knotted strings","Measuring time","Catching fish"],1],
+    ["About how long was the Carpa Nan road system?",["2,500 miles","25,000 miles","250 miles","250,000 miles"],1],
+    ["What was happening when Pizarro arrived in 1532?",["A drought","An Inca civil war","An Aztec invasion","A plague of locusts"],1],
+    ["Which statement best matches the Cahokia painting question in the textbook?",["No one lived inside the mound complex","The mound complex was the political and religious center","Few people farmed","Cahokia lacked fresh water"],1],
+    ["Why can the Inca be called the most impressive empire builders of their day?",["They had the most gold","They adapted to every kind of terrain","They conquered the Aztecs","They had iron weapons"],1]
+  ];
+
+  var TF_Q = [
+    ["The Mississippian culture was the first large-scale civilization in North America.",true,"","State-Building"],
+    ["Some Mississippian mounds were about 100 feet tall.",true,"Some covered as much ground as 12 football fields.","Environment"],
+    ["A Mississippian link to the Maya has been proven.",false,"Their farming and art suggest contact, but it has never been proven.","Culture"],
+    ["Cahokia had more people than London around 1250.",true,"About 40,000.","Environment"],
+    ["Mississippian men did most of the farming.",false,"Women did most of the farming and men hunted.","Social Structure"],
+    ["Mississippian religion banned war between their own settlements.",true,"","Culture"],
+    ["Historians know exactly why the Mississippian civilization declined.",false,"They have theories, like floods or European disease.","State-Building"],
+    ["The Toltecs built their capital at Tula around 950.",true,"","State-Building"],
+    ["The Toltecs got the cult of Quetzalcoatl from the Maya.",true,"","Culture"],
+    ["The Aztecs actually came from the same area as the Toltecs.",false,"They claimed the Toltec legacy but came from the north.","State-Building"],
+    ["Tenochtitlan was founded in 1325.",true,"On an island in Lake Texcoco.","Environment"],
+    ["Tenochtitlan was one of the largest cities in the world.",true,"Almost 200,000 people.","Environment"],
+    ["The Aztecs used wheeled carts and pack animals.",false,"They had neither and carried everything themselves.","Environment"],
+    ["Chinampas were floating gardens.",true,"","Environment"],
+    ["The Aztecs replaced conquered rulers with Aztec governors everywhere.",false,"Local rulers stayed on as tribute collectors.","State-Building"],
+    ["The Great Speaker was both political ruler and the gods' representative.",true,"","State-Building"],
+    ["Merchants were at the top of Aztec society.",false,"Land-owning nobles were near the top; the pochteca were in the middle.","Social Structure"],
+    ["Aztecs could be enslaved for not paying debts.",true,"Or as punishment for crimes.","Social Structure"],
+    ["The Aztecs adopted a 365-day calendar from the Maya.",true,"","Culture"],
+    ["Aztec women played no role in the tribute system.",false,"They wove the valuable cloth demanded as tribute.","Social Structure"],
+    ["Grinding maize by hand took 30 to 40 hours a week per family.",true,"","Environment"],
+    ["Conquered peoples were loyal to the Aztecs when the Spanish came.",false,"They resented the Aztecs and were ready to rebel.","State-Building"],
+    ["Cortés invaded the Aztec Empire in 1519.",true,"","State-Building"],
+    ["Cuzco was always a big imperial city.",false,"It was a small tribal center until the early 1400s.","Environment"],
+    ["Pachacuti ruled from 1438 to 1471.",true,"","State-Building"],
+    ["Conquered peoples in the Inca Empire paid heavy tribute.",false,"They did mita labor instead.","Social Structure"],
+    ["The Inca made conquered people learn Quechua.",true,"","Culture"],
+    ["The Inca had lots of market towns run by private traders.",false,"Few markets; the government handled long-distance trade.","Economy"],
+    ["Inca warehouses fed people during famines.",true,"","Economy"],
+    ["New Inca rulers inherited their father's land.",false,"Dead rulers kept their property, so new ones had to conquer more.","Culture"],
+    ["Inca means people of the sun.",true,"","Culture"],
+    ["The Inca practiced human sacrifice as often as the Aztecs.",false,"Scholars think it was much less frequent.","Culture"],
+    ["Huaca could be small things like a stone or a bridge.",true,"","Culture"],
+    ["The quipu was a system of knotted strings.",true,"","Culture"],
+    ["The Carpa Nan helped the Spanish when they invaded.",true,"","Environment"],
+    ["The Inca used mortar to build their stone walls.",false,"Their stones were precisely fitted without mortar.","Culture"],
+    ["Pizarro arrived in 1532 during an Inca civil war.",true,"","State-Building"],
+    ["The Inca Empire ended in 1572.",true,"","State-Building"],
+    ["Kroeber estimated the Americas had about 8.4 million people before Columbus.",true,"","Culture"],
+    ["Charles Mann is a low counter.",false,"He's a high counter who suggested up to 200 million.","Culture"]
+  ];
+
+  var PACKET = [
+    {section:"Introduction", items:[
+      {q:"From what do we get most of our knowledge of the Inca and Aztec?", a:"Archaeology and writings by Europeans who came starting in the late 1400s, like Sahagún."}
+    ]},
+    {section:"The Mississippian Culture", items:[
+      {q:"What is the Mississippian culture most known for making?", a:"Huge earthen mounds, some 100 feet tall and as big as 12 football fields."},
+      {q:"Describe the capital of Cahokia. How did it compare to other cities of the time period?", a:"It was a big trading town in Illinois with about 40,000 people around 1250, more than London had at the time."},
+      {q:"What type of religion did the culture practice?", a:"Animism, the belief that nature is full of spirits."},
+      {q:"Describe its social structure.", a:"The Great Sun was on top, then priests and nobles, then commoners, then slaves, and it was matrilineal so power passed through the mother's side."}
+    ]},
+    {section:"The Toltec", items:[
+      {q:"Who were the Toltec?", a:"A warrior civilization in central Mexico from about 950 to 1150, ruled from Tula by military landholders who collected tribute."},
+      {q:"What culture did they borrow from?", a:"The Maya."},
+      {q:"What cultural features did they borrow?", a:"The cult of Quetzalcoatl and Mayan-style architecture like what you see at Chichén Itzá."}
+    ]},
+    {section:"The Aztecs", items:[
+      {q:"Who were the Aztecs?", a:"Also called the Mexica, they were hunter-gatherers from the north who moved to central Mexico in the 1200s and built a big empire."},
+      {q:"What was the name of the Aztec capital and what made it unique from other cities?", a:"Tenochtitlan, which was built on an island in Lake Texcoco and grew to almost 200,000 people, one of the biggest cities in the world."},
+      {q:"What was a chinampa and why was it an important innovation?", a:"A floating garden made by filling fenced parts of the lake with mud and weeds, which gave them way more land to grow food."},
+      {q:"What type of technology did the Aztecs have?", a:"Chinampas, irrigation ditches, fertilizer, terraces, and stone pyramids, but only hand tools, no wheels, and no pack animals."},
+      {q:"Describe the Aztec tribute system. In what ways is this similar or different from that of the Tang?", a:"Conquered people paid goods, gave up land, and served in the army, and like the Tang it showed dominance without direct rule, but the Aztecs forced way more out of people while Tang tribute was more about honoring the emperor."},
+      {q:"Describe the social structure of the Aztecs.", a:"The Great Speaker on top, then land-owning nobles, scribes and healers, craftspeople and traders, the pochteca, peasants and soldiers, and slaves at the bottom."},
+      {q:"What type of religion did the Aztecs follow? Why did their religion involve human sacrifice?", a:"Polytheism with hundreds of gods, and they believed the gods sacrificed themselves to make the world, so human sacrifice paid them back."},
+      {q:"What role did women play in Aztec society and culture?", a:"Women wove the cloth used for tribute, and while most worked at home, some were priestesses, midwives, healers, merchants, or scribes."},
+      {q:"What were several reasons the Aztecs began to decline?", a:"Low technology made farming hard, they expanded too far chasing sacrifice victims, and conquered people hated them."},
+      {q:"How did the Aztec Empire actually come to an end?", a:"European diseases, Cortés and his army in 1519, and conquered people rebelling all crashed it fast."}
+    ]},
+    {section:"The Inca", items:[
+      {q:"What was the capital of the Incan Empire?", a:"Cuzco, in modern Peru."},
+      {q:"How did the Incan Empire develop?", a:"Pachacuti beat the Chanca in 1438 and turned Cuzco into an empire, then Yupanqui and Huayna Capac kept expanding and organizing it from Ecuador to Chile."},
+      {q:"What was the mita system?", a:"Required public labor where men 15 to 50 did farm work and built roads for the government instead of paying tribute."},
+      {q:"What did the Incan economy primarily revolve around?", a:"Agriculture, with crops like maize and potatoes stored in government warehouses."},
+      {q:"What type of religion did the Inca practice? Describe it.", a:"Polytheism centered on Inti the sun god and royal ancestor veneration, where dead rulers were mummified and kept their property."},
+      {q:"Did the Inca use human sacrifice?", a:"Yes, but only for big crises like famines or war defeats, and way less than the Aztecs."},
+      {q:"How was the Incan religion also animistic?", a:"They believed huaca, things like rivers, mountain peaks, stones, and bridges, had supernatural powers."},
+      {q:"What is waru waru?", a:"Raised farming beds with channels that redirected rain to stop erosion and saved water for dry times."},
+      {q:"What other types of achievements did the Inca accomplish?", a:"The quipu, copper and bronze tools, mortarless stone buildings, terraces, and about 25,000 miles of roads."},
+      {q:"How did the Incan Empire fall?", a:"Pizarro showed up in 1532 during a civil war after Huayna Capac died, and with disease weakening them, the Spanish finished them off by 1572."}
+    ]},
+    {section:"Textbook Short-Answer Practice", items:[
+      {q:"SAQ 1A: Give one piece of evidence that the Inca invested heavily in public works.", a:"They built about 25,000 miles of roads connecting Cuzco to the rest of the empire."},
+      {q:"SAQ 1B: Give one specific example of how the Inca adapted to different climates or terrains.", a:"They cut terraces into mountainsides and used waru waru beds to control water."},
+      {q:"SAQ 1C: Give one example of how the Inca ruler and the Moche ruler ran their governments differently.", a:"The Inca ruler ran one centralized empire with four provinces and governors, while the Moche were split into separate local valley states."},
+      {q:"SAQ 2A: Identify and explain one method the Aztecs used to keep subject peoples under control.", a:"They put Aztec warriors and an official in each province capital to make sure tribute got collected."},
+      {q:"SAQ 2B: Identify and explain two reasons why people under the Aztecs were ready to rebel when the Europeans arrived.", a:"They hated paying heavy tribute, and they hated having their people taken as sacrifice victims."}
+    ]}
+  ];
+
+  return {
+    id:"14", num:14, short:"Americas",
+    title:"The Americas on the Eve of Globalization", years:"700–1572 C.E.",
+    pages:"256–270", heading:"Chapter 14 Study Hub",
+    blurb:"The Mississippian mound builders, the Toltecs, the Aztecs of Tenochtitlan, and the Inca of the Andes, right before Europeans showed up.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
+  };
+})());
+
 (function(){
   "use strict";
 
