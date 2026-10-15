@@ -362,6 +362,25 @@
     border:1px dashed var(--accent-2); border-radius:8px; padding:7px 12px; cursor:pointer; }
   .packet-reveal:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
   .packet-item.revealing .packet-a{ animation:rise .35s var(--ease-out) both; }
+  .tbadge{ font-family:var(--font-mono); font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:999px; padding:4px 9px; }
+  .packet-note{ color:var(--ink-soft); font-size:0.88rem; margin:-4px 0 12px; }
+  .tqa-note{ margin:22px 0 14px; }
+  #tqaList .packet-item{ border-left-color:var(--accent); }
+  .packet-list.teacher .packet-item{ border-left-color:var(--accent); }
+
+  /* AP value badges (teacher ratings) */
+  .apb{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.06em; border-radius:6px; padding:3px 7px;
+    white-space:nowrap; border:1px solid transparent; font-variant-numeric:tabular-nums; }
+  .apb.t3{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
+  .apb.t2{ color:var(--accent-2); background:var(--accent-2-soft); border-color:var(--accent-2); }
+  .apb.t1{ color:var(--ink-soft); border-color:var(--border); }
+  .apb.tt{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
+  .vocab-item .vtags{ display:flex; gap:6px; align-items:center; flex:none; align-self:center; }
+  .vocab-item .vtags .vcat{ align-self:auto; }
+  .fc-ap{ position:absolute; bottom:12px; left:15px; }
+  .sheet-card.teacher{ border-color:var(--accent-line); background:linear-gradient(180deg, var(--accent-soft), transparent 70%), var(--surface); }
+  @media (max-width:640px){ .vocab-item .vtags{ align-self:flex-start; } }
 
   /* =========================================================
      Chapter picker
@@ -472,6 +491,7 @@
       <button role="tab" id="tab-quiz" aria-selected="false" aria-controls="panel-quiz" tabindex="-1">Quiz</button>
       <button role="tab" id="tab-time" aria-selected="false" aria-controls="panel-time" tabindex="-1">Timeline</button>
       <button role="tab" id="tab-packet" aria-selected="false" aria-controls="panel-packet" tabindex="-1">Packet Answers</button>
+      <button role="tab" id="tab-tqa" aria-selected="false" aria-controls="panel-tqa" tabindex="-1" hidden>Teacher Q&amp;A</button>
     </nav></div>
   </div>
 
@@ -493,6 +513,10 @@
           <div class="setting">
             <span class="label">Theme</span>
             <div class="seg" id="vocabCatSeg"></div>
+          </div>
+          <div class="setting" id="vocabApSet" hidden>
+            <span class="label" id="vocabApLabel">AP value</span>
+            <div class="seg" id="vocabApSeg"></div>
           </div>
         </div>
       </div>
@@ -521,6 +545,8 @@
             <div class="seg" id="fcStarSeg">
               <button data-val="all" aria-pressed="true">All cards</button>
               <button data-val="starred" aria-pressed="false">★ Starred only</button>
+              <button data-val="teacher" aria-pressed="false" id="fcTeachBtn" hidden>Teacher’s terms</button>
+              <button data-val="hi" aria-pressed="false" id="fcApBtn" hidden>AP 8+</button>
             </div>
           </div>
         </div>
@@ -535,6 +561,7 @@
               <span class="fc-label" id="fcFrontLabel">Term</span>
               <button class="fc-star" id="fcStarBtn" aria-pressed="false" aria-label="Star this card" title="Star for review">☆</button>
               <div class="fc-text" id="fcFront"></div>
+              <span class="fc-ap" id="fcAp"></span>
             </div>
             <div class="fc-face fc-back">
               <span class="fc-label" id="fcBackLabel">Definition</span>
@@ -639,6 +666,28 @@
         <p class="packet-count" id="packetCount" aria-live="polite"></p>
       </div>
       <div id="packetList"></div>
+    </section>
+
+    <!-- TEACHER Q&A -->
+    <section id="panel-tqa" class="panel" role="tabpanel" aria-labelledby="tab-tqa" hidden>
+      <div class="settings">
+        <div class="packet-tools">
+          <div class="setting">
+            <label class="label" for="tqaSearch">Search questions</label>
+            <input type="text" id="tqaSearch" placeholder="Search your teacher's questions…" autocomplete="off">
+          </div>
+          <div class="setting" style="flex:0 0 auto;">
+            <span class="label">Answers</span>
+            <div class="seg" id="tqaModeSeg">
+              <button data-val="show" aria-pressed="true">Show all</button>
+              <button data-val="hide" aria-pressed="false">Quiz me</button>
+            </div>
+          </div>
+        </div>
+        <p class="packet-count" id="tqaCount" aria-live="polite"></p>
+      </div>
+      <p class="packet-note tqa-note">Straight from your teacher's Knowt set, so expect these on the test.</p>
+      <div id="tqaList"></div>
     </section>
   </main>
 </div>
@@ -1105,8 +1154,35 @@ CH.push((function(){
     ["chivalry","The European knight's code of duty to countrymen, God, and women — Japan's rough counterpart to bushido.","Culture"],
     ["gunpowder","Explosive powder discovered by 9th-century Chinese researchers hunting an elixir of long life; it spread across Eurasia via traders and the Mongols.","Culture"],
     ["Marco Polo","The Venetian traveler whose account described Hangzhou's huge markets, widespread silk, and paper money.","Culture"],
-    ["Joseph Needham","British scholar whose Science and Civilization in China proved the Chinese were making guns by the 10th century.","Culture"]
+    ["Joseph Needham","British scholar whose Science and Civilization in China proved the Chinese were making guns by the 10th century.","Culture"],
+    // ---- Added from the teacher's Knowt set ----
+    ["collapse of the Sui", "Heavy taxes, forced labor, failed wars in Korea, and harsh rule sparked rebellions in the early 600s. Emperor Yang was killed in 618 and the Tang took over.", "State-Building"],
+    ["Great Wall (Sui)", "The Sui repaired and extended old northern walls in the late 500s and early 600s to keep out nomads, but the taxes and forced labor made people angry.", "State-Building"],
+    ["Tang infrastructure", "Roads, canals, postal stations, and guarded routes from 618 to 907 that moved officials, soldiers, news, taxes, and goods faster.", "State-Building"],
+    ["Tang-Song golden age", "618 to 1279, when China hit huge highs in government, farming, cities, literature, manufacturing, trade, and tech.", "Culture"],
+    ["Mongol conquest of Song", "Genghis Khan's successors and then Kublai Khan slowly took northern and southern China, finishing in 1279 and folding China into a bigger Eurasian empire.", "State-Building"],
+    ["Chinese social hierarchy", "Officials and scholar landowners on top, then farmers and artisans, with merchants ranked low because thinkers saw trade as profiting off others. Rich merchants still had real influence.", "Social"],
+    ["Buddhism's arrival in China", "Buddhism came from South Asia through Central Asian trade and missionary routes starting in the Han era, and was deeply rooted by the Tang.", "Culture"],
+    ["Buddhist monasteries", "Landholding religious communities that offered worship, school, charity, and lodging. Their tax breaks and wealth worried officials, leading to closures in the persecution of 845.", "Culture"],
+    ["syncretism", "Blending traditions from different cultures. Chan Buddhism and Neo-Confucianism show how imported beliefs got adapted instead of copied.", "Culture"],
+    ["Tang-Song agricultural improvements", "Manure, irrigation pumps, waterwheels, terraces, heavy plows, and better crops grew more food, which fed population growth, cities, and markets.", "Economics"],
+    ["commercialization", "Making crops and goods to sell instead of just using them at home, especially under the Song.", "Economics"],
+    ["iron and steel production", "Mining and better furnaces fueled by coal and coke boosted metal output in the Tang and Song, giving stronger tools, weapons, and bridges.", "Economics"],
+    ["porcelain and silk", "High-quality Chinese products exported all over Afro-Eurasia.", "Economics"],
+    ["Tang-Song trade networks", "Chinese merchants and goods moved on both the Silk Roads and the Indian Ocean, carrying ceramics, textiles, ideas, religions, and technology.", "Economics"],
+    ["urbanization", "Cities growing as government, manufacturing, and trade centers, especially under the Song.", "Social"],
+    ["patriarchy", "A system giving men, especially older men, more power over property, family, school, and government jobs.", "Social"],
+    ["Tang-Song literature", "More wealth, schooling, and printing from 618 to 1279 led to tons of poetry, history, and essays. Exam takers had to master the classic texts.", "Culture"],
+    ["Korean aristocracy", "Korean noble families kept their power even after copying Chinese government, unlike China's exam-based system.", "Social"],
+    ["Chinese influence on Korea", "Being right next to China, Korea borrowed writing, Buddhism, Confucianism, and bureaucracy but stayed independent.", "State-Building"],
+    ["Vietnamese resistance to China", "China occupied Vietnam for centuries and brought writing, Confucian government, and Buddhism, but the Vietnamese kept rebelling and won independence in 939.", "State-Building"],
+    ["Chinese influence on Vietnam", "Chinese writing, bureaucracy, Confucian learning, Buddhism, and tech stuck around after independence, but Vietnam kept its own language and identity.", "Culture"],
+    ["Japan and Chinese influence", "Being an island let Japan borrow selectively, taking writing, Buddhism, and court practices but never a Chinese-style exam bureaucracy.", "Culture"],
+    ["Kamakura shogunate", "Japan's first long-lasting warrior government, 1185 or 1192 to 1333, with the emperor kept around for ceremony.", "State-Building"]
   ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  // Terms that appear in the teacher's Knowt set "Amsco Chapter 10"
+  var TEACHER = ["Sui Dynasty", "Grand Canal", "Tang Dynasty", "equal-field system", "civil service examination", "An Lushan", "Chang'an", "Song Dynasty", "Southern Song Dynasty", "Yuan Dynasty", "scholar gentry", "Confucianism", "Xuanzang", "Neo-Confucianism", "Chan (Zen) Buddhism", "Middle Kingdom", "tributary system", "kowtow", "sinification", "Champa rice", "proto-industrialization", "Hangzhou", "flying cash", "paper money", "magnetic compass", "rudder", "junk", "gunpowder", "wood-block printing", "foot binding", "nuclear family", "polygyny", "landscape painting", "Silla Kingdom", "guerilla warfare", "Shotoku Taishi", "Taika Reforms", "Heian", "Murasaki Shikibu", "The Tale of Genji", "Minamoto clan", "feudalism", "shogun", "samurai", "daimyo", "collapse of the Sui", "Great Wall (Sui)", "Tang infrastructure", "Tang-Song golden age", "Mongol conquest of Song", "Chinese social hierarchy", "Buddhism's arrival in China", "Buddhist monasteries", "syncretism", "Tang-Song agricultural improvements", "commercialization", "iron and steel production", "porcelain and silk", "Tang-Song trade networks", "urbanization", "patriarchy", "Tang-Song literature", "Korean aristocracy", "Chinese influence on Korea", "Vietnamese resistance to China", "Chinese influence on Vietnam", "Japan and Chinese influence", "Kamakura shogunate"];
 
   var SHEET = [
     {name:"Sui Dynasty", dates:"581–618", items:[
@@ -1418,7 +1494,7 @@ CH.push((function(){
     pages:"180–200", heading:"Chapter 10 Study Hub",
     blurb:"Tang & Song China, plus Japan, Korea, and Vietnam in their orbit.",
     legacyPrefix:"mk.",
-    cats:CATS, vocab:VOCAB, sheet:SHEET,
+    cats:CATS, vocab:VOCAB, teacher:TEACHER, sheet:SHEET,
     tables:[
       {title:"China's neighbors, compared", head:["Country","Relationship with China","What they took","What they kept / resisted"], rows:COMPARE1},
       {title:"Japanese vs. European feudalism", head:["","Japan","Europe"], rows:COMPARE2}
@@ -1491,8 +1567,19 @@ CH.push((function(){
     // ---- Social Structure ----
     ["jatis","Subcastes that worked like workers' guilds. Muslim merchants fit into the caste system through them based on their jobs.","Social Structure"],
     ["caste system","India's social hierarchy and its strongest historical continuity. It kept a divided land stable and made room for newcomers.","Social Structure"],
-    ["low-caste converts","Low-caste Hindus who became Muslim hoping to move up. Most stayed stuck because they still lacked education and better jobs.","Social Structure"]
+    ["low-caste converts","Low-caste Hindus who became Muslim hoping to move up. Most stayed stuck because they still lacked education and better jobs.","Social Structure"],
+    // ---- Added from the teacher's Knowt set ----
+    ["Southern India", "More stable after 550, where the Chola and Vijayanagar kingdoms rose after the Gupta fell.", "State-Building"],
+    ["Northern India", "Struggled to stay stable after 550 because Muslim armies kept invading.", "State-Building"],
+    ["Muslim merchants", "The group that dominated Indian Ocean sea trade and first brought Islam to South Asia.", "Economics"],
+    ["South Asia (India)", "Exported textiles, cotton, and spices like pepper into the Indian Ocean trade.", "Economics"],
+    ["Southeast Asia", "Modern Malaysia and Indonesia, best known for exporting spices like nutmeg and cloves.", "Economics"],
+    ["East Asia (China)", "Best known for sending silk and porcelain into the Indian Ocean trade.", "Economics"],
+    ["syncretism", "Blending different cultural, religious, or language elements into something new, like Urdu or the Taj Mahal.", "Culture"]
   ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  // Terms that appear in the teacher's Knowt set "Amsco Chapter 11"
+  var TEACHER = ["Vijayanagar", "Delhi Sultanate", "jizya", "Indian Ocean Basin", "monsoon winds", "Calicut", "Melaka", "Swahili city-states", "Bhakti Movement", "Guru Kabir", "Sufis", "jatis", "Qutab Minar", "Urdu", "Angkor Kingdom", "Angkor Wat", "Taj Mahal", "lateen sails", "proselytizing religion", "diasporic communities", "Dar al-Islam", "Southern India", "Northern India", "Muslim merchants", "South Asia (India)", "Southeast Asia", "East Asia (China)", "syncretism"];
 
   var SHEET = [
     {name:"Southern India", dates:"more stable", items:[
@@ -1813,14 +1900,14 @@ CH.push((function(){
     title:"South Asia and Southeast Asia", years:"600–1450 C.E.",
     pages:"202–213", heading:"Chapter 11 Study Hub",
     blurb:"The Delhi Sultanate, the Chola and Vijayanagar, Angkor and Melaka, all tied together by Indian Ocean trade.",
-    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    cats:CATS, vocab:VOCAB, teacher:TEACHER, sheet:SHEET, tables:TABLES,
     timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
   };
 })());
 
 CH.push((function(){
 
-  var CATS = ["State-Building","Technology","Environment","Culture"];
+  var CATS = ["State-Building","Technology","Environment","Economy","Culture"];
 
   var VOCAB = [
     // ---- State-Building ----
@@ -1880,8 +1967,54 @@ CH.push((function(){
     ["religious tolerance","Mongol policy of letting people practice any religion, unusual for the 1200s.","Culture"],
     ["shamanism","The Mongols' own religion based on nature spirits. They did not force it on anyone.","Culture"],
     ["Matthew Paris","English monk who wrote about Mongol destruction in 1240 without ever seeing it himself.","Culture"],
-    ["Mongol women","Women who tended herds, rode horses, wore leather pants like men, could remarry, and could start a divorce.","Culture"]
+    ["Mongol women","Women who tended herds, rode horses, wore leather pants like men, could remarry, and could start a divorce.","Culture"],
+    // ---- Added from the teacher's Knowt set ----
+    ["Mongol Empire", "The empire Genghis Khan and his descendants built by conquest, connecting most of Eurasia. Biggest land empire in history.", "State-Building"],
+    ["pastoral nomadism", "Way of life based on herding animals and moving between pastures, like the Mongols on the steppe.", "Environment"],
+    ["Tatars", "Neighboring people who were rivals of the Mongol clans before Temujin united them.", "State-Building"],
+    ["Jin Empire", "The state the Jurchens ran in northern China, which Genghis Khan attacked.", "State-Building"],
+    ["universal ruler", "What the title Genghis Khan means, the name Temujin got in 1206.", "State-Building"],
+    ["meritocracy", "Promoting people based on skill instead of family. Temujin did this with his followers.", "State-Building"],
+    ["siege warfare", "Attacking walled cities. The Mongols got good at it by using engineers from conquered peoples.", "Technology"],
+    ["Silk Roads", "Overland trade routes linking East Asia and western Eurasia that boomed under Mongol protection.", "Economy"],
+    ["Uyghur script", "Writing system the Mongols borrowed from the Uyghurs to run their empire on paper.", "Culture"],
+    ["tribute", "Payments conquered rulers had to make to show a stronger power was in charge. The Golden Horde collected it from Russian princes.", "Economy"],
+    ["indirect rule", "Governing through local leaders who stay in place, like the Golden Horde collecting payments through Russian princes.", "State-Building"],
+    ["Abbasid Caliphate", "Islamic caliphate that lost Baghdad and its caliph to Hulegu's Mongols in 1258.", "State-Building"],
+    ["Baghdad", "Abbasid capital that the Mongols wrecked in 1258.", "State-Building"],
+    ["Persia", "Region, modern Iran, where the Il-khanate leaned on experienced Persian officials to govern and collect taxes.", "State-Building"],
+    ["Islam", "Religion that many Il-khanate rulers eventually converted to.", "Culture"],
+    ["Song Dynasty", "Chinese dynasty in the south that held off the Mongols for decades before falling in 1279.", "State-Building"],
+    ["civil service examinations", "Traditional Chinese tests to get into government. The Yuan suspended them, which made Confucian scholars mad.", "State-Building"],
+    ["Confucianism", "Chinese tradition of learning that trained scholar-officials. Its scholars lost influence under the Yuan.", "Culture"],
+    ["Buddhism", "Religion that got favored under the Yuan after some Chinese officials had pushed back on it before.", "Culture"],
+    ["Daoism", "Chinese religious and philosophical tradition that also benefited from Yuan tolerance.", "Culture"],
+    ["paper money", "Portable money the Mongols pushed in China to make trade easier across a huge territory.", "Economy"],
+    ["Japan", "Island country that fought off two Yuan invasions with help from typhoons.", "State-Building"],
+    ["gunpowder", "Explosive technology from East Asia that spread more widely across Eurasia through Mongol contacts.", "Technology"],
+    ["Arabic numerals", "Number system tied to Islamic scholars that spread into wider European use.", "Culture"],
+    ["artisans", "Skilled craftspeople the Mongols usually spared and relocated to work for the empire.", "Economy"],
+    ["merchants", "Traders who got unusually high status under many Mongol rulers because they kept exchange going.", "Economy"],
+    ["bubonic plague", "Disease that spread along connected trade routes and caused a huge pandemic across Eurasia.", "Environment"],
+    ["cultural diffusion", "The spread of ideas, practices, and technologies between societies through contact.", "Culture"]
   ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  // Teacher's AP Value ratings, 1 to 10, from the Knowt set "Mongol Specifics (CH 13)"
+  var AP = {
+    "steppes":7, "Gobi Desert":4, "pastoral nomadism":8, "yurt":4, "Tatars":2, "Jurchens":5, "Jin Empire":5,
+    "Temujin":6, "Genghis Khan":10, "khan":6, "universal ruler":4, "kuriltai":3, "meritocracy":7,
+    "Mongol Empire":10, "tumens":3, "heavy and light cavalry":6, "feigned retreat":5, "siege warfare":7,
+    "siege weapons":4, "Kara Khitai Empire":1, "Khwarazm Empire":3, "Karakorum":3, "Pax Mongolica":10,
+    "religious tolerance":9, "Silk Roads":10, "yam system":8, "Uyghur script":8, "Ogodei":3, "khanate":10,
+    "Chaghatai Khanate":5, "Batu":5, "Golden Horde":8, "Kiev":4, "tribute":8, "indirect rule":9,
+    "Moscow":6, "Battle of Kulikovo":3, "Sarai":2, "Hulegu":5, "Abbasid Caliphate":8, "Baghdad":7,
+    "Il-khanate":7, "Persia":8, "Mamluks":7, "Baibars":2, "Islam":10, "Kublai Khan":9, "Song Dynasty":9,
+    "Yuan Dynasty":10, "Dadu":4, "civil service examinations":9, "Confucianism":10, "Buddhism":9,
+    "Daoism":7, "Marco Polo":10, "paper money":9, "Japan":7, "typhoon":3, "White Lotus Society":3,
+    "Zhu Yuanzhang":5, "Ming Dynasty":9, "Tamerlane":6, "gunpowder":10, "Arabic numerals":8,
+    "artisans":6, "merchants":8, "bubonic plague":10, "Black Death":10, "cultural diffusion":10,
+    "Tangut Empire":1
+  };
 
   var SHEET = [
     {name:"Before the conquests", dates:"1100s", items:[
@@ -2117,6 +2250,59 @@ CH.push((function(){
     ["All historians agree Genghis Khan was only a destroyer.",false,"Others see him as an empire builder, and one view says he was both.","Culture"]
   ];
 
+  // Teacher's Q&A Knowt set, shown in its own tab
+  var TEACHER_QA = [
+      {q:"How did life on the Central Asian steppe shape early Mongol society?", a:"The dry land pushed them into mobile herding, portable homes, expert riding, and working together within and between clans."},
+      {q:"Why was a yurt well suited to Mongol life?", a:"It was a felt tent they could take down and move whenever families went to new pasture."},
+      {q:"What expectation about horsemanship applied to Mongol women as well as men?", a:"Everyone was expected to ride well because nomadic life demanded it."},
+      {q:"Why did neighboring kingdoms attract Mongol raiders and conquerors?", a:"Settled states had cities, trade routes, and luxury goods the steppe didn't have."},
+      {q:"How did Temujin build power before establishing an empire?", a:"He made alliances, beat rival groups, and locked in loyalty through personal relationships."},
+      {q:"Why did Temujin sometimes promote capable outsiders over relatives?", a:"He cared more about skill and loyalty than family when picking commanders."},
+      {q:"What happened at the Mongol assembly in 1206?", a:"The chiefs recognized Temujin as their ruler and he took the title Genghis Khan."},
+      {q:"How could the Mongols' reputation affect a campaign before a battle began?", a:"Cities heard how brutally resisters got punished, so many just surrendered without a fight."},
+      {q:"How did the Mongol army's organization help it operate across vast distances?", a:"Units built from groups of ten made a clear chain of command, so huge armies were easy to coordinate."},
+      {q:"What was the purpose of a feigned retreat?", a:"Mongols would fake running away to pull enemies out of position, then other Mongol troops would hit them."},
+      {q:"Besides fast riding, what preparation gave Mongol commanders an advantage?", a:"They scouted the terrain and enemy positions and used messengers to coordinate."},
+      {q:"How did the Mongols become effective attackers of fortified cities?", a:"They used engineers from conquered peoples and picked up siege weapons that could break through walls."},
+      {q:"Why did Mongol conquerors often preserve the lives of skilled workers?", a:"Craftspeople, miners, engineers, and literate people could make the army stronger and help run conquered land."},
+      {q:"What did the Mongol relay network make possible?", a:"Riders and stations carried messages across huge distances, so rulers could coordinate the empire and people could travel."},
+      {q:"Why did Genghis Khan draw on Chinese and Islamic advisers at Karakorum?", a:"They knew how to build a capital and run an empire way bigger than a steppe alliance."},
+      {q:"What does Pax Mongolica describe?", a:"The relative safety and boom in trade across Mongol-controlled Eurasia after the conquests."},
+      {q:"Why should Pax Mongolica not be taken to mean that Mongol expansion was peaceful?", a:"Trade grew under Mongol protection, but the conquests that set it up killed tons of people and destroyed a lot."},
+      {q:"How could religious tolerance help Mongol rulers govern?", a:"It cut down on resistance from people with different beliefs, which made a diverse empire easier to hold."},
+      {q:"What changed under Ögedei after Genghis Khan's death?", a:"Expansion kept going, and Ögedei also built up the bureaucracy and the capital at Karakorum."},
+      {q:"Why did one Mongol empire become several regional khanates?", a:"Genghis Khan's descendants ruled different areas, and their local situations and interests kept drifting apart."},
+      {q:"Which branch of the Mongol expansion reached the Russian principalities?", a:"Batu's Golden Horde, which conquered the principalities and made their rulers pay up."},
+      {q:"Why did the Golden Horde usually govern Russian lands through local princes?", a:"Local rulers could collect tribute for them, so the Mongols didn't have to settle all over the forests."},
+      {q:"How did Moscow's role under Mongol rule help it gain power?", a:"Its rulers collected tribute and used the wealth and influence they built up to organize resistance."},
+      {q:"Why is the Battle of Kulikovo important without being the immediate end of Mongol rule?", a:"Moscow's forces won big in 1380, but Mongol influence still hung around after that."},
+      {q:"How did Mongol domination affect Russia's relationship with Western Europe?", a:"It cut a lot of ties to the West, so Russia's politics and culture grew in their own direction."},
+      {q:"What made the Mongol capture of Baghdad in 1258 a major turning point?", a:"Hulegu destroyed the Abbasid capital and killed the caliph, ending caliphate rule from Baghdad."},
+      {q:"What checked further Mongol advances in the Middle East in 1260?", a:"The Mamluks beat a Mongol army in Palestine, showing the Mongols had limits."},
+      {q:"Why did the Il-khanate rely on Persian officials?", a:"They already knew how to run the area and could help the Mongols govern and collect taxes."},
+      {q:"How does the Il-khanate complicate a simple claim that Mongol religious policy was always tolerant?", a:"After its rulers converted to Islam, early tolerance turned into persecution of some religious minorities."},
+      {q:"Why was the conquest of Song China especially demanding for Kublai Khan?", a:"The Song was a big, rich, organized state that held off Mongol armies for decades."},
+      {q:"How did Kublai Khan present Mongol rule as a Chinese dynasty?", a:"He started the Yuan Dynasty and ruled from Dadu, where Beijing is now."},
+      {q:"What tension ran through Yuan government?", a:"They used parts of Chinese government but kept a lot of power for Mongols and favored outsiders."},
+      {q:"Why did ending the civil service examinations anger many Chinese scholars?", a:"It cut off a traditional way for Confucian-trained people to get government jobs."},
+      {q:"How did Yuan religious policy differ from its treatment of many Confucian officials?", a:"The Yuan made room for lots of religions while its hiring pushed out a lot of Confucian scholar-officials."},
+      {q:"Why is Yuan China difficult to describe only as a period of decline?", a:"Mongol rule caused political tension, but trade grew and art and literature kept thriving."},
+      {q:"What makes Marco Polo's account useful but insufficient on its own for studying Yuan China?", a:"It shows an outsider's view of China's wealth and cities, but one traveler's story has to be checked against other evidence."},
+      {q:"How could paper money support commerce under Mongol rule in China?", a:"It gave merchants an easy way to pay across a huge territory."},
+      {q:"Why did Mongol attempts to conquer Japan fail despite their success on land?", a:"Crossing the sea was hard and huge storms wrecked the invasion fleets."},
+      {q:"What role did the White Lotus Society play near the end of Yuan rule?", a:"It helped organize the opposition to Mongol rule in China."},
+      {q:"Who founded the dynasty that replaced the Yuan in 1368?", a:"Zhu Yuanzhang, who led the revolt and started the Ming Dynasty."},
+      {q:"Why did Mongol power weaken at different rates across Eurasia?", a:"Each khanate had its own enemies and problems, so they didn't all fall at once."},
+      {q:"Why was a shared writing system useful to Mongol rulers?", a:"A script borrowed from the Uyghurs made written government across the empire way more practical."},
+      {q:"How did Mongol attitudes toward merchants and artisans support imperial rule?", a:"Rulers valued the trade, skills, and useful goods those groups brought in."},
+      {q:"Why did Silk Road commerce grow under Mongol domination?", a:"The Mongols guarded the routes and linked areas that used to be run by competing powers."},
+      {q:"How did Mongol conquest help spread military knowledge?", a:"Their armies pulled in experts and techniques from conquered peoples, which spread things like siege methods and gunpowder."},
+      {q:"How could the same routes that carried goods create a public-health danger?", a:"Trade and armies also carried plague fleas and infected hosts across connected regions."},
+      {q:"What weaknesses in some European defenses did Mongol warfare expose?", a:"Fast cavalry could outmaneuver heavily armored knights, and Mongol siege methods threatened walled cities."},
+      {q:"Why should a historian be cautious with Matthew Paris's description of Mongol destruction?", a:"He wrote from England without seeing the conquests, so his account shows how rumors and fears spread as much as what really happened."},
+      {q:"What evidence supports both harsh and favorable assessments of Mongol rule?", a:"Massacres and destruction back up the criticism, while more trade, new government ideas, and religious tolerance explain their bigger impact."}
+  ];
+
   var PACKET = [
     {section:"The Mongols and Their Surroundings", items:[
       {q:"Describe the life of the pastoralist Mongols of the 12th century.", a:"They were nomadic clans north of the Gobi Desert who herded goats and sheep, hunted, lived in yurts, owned very little, and expected everyone to ride horses."},
@@ -2160,8 +2346,8 @@ CH.push((function(){
     title:"The Mongols and Interregional Empires", years:"1200–1450 C.E.",
     pages:"240–253", heading:"Chapter 13 Study Hub",
     blurb:"Genghis Khan and his grandsons build the biggest land empire ever, then split it into the Golden Horde, the Il-khanate, the Chaghatai Khanate, and the Yuan.",
-    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
-    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
+    cats:CATS, vocab:VOCAB, ap:AP, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET, teacherQA:TEACHER_QA
   };
 })());
 
@@ -2194,14 +2380,14 @@ CH.push((function(){
     ["Lake Texcoco","Swampy lake in the Valley of Mexico where the Aztecs built Tenochtitlan and their floating gardens.","Environment"],
     ["chinampas","Aztec floating gardens built by fencing off parts of the lake with woven sticks and filling them with mud and weeds to make farmland.","Environment"],
     ["Cuzco","City in modern Peru that went from a small tribal center to the Inca capital in about 55 years.","Environment"],
-    ["Carpa Nan","The textbook's name for the Inca road system, about 25,000 miles built with captive labor and used mostly by the government and army.","Environment"],
+    ["Qhapaq Ñan (Carpa Nan)","The Inca road network, about 25,000 miles built with captive labor and used mostly by the government and army. The textbook spells it Carpa Nan.","Environment"],
     ["earthen mounds","Huge Mississippian dirt mounds, some 100 feet tall and as big as 12 football fields, shaped like pyramids, ovals, or animals.","Environment"],
-    ["terraces","Flat steps cut into mountainsides for farming. Both the Aztecs and the Inca used them to stop erosion.","Environment"],
+    ["terrace farming","Flat steps cut into mountainsides for farming. Both the Aztecs and the Inca used them to stop erosion.","Environment"],
     ["Machu Picchu","Inca mountain site near Cuzco shown on the textbook's Inca map.","Environment"],
 
     // ---- Social Structure ----
     ["matrilineal society","A society where your status comes from your mother's side. When a Mississippian Great Sun died, his sister's son took over, not his own son.","Social Structure"],
-    ["mita system","Inca mandatory public service. Men from 15 to 50 did farm work, built roads, and other labor for the government instead of paying tribute.","Social Structure"],
+    ["mit'a system","Inca mandatory public service. Men from 15 to 50 did farm work, built roads, and other labor for the government instead of paying tribute.","Social Structure"],
     ["Aztec social classes","Great Speaker, then land-owning nobles, scribes and healers, craftspeople and traders, the pochteca, peasants and soldiers, and slaves at the bottom.","Social Structure"],
     ["Aztec slaves","Mostly war captives, plus Aztecs who did not pay debts or committed crimes. Some were used as human sacrifices.","Social Structure"],
     ["Aztec women","They wove the cloth demanded as tribute, so some husbands took more than one wife. A few were priestesses, midwives, healers, merchants, or scribes.","Social Structure"],
@@ -2209,7 +2395,7 @@ CH.push((function(){
     // ---- Economy ----
     ["pochteca","Special Aztec merchant class that traded luxury goods.","Economy"],
     ["Aztec trade","Trade reached from present-day San Luis Obispo to Costa Rica, swapping cloth, cacao, and rubber balls for shells, feathers, and precious stones.","Economy"],
-    ["Inca warehouses","Storehouses where rulers kept part of everyone's crops to feed people during famines.","Economy"],
+    ["Inca storehouses","Storehouses where rulers kept part of everyone's crops to feed people during famines.","Economy"],
 
     // ---- Culture ----
     ["Quetzalcoatl","God of wind and knowledge, shown as a feathered serpent. The Toltec borrowed his cult from the Maya and the Aztecs worshipped him too.","Culture"],
@@ -2228,8 +2414,53 @@ CH.push((function(){
     ["quipu","Inca knotted strings used to record numbers for trade and engineering and to send messages.","Culture"],
     ["waru waru","Inca raised farming beds with channels that redirected rain to stop flood erosion and saved water for dry times.","Culture"],
     ["Fray Bernardino de Sahagún","Spanish missionary who came to Mexico in 1529, learned the Aztec language, and studied Aztec culture for about 30 years.","Culture"],
-    ["Florentine Codex","Sahagún's 1577 record of Aztec life, an early example of anthropology.","Culture"]
+    ["Florentine Codex","Sahagún's 1577 record of Aztec life, an early example of anthropology.","Culture"],
+    // ---- Added from the teacher's Knowt set ----
+    ["Mesoamerica","Region covering central Mexico and much of Central America, where the Maya and Mexica built their states.","Environment"],
+    ["Andes","Mountain range in western South America that was the core of the Inca Empire.","Environment"],
+    ["maize","Corn. The main American grain that fed big settlements and later spread across the Atlantic.","Economy"],
+    ["Chaco","Ancestral Pueblo center in present-day New Mexico, known for its great houses and connections across the Southwest.","Environment"],
+    ["Mesa Verde","Ancestral Pueblo site in present-day Colorado known for its cliff dwellings.","Environment"],
+    ["Ancestral Pueblo peoples","Ancestors of today's Pueblo peoples who built the big communities at Chaco and Mesa Verde.","State-Building"],
+    ["city-states","Independent cities that each had their own ruler. The Maya were set up this way instead of as one big empire.","State-Building"],
+    ["Olmecs","Early Mesoamerican civilization that came before the Toltecs and Maya.","State-Building"],
+    ["Triple Alliance","The alliance of Tenochtitlan, Texcoco, and Tlacopan that drove Mexica expansion.","State-Building"],
+    ["irrigation","Moving water to fields through channels people build. The Aztecs and Inca both used it.","Environment"],
+    ["indirect rule","Governing through local leaders who stay in office, like when the Mexica let conquered rulers keep their jobs and collect tribute.","State-Building"],
+    ["polytheism","Worshipping many gods. The Mexica and Inca were both polytheistic.","Culture"],
+    ["autosacrifice","Drawing your own blood as an offering to the gods.","Culture"],
+    ["pictographic writing","Writing with pictures or symbols, like some Mexica records.","Culture"],
+    ["solar calendar","Calendar with a year of about 365 days that the Mexica used to plan seasons and ceremonies.","Culture"],
+    ["cacao","Chocolate bean used in Mesoamerican trade that later became a big product in Atlantic trade.","Economy"],
+    ["conquistadors","Spanish soldiers and adventurers who conquered land in the Americas, like Cortés and Pizarro.","State-Building"],
+    ["Tlaxcalans","Independent people in Mexico who hated the Mexica and became Cortés's biggest allies against them.","State-Building"],
+    ["redistribution","When the state collects resources and hands them back out to armies, workers, or communities. The Inca economy ran this way.","Economy"],
+    ["mortarless masonry","Inca way of building with cut stones fitted so tightly they didn't need mortar.","Culture"],
+    ["potatoes","Andean crop that became a major food in Afro-Eurasia after contact.","Economy"],
+    ["llama","Andean animal used for wool and for carrying loads.","Economy"],
+    ["Inca civil war","Fight over who would rule after Huayna Capac died. It split the Inca right before Pizarro showed up.","State-Building"],
+    ["Columbian Exchange","The swap of plants, animals, and diseases between the Eastern and Western Hemispheres after Columbus.","Environment"],
+    ["smallpox","Disease from the Eastern Hemisphere that killed huge numbers of Native Americans after contact.","Environment"],
+    ["population collapse","The massive drop in Native American population after contact, mostly from disease.","Social Structure"],
+    ["encomienda system","Spanish colonial system that gave colonists the right to Native American labor and tribute.","Economy"]
   ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  // Teacher's AP Value ratings, 1 to 10, from the Knowt set "Amsco CH 14 Specifics + Value Scale"
+  var AP = {
+    "Mesoamerica":10, "Andes":9, "Mississippian":8, "Cahokia":9, "earthen mounds":7, "Great Sun":3,
+    "matrilineal society":6, "animism":6, "maize":10, "Chaco":8, "Mesa Verde":8, "Ancestral Pueblo peoples":7,
+    "city-states":9, "Olmecs":2, "Toltec":5, "Tula":2, "Quetzalcoatl":5, "Mexica":10, "Aztec":10,
+    "Triple Alliance":7, "Tenochtitlan":10, "Lake Texcoco":6, "chinampas":10, "irrigation":9,
+    "terrace farming":9, "tribute system":9, "indirect rule":8, "pochteca":7, "theocracy":7,
+    "Great Speaker":4, "polytheism":7, "Huitzilopochtli":4, "Tlaloc":3, "human sacrifice":8,
+    "autosacrifice":3, "pictographic writing":5, "solar calendar":5, "cacao":7, "Aztec slaves":7,
+    "conquistadors":9, "Hernán Cortés":10, "Tlaxcalans":6, "Inca":10, "Cuzco":8, "Pachacuti":7,
+    "Yupanqui":3, "Huayna Capac":4, "Chimu":3, "mit'a system":10, "Quechua":8, "redistribution":8,
+    "Inca storehouses":7, "waru waru":5, "Qhapaq Ñan (Carpa Nan)":8, "quipu":9, "mortarless masonry":5,
+    "royal ancestor veneration":6, "Inti":5, "huaca":5, "potatoes":9, "llama":6,
+    "Francisco Pizarro":9, "Inca civil war":7, "Columbian Exchange":10, "smallpox":10,
+    "population collapse":9, "encomienda system":9
+  };
 
   var SHEET = [
     {name:"Big picture", dates:"", items:[
@@ -2333,8 +2564,21 @@ CH.push((function(){
       "<b>Quipu</b> knotted strings for numbers and messages",
       "Mortarless stonework, copper and bronze tools",
       "<b>Waru waru</b> raised beds and mountain terraces",
-      "<b>Carpa Nan</b> roads, about 25,000 miles",
+      "<b>Qhapaq Ñan</b> roads, about 25,000 miles",
       "<b>Pizarro</b> arrived in 1532 during a civil war; empire done by 1572"
+    ]},
+    {name:"Ancestral Pueblo", dates:"c. 850–1300", items:[
+      "<b>Chaco</b> in New Mexico: great houses and links across the Southwest",
+      "<b>Mesa Verde</b> in Colorado: cliff dwellings",
+      "Proof North America had big organized building projects too",
+      "From your teacher's notes; both rated 8/10"
+    ]},
+    {name:"After contact", dates:"1492 on", items:[
+      "<b>Columbian Exchange</b>: plants, animals, and diseases crossing the Atlantic",
+      "<b>Smallpox</b> caused a <b>population collapse</b>",
+      "<b>Maize</b> and <b>potatoes</b> spread to Afro-Eurasia and boosted population",
+      "<b>Encomienda</b> gave Spanish colonists native labor and tribute",
+      "Spanish weapons alone don't explain the conquest: disease and native allies like the <b>Tlaxcalans</b> mattered"
     ]},
     {name:"How many people in 1491?", dates:"debate", items:[
       "Early settlers like Bradford saw disease had already wiped out natives",
@@ -2440,10 +2684,20 @@ CH.push((function(){
     ["What is a huaca?",["An Inca priest","An object or place with supernatural power","A road","A farm"],1],
     ["What was waru waru?",["A war tactic","Raised farm beds with channels to control water","A god","A dance"],1],
     ["What was the quipu used for?",["Weaving","Recording numbers and messages with knotted strings","Measuring time","Catching fish"],1],
-    ["About how long was the Carpa Nan road system?",["2,500 miles","25,000 miles","250 miles","250,000 miles"],1],
+    ["About how long was the Qhapaq Ñan road system?",["2,500 miles","25,000 miles","250 miles","250,000 miles"],1],
     ["What was happening when Pizarro arrived in 1532?",["A drought","An Inca civil war","An Aztec invasion","A plague of locusts"],1],
     ["Which statement best matches the Cahokia painting question in the textbook?",["No one lived inside the mound complex","The mound complex was the political and religious center","Few people farmed","Cahokia lacked fresh water"],1],
-    ["Why can the Inca be called the most impressive empire builders of their day?",["They had the most gold","They adapted to every kind of terrain","They conquered the Aztecs","They had iron weapons"],1]
+    ["Why can the Inca be called the most impressive empire builders of their day?",["They had the most gold","They adapted to every kind of terrain","They conquered the Aztecs","They had iron weapons"],1],
+    ["Which three cities formed the Triple Alliance?",["Tenochtitlan, Texcoco, and Tlacopan","Cuzco, Tula, and Cahokia","Tenochtitlan, Tula, and Chichén Itzá","Cuzco, Quito, and Lima"],0],
+    ["How did the main Inca obligation differ from Mexica tribute?",["The Inca required labor service while the Mexica demanded goods","The Inca demanded gold while the Mexica demanded labor","Both only demanded soldiers","Neither demanded anything from subjects"],0],
+    ["Why is Spanish weaponry alone an incomplete explanation for the Mexica's fall?",["Disease and rebelling subject peoples also played huge roles","The Spanish had no guns","The Mexica surrendered peacefully","The Inca sent an army to help Cortés"],0],
+    ["Which Andean crop became an important food in Afro-Eurasia after contact?",["Potatoes","Rice","Wheat","Millet"],0],
+    ["What did Inca storehouses let the state do?",["Redistribute food and supplies to armies, workers, and communities","Sell goods to Europe","Hide gold from the Spanish","Store weapons only"],0],
+    ["Which Ancestral Pueblo site is famous for cliff dwellings?",["Mesa Verde","Cahokia","Tula","Cuzco"],0],
+    ["Who were Cortés's biggest local allies against the Mexica?",["The Tlaxcalans","The Inca","The Toltecs","The Chimu"],0],
+    ["How could the Inca road network hurt the Inca later?",["Invading Spanish forces could use it too","It flooded every year","It only reached the coast","It was too narrow for armies"],0],
+    ["Why do historians disagree about the Americas' population before Columbus?",["Disease changed populations before many counts were made","Everyone used the same method","Nobody has tried to estimate it","The Inca left a full census of the Americas"],0],
+    ["How was the Maya political setup different from the Mexica?",["The Maya had separate city-states while the Mexica built one expanding empire","The Maya had one emperor and the Mexica had city-states","Both were democracies","Neither had rulers"],0]
   ];
 
   var TF_Q = [
@@ -2481,12 +2735,79 @@ CH.push((function(){
     ["The Inca practiced human sacrifice as often as the Aztecs.",false,"Scholars think it was much less frequent.","Culture"],
     ["Huaca could be small things like a stone or a bridge.",true,"","Culture"],
     ["The quipu was a system of knotted strings.",true,"","Culture"],
-    ["The Carpa Nan helped the Spanish when they invaded.",true,"","Environment"],
+    ["The Qhapaq Ñan helped the Spanish when they invaded.",true,"","Environment"],
     ["The Inca used mortar to build their stone walls.",false,"Their stones were precisely fitted without mortar.","Culture"],
     ["Pizarro arrived in 1532 during an Inca civil war.",true,"","State-Building"],
     ["The Inca Empire ended in 1572.",true,"","State-Building"],
     ["Kroeber estimated the Americas had about 8.4 million people before Columbus.",true,"","Culture"],
-    ["Charles Mann is a low counter.",false,"He's a high counter who suggested up to 200 million.","Culture"]
+    ["Charles Mann is a low counter.",false,"He's a high counter who suggested up to 200 million.","Culture"],
+    ["The Maya were organized as independent city-states.",true,"Each city had its own ruler, unlike the Mexica empire.","State-Building"],
+    ["The Mexica had less merchant activity than the Inca.",false,"It's the opposite. The Inca state ran most production and distribution itself.","Economy"],
+    ["Spanish accounts of Mexica sacrifice should be read carefully.",true,"Their attitude toward conquest could affect what they exaggerated.","Culture"],
+    ["Smallpox came from the Eastern Hemisphere.",true,"It caused huge losses among Native Americans.","Environment"],
+    ["The Inca kept records with an alphabet.",false,"They used knotted cords called quipus.","Culture"],
+    ["Only the Mexica practiced human sacrifice.",false,"Both did, but their practices and evidence should be looked at separately.","Culture"],
+    ["Mexica rulers claimed a link to the Toltecs to look legitimate.",true,"","State-Building"],
+    ["Maize and potatoes spread to Afro-Eurasia after contact.",true,"They changed diets and helped populations grow.","Economy"]
+  ];
+
+  // Teacher's Q&A Knowt set, shown in its own tab
+  var TEACHER_QA = [
+      {q:"Map graphic Q1: how each empire controlled its land", a:"The Mexica collected tribute from subject provinces, shown by the arrows pointing to Tenochtitlan, and the Inca held their four regions together with roads, storehouses, and mit'a labor."},
+      {q:"Map graphic Q2: how each empire connected its land", a:"Tenochtitlan used causeways and waterways to connect its lake capital, and the Inca built roads and bridges to link communities across the Andes."},
+      {q:"Map graphic Q3: how subjects could push back", a:"Mexica subject provinces could resist the tribute demands shown by the arrows, and Inca communities could resist the mit'a labor shown on their map."},
+      {q:"How do the societies of the Americas challenge the idea that state building followed a single pattern?", a:"The Americas had city-states, regional centers, and huge empires that all organized power in different ways."},
+      {q:"Why was agriculture essential to large Mississippian settlements?", a:"Maize, beans, and squash fed enough people to support towns, specialized workers, and leaders."},
+      {q:"What can the large earthen mounds at Mississippian sites reveal about their societies?", a:"Building them took organized labor, and they worked as centers of ceremony and political power."},
+      {q:"How were major Mississippian towns connected to nearby villages?", a:"A big town was the regional center, and smaller villages were tied to its leaders, ceremonies, and trade."},
+      {q:"Why is Cahokia evidence against describing precontact North America as entirely rural?", a:"It was a big population center with huge construction, specialized crafts, and long-distance trade."},
+      {q:"How can objects found at Mississippian sites help historians identify trade?", a:"Stuff that came from far away shows contact with other regions even without written trade records."},
+      {q:"How could a Mississippian chief's title pass to his sister's son instead of his own son?", a:"It was matrilineal, so status was traced through the mother's family."},
+      {q:"What did animist beliefs mean for Mississippian religious practice?", a:"They believed parts of nature had spiritual power and held ceremonies connected to those spirits."},
+      {q:"Why should a student be cautious about giving one certain cause for Cahokia's decline?", a:"Its population dropped before Europeans settled there, and historians are still looking at environmental, farming, and social causes."},
+      {q:"How does Chaco broaden the AP picture of North American state building?", a:"Its great houses and regional connections show Ancestral Pueblo communities pulled off large-scale building in the Southwest."},
+      {q:"What does Mesa Verde add to a comparison of American societies around 1200?", a:"Ancestral Pueblo people built big settlements and cliff dwellings in an environment totally different from the Mississippi valley."},
+      {q:"How did the political organization of Maya city-states differ from the later Mexica Empire?", a:"Each Maya city had its own ruler, while the Mexica put lots of conquered communities under one expanding empire."},
+      {q:"What did Toltec rulers use military strength to obtain from neighboring peoples?", a:"They used it to spread their influence and take goods from conquered communities."},
+      {q:"Why would Mexica rulers claim a connection to the earlier Toltecs?", a:"Linking themselves to an admired older civilization made their rule look more legit."},
+      {q:"How did the Mexica transform their position in central Mexico over time?", a:"They came in as migrants, founded Tenochtitlan, and fought their way into a regional empire."},
+      {q:"What advantages and challenges came with founding Tenochtitlan in a lake?", a:"The water protected the city, but feeding a growing population took a lot of work managing land and water."},
+      {q:"How did chinampas increase food production near Tenochtitlan?", a:"Farmers built fertile raised plots in the shallow lake, which gave them productive fields right next to the city."},
+      {q:"What do chinampas, canals, and hillside terraces show about Mexica farming?", a:"Farmers adapted different techniques to local conditions to grow more food and manage water and soil."},
+      {q:"How did Mexica rulers benefit from leaving some conquered local leaders in office?", a:"Those leaders collected the payments and kept order while still answering to the Mexica."},
+      {q:"Why did the Mexica also place officials and warriors in provincial centers?", a:"They watched over tribute collection and discouraged anyone from challenging Mexica control."},
+      {q:"How did payments from conquered communities support Mexica elites?", a:"Food and supplies kept the capital running, and luxury goods rewarded nobles and showed off their power."},
+      {q:"Why did the Mexica system of conquest create opportunities for rebellion?", a:"Demanding goods, land, service, and captives gave conquered people plenty of reasons to hate Mexica rule."},
+      {q:"What made the pochteca more than ordinary local sellers?", a:"They traded valuable goods over long distances and linked markets across Mesoamerica."},
+      {q:"How was women's textile work connected to the Mexica economy and empire?", a:"Woven cloth was valuable and could be demanded as tribute, so women's work at home was part of the empire's demands."},
+      {q:"How did the Great Speaker combine political and religious authority?", a:"He ran the state and also claimed a sacred role that justified his power."},
+      {q:"How could human sacrifice serve both religious and political purposes in Mexica society?", a:"It met their duties to the gods and also showed off the empire's power over captives and subjects."},
+      {q:"Why should accounts written by Spanish observers be evaluated carefully when studying Mexica sacrifice?", a:"They're useful evidence, but the writers' views on conquest could make them exaggerate."},
+      {q:"Why is Spanish weaponry alone an incomplete explanation for the fall of the Mexica Empire?", a:"Disease and resistance from conquered peoples mattered just as much as Spanish fighting."},
+      {q:"How did opposition to Mexica rule help Cortés?", a:"Native groups who hated the Mexica joined the Spanish and gave them key local support."},
+      {q:"What do Mexica calendars and picture-based records show beyond artistic skill?", a:"They helped people organize religious events and keep track of information in a complex society."},
+      {q:"How did Pachacuti change the political position of Cuzco in the fifteenth century?", a:"His conquests turned a regional Andean power into the center of a fast-growing empire."},
+      {q:"Why did Inca rulers divide their large empire into four administrative regions?", a:"Regional governors made it easier to run faraway land from Cuzco."},
+      {q:"What was the political value of the Inca mit'a labor obligation?", a:"It gave the state workers for farming, roads, and other projects all over the empire."},
+      {q:"How did a major obligation imposed on Inca subjects differ from Mexica tribute?", a:"The Inca made people do labor service, while the Mexica mostly demanded goods."},
+      {q:"Why did Inca rulers promote Quechua and sometimes relocate conquered groups?", a:"A shared language made governing easier, and moving people around weakened local resistance."},
+      {q:"How could state storehouses strengthen Inca rule?", a:"Officials stored supplies and handed them out to armies, workers, and communities during shortages."},
+      {q:"How did the Inca economy differ from the extensive merchant activity of the Mexica?", a:"The Inca state ran most production and distribution itself, so private trade mattered less."},
+      {q:"Why were agricultural terraces useful in the Andes?", a:"They made flat farmland on steep slopes and helped manage water and soil."},
+      {q:"How did raised fields with surrounding channels help some Andean farmers?", a:"The channels controlled water around the planting beds, which helped crops grow in tough conditions."},
+      {q:"How could Inca officials keep track of quantities without an alphabetic writing system?", a:"They used knotted cords called quipus to record numbers."},
+      {q:"Why was the Qhapaq Ñan important to Inca government?", a:"Its roads let officials, messengers, supplies, and armies move across the whole empire."},
+      {q:"How did the Inca road network later affect Spanish conquest?", a:"The same roads built to run the empire could be used by invaders."},
+      {q:"What does Inca stonework reveal about their engineering?", a:"They fit stones so tightly that their buildings lasted without mortar."},
+      {q:"How could royal ancestor veneration encourage continued Inca expansion?", a:"Dead rulers kept their property, so new rulers had to go find new land and resources."},
+      {q:"How did devotion to the pagan god Inti support the authority of Inca rulers?", a:"Rulers tied themselves to the sun god, which made their power look sacred."},
+      {q:"What could a huaca be in Inca religious life?", a:"A natural feature or a human-made object believed to have spiritual power."},
+      {q:"Why is it misleading to say either the Mexica or Inca alone practiced human sacrifice?", a:"Both did sacrifices, but their practices and evidence should be looked at separately."},
+      {q:"Why was the Inca Empire vulnerable when Pizarro arrived?", a:"A fight over succession had split its leaders, and disease and the Spanish piled on more pressure."},
+      {q:"How did both Mexica and Inca rulers face risks created by rapid expansion?", a:"Conquest brought power and resources, but also faraway land and subjects who might not stay loyal."},
+      {q:"Why do maize and potatoes matter to AP World History beyond the history of American states?", a:"After contact they spread to other regions and changed diets and population growth."},
+      {q:"How did postcontact disease change the Americas in ways conquest alone cannot explain?", a:"Eastern Hemisphere diseases killed huge numbers of Native Americans and wrecked communities everywhere."},
+      {q:"Why do historians disagree about the population of the Americas before Columbus?", a:"Disease changed populations before many counts were made, so scholars have to work with incomplete evidence and different methods."}
   ];
 
   var PACKET = [
@@ -2542,8 +2863,8 @@ CH.push((function(){
     title:"The Americas on the Eve of Globalization", years:"700–1572 C.E.",
     pages:"256–270", heading:"Chapter 14 Study Hub",
     blurb:"The Mississippian mound builders, the Toltecs, the Aztecs of Tenochtitlan, and the Inca of the Andes, right before Europeans showed up.",
-    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
-    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET
+    cats:CATS, vocab:VOCAB, ap:AP, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET, teacherQA:TEACHER_QA
   };
 })());
 
@@ -2557,6 +2878,13 @@ CH.push((function(){
   var BY_ID = {};
   CH.forEach(function(c){
     c.vocab = c.vocab.map(function(v){ return Array.isArray(v) ? {term:v[0], def:v[1], cat:v[2]} : v; });
+    c.hasAP = !!c.ap;
+    var tset = {}; (c.teacher || []).forEach(function(t){ tset[t] = 1; });
+    c.vocab.forEach(function(v){
+      if (c.ap && c.ap[v.term] != null) v.ap = c.ap[v.term];
+      if (v.ap != null || tset[v.term]) v.teacher = true;
+    });
+    c.hasTeacher = c.vocab.some(function(v){ return v.teacher; });
     BY_ID[c.id] = c;
   });
   var ORDER = CH.slice().sort(function(a,b){ return a.num - b.num; }).map(function(c){ return c.id; });
@@ -2604,6 +2932,18 @@ CH.push((function(){
     el.innerHTML = vals.map(function(v,i){
       return '<button data-val="'+esc(v[0])+'" aria-pressed="'+(i===0)+'">'+esc(v[1])+'</button>';
     }).join("");
+  }
+  function apTier(n){ return n >= 9 ? "t3" : n >= 7 ? "t2" : "t1"; }
+  function apBadge(v){
+    if (v.ap != null) return '<span class="apb '+apTier(v.ap)+'" title="Teacher\u2019s AP value rating">AP '+v.ap+'</span>';
+    return v.teacher ? '<span class="apb tt" title="In your teacher\u2019s Knowt set">Teacher</span>' : "";
+  }
+  function isHi(v){ return v.ap != null && v.ap >= 8; }
+  function isTeacher(v){ return !!v.teacher; }
+  function filterFor(key){ return key === "hi" ? isHi : key === "teacher" ? isTeacher : null; }
+  function mentions(text, pred){
+    var t = String(text).toLowerCase();
+    return VOCAB.filter(pred).some(function(v){ return t.indexOf(v.term.replace(/\s*\(.*\)$/,"").toLowerCase()) !== -1; });
   }
   function replay(el, cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
@@ -2802,12 +3142,14 @@ CH.push((function(){
     resetCards();
     resetQuiz();
     renderTimeline();
-    resetPacket();
+    packetPanel.reset();
+    $("tab-tqa").hidden = !(cur.teacherQA && cur.teacherQA.length);
+    tqaPanel.reset();
     selectTab("sheet", false);
   }
 
   /* =======================  TABS  ======================= */
-  var TABS = ["sheet","vocab","cards","quiz","time","packet"];
+  var TABS = ["sheet","vocab","cards","quiz","time","packet","tqa"];
   var curTab = "sheet", tabToken = 0;
   var tabInk = $("tabInk");
 
@@ -2854,19 +3196,28 @@ CH.push((function(){
     $("tab-"+t).addEventListener("click", function(){ if (t !== curTab) selectTab(t, true); });
   });
   $("tabs").addEventListener("keydown", function(e){
-    var i = TABS.indexOf(curTab), n = null;
-    if (e.key === "ArrowRight") n = TABS[(i+1) % TABS.length];
-    else if (e.key === "ArrowLeft") n = TABS[(i-1+TABS.length) % TABS.length];
-    else if (e.key === "Home") n = TABS[0];
-    else if (e.key === "End") n = TABS[TABS.length-1];
+    var vis = TABS.filter(function(x){ return !$("tab-"+x).hidden; });
+    var i = vis.indexOf(curTab), n = null;
+    if (e.key === "ArrowRight") n = vis[(i+1) % vis.length];
+    else if (e.key === "ArrowLeft") n = vis[(i-1+vis.length) % vis.length];
+    else if (e.key === "Home") n = vis[0];
+    else if (e.key === "End") n = vis[vis.length-1];
     if (n){ e.preventDefault(); selectTab(n, true); $("tab-"+n).focus(); }
   });
 
   /* =======================  CHEAT SHEET  ======================= */
   function renderSheet(){
     var grid = $("sheetGrid");
-    grid.innerHTML = cur.sheet.map(function(sec){
-      return '<div class="sheet-card spot"><h3>'+sec.name+(sec.dates?' <span class="dates">'+sec.dates+'</span>':'')+'</h3><ul>'+
+    var sheet = cur.sheet;
+    if (cur.hasAP){
+      var lines = [10,9,8].map(function(n){
+        var t = VOCAB.filter(function(v){ return v.ap === n; }).map(function(v){ return v.term; });
+        return t.length ? '<b>'+n+'/10:</b> '+t.map(esc).join(", ") : "";
+      }).filter(Boolean);
+      sheet = [{name:"Teacher\u2019s must-knows", dates:"AP 8\u201310", items:lines, cls:"teacher"}].concat(sheet);
+    }
+    grid.innerHTML = sheet.map(function(sec){
+      return '<div class="sheet-card spot'+(sec.cls?' '+sec.cls:'')+'"><h3>'+sec.name+(sec.dates?' <span class="dates">'+sec.dates+'</span>':'')+'</h3><ul>'+
         sec.items.map(function(i){ return '<li>'+i+'</li>'; }).join("")+'</ul></div>';
     }).join("");
     stagger(grid);
@@ -2879,13 +3230,18 @@ CH.push((function(){
   }
 
   /* =======================  VOCABULARY  ======================= */
-  var vocabCat = "all", vocabQuery = "";
+  var vocabCat = "all", vocabQuery = "", vocabAP = "all";
+  segInit($("vocabApSeg"), function(v){ vocabAP = v; renderVocab(); });
   var vocabListEl = $("vocabList"), vocabCountEl = $("vocabCount");
   segInit($("vocabCatSeg"), function(v){ vocabCat = v; renderVocab(); });
   $("vocabSearch").addEventListener("input", function(e){ vocabQuery = e.target.value.trim(); renderVocab(); });
 
   function resetVocab(){
-    vocabCat = "all"; vocabQuery = ""; $("vocabSearch").value = "";
+    vocabCat = "all"; vocabQuery = ""; vocabAP = "all"; $("vocabSearch").value = "";
+    $("vocabApSet").hidden = !cur.hasTeacher;
+    $("vocabApLabel").textContent = cur.hasAP ? "AP value" : "Teacher\u2019s set";
+    $("vocabApSeg").innerHTML = [["all","All"],["teacher","Teacher\u2019s terms"]].concat(cur.hasAP ? [["hi","8+ only"],["sort","Highest first"]] : [])
+      .map(function(b,i){ return '<button data-val="'+b[0]+'" aria-pressed="'+(i===0)+'">'+b[1]+'</button>'; }).join("");
     fillCatSeg($("vocabCatSeg"));
     renderVocab();
   }
@@ -2893,13 +3249,16 @@ CH.push((function(){
     var q = vocabQuery.toLowerCase();
     var list = VOCAB.filter(function(v){
       if (vocabCat !== "all" && v.cat !== vocabCat) return false;
+      if (vocabAP === "hi" && !isHi(v)) return false;
+      if (vocabAP === "teacher" && !isTeacher(v)) return false;
       if (q && (v.term+" "+v.def).toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
-    vocabCountEl.textContent = list.length + " of " + VOCAB.length + " terms";
+    if (vocabAP === "sort") list = list.map(function(v,i){ return [v,i]; }).sort(function(a,b){ return ((b[0].ap==null?-1:b[0].ap) - (a[0].ap==null?-1:a[0].ap)) || a[1]-b[1]; }).map(function(x){ return x[0]; });
+    vocabCountEl.textContent = list.length + " of " + VOCAB.length + " terms" + (cur.hasAP ? " \u00b7 AP ratings come from your teacher\u2019s Knowt set" : cur.hasTeacher ? " \u00b7 Teacher tags mark terms from your teacher\u2019s Knowt set" : "");
     vocabListEl.innerHTML = list.length ? list.map(function(v){
       return '<div class="vocab-item"><div class="vt">'+highlight(v.term, vocabQuery)+'</div><div class="vd">'+highlight(v.def, vocabQuery)+
-        '</div><span class="vcat">'+esc(v.cat)+'</span></div>';
+        '</div><span class="vtags">'+apBadge(v)+'<span class="vcat">'+esc(v.cat)+'</span></span></div>';
     }).join("") : '<div class="vocab-item"><div class="empty">No terms match that search.</div></div>';
   }
 
@@ -2922,12 +3281,16 @@ CH.push((function(){
     starred = store("starred") || {};
     fillCatSeg($("fcCatSeg"));
     segSet($("fcStarSeg"), "all");
+    $("fcApBtn").hidden = !cur.hasAP;
+    $("fcTeachBtn").hidden = !cur.hasTeacher;
     buildDeck();
   }
   function buildDeck(){
     deck = VOCAB.filter(function(v){
       if (fcCat !== "all" && v.cat !== fcCat) return false;
       if (fcFilter === "starred" && !starred[v.term]) return false;
+      if (fcFilter === "hi" && !isHi(v)) return false;
+      if (fcFilter === "teacher" && !isTeacher(v)) return false;
       return true;
     });
     fcFlipSides = deck.map(function(){ return fcSide === "mix" ? (Math.random() < 0.5 ? "term" : "def") : fcSide; });
@@ -2942,6 +3305,7 @@ CH.push((function(){
       fcBackEl.textContent = "Switch the filter back to All cards.";
       fcCardEl.classList.remove("flipped");
       fcStarBtn.hidden = true;
+      $("fcAp").innerHTML = "";
       fcMeter.style.width = "0%";
       return;
     }
@@ -2955,7 +3319,8 @@ CH.push((function(){
     fcFrontLabel.textContent = termFirst ? "Term" : "Definition";
     fcBackLabel.textContent = termFirst ? "Definition" : "Term";
     fcCardEl.classList.remove("flipped");
-    fcProgressEl.textContent = "Card " + (fcIndex+1) + " of " + deck.length + " · " + card.cat;
+    fcProgressEl.textContent = "Card " + (fcIndex+1) + " of " + deck.length + " · " + card.cat + (card.ap != null ? " · AP " + card.ap + "/10" : "");
+    $("fcAp").innerHTML = apBadge(card);
     fcMeter.style.width = ((fcIndex+1) / deck.length * 100) + "%";
     var isStar = !!starred[card.term];
     fcStarBtn.setAttribute("aria-pressed", String(isStar));
@@ -3009,7 +3374,7 @@ CH.push((function(){
 
   function resetQuiz(){
     qCat = "all";
-    fillCatSeg($("qCatSeg"), [["content","Big-picture questions"]]);
+    fillCatSeg($("qCatSeg"), [["content","Big-picture questions"]].concat(cur.hasTeacher ? [["teacher","Teacher\u2019s terms"]] : [], cur.hasAP ? [["hi","AP 8+ only"]] : []));
     quizSetup.hidden = false; quizActive.hidden = true; quizDone.hidden = true;
     showBest();
   }
@@ -3019,6 +3384,7 @@ CH.push((function(){
   }
   function vocabPool(){
     if (qCat === "all" || qCat === "content") return VOCAB.slice();
+    if (filterFor(qCat)) return VOCAB.filter(filterFor(qCat));
     return VOCAB.filter(function(v){ return v.cat === qCat; });
   }
   function pickDistractors(v, field){
@@ -3032,8 +3398,9 @@ CH.push((function(){
   }
   function mcPool(){
     var out = [];
-    if (qCat === "all" || qCat === "content"){
-      out = out.concat(CONTENT_Q.map(function(q){
+    var pf = filterFor(qCat);
+    if (qCat === "all" || qCat === "content" || pf){
+      out = out.concat(CONTENT_Q.filter(function(q){ return !pf || mentions(q[0] + " " + q[1][q[2]], pf); }).map(function(q){
         var answer = q[1][q[2]];
         var choices = shuffle(q[1]);
         return {kind:"mc", q:q[0], choices:choices, correct:choices.indexOf(answer), answerText:answer};
@@ -3050,13 +3417,16 @@ CH.push((function(){
     return out;
   }
   function tfPool(){
-    return TF_Q.filter(function(t){ return qCat === "all" || qCat === "content" || t[3] === qCat; })
+    return TF_Q.filter(function(t){ return qCat === "all" || qCat === "content" || (filterFor(qCat) ? mentions(t[0], filterFor(qCat)) : t[3] === qCat); })
       .map(function(t){ return {kind:"tf", q:t[0], isTrue:t[1], note:t[2], answerText:(t[1] ? "True" : "False")}; });
   }
   function typePool(){ return vocabPool().map(function(v){ return {kind:"type", q:v.def, answerText:v.term}; }); }
   function buildMixed(){
     var n = qCount, nMC = Math.round(n*0.5), nTF = Math.round(n*0.3), nType = n - nMC - nTF;
-    var picks = shuffle(mcPool()).slice(0, nMC).concat(shuffle(tfPool()).slice(0, nTF)).concat(shuffle(typePool()).slice(0, nType));
+    var mc = shuffle(mcPool()), tf = shuffle(tfPool()), ty = shuffle(typePool());
+    var picks = mc.splice(0, nMC).concat(tf.splice(0, nTF)).concat(ty.splice(0, nType));
+    var rest = shuffle(mc.concat(tf, ty));
+    while (picks.length < n && rest.length) picks.push(rest.pop());
     return shuffle(picks).slice(0, n);
   }
   function buildMatch(){
@@ -3066,7 +3436,7 @@ CH.push((function(){
     return rounds.map(function(r){ return {kind:"match", pairs:r}; });
   }
   function normalize(s){
-    return String(s).toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\bthe\b/g," ").replace(/\s+/g," ").trim();
+    return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[’']/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\bthe\b/g," ").replace(/\s+/g," ").trim();
   }
   function acceptable(term){
     var forms = [term];
@@ -3269,41 +3639,46 @@ CH.push((function(){
     stagger(el);
   }
 
-  /* =======================  PACKET ANSWERS  ======================= */
-  var packetQuery = "", packetMode = "show";
-  segInit($("packetModeSeg"), function(v){ packetMode = v; renderPacket(); });
-  $("packetSearch").addEventListener("input", function(e){ packetQuery = e.target.value.trim(); renderPacket(); });
-  $("packetList").addEventListener("click", function(e){
-    var btn = e.target.closest(".packet-reveal"); if (!btn) return;
-    var item = btn.closest(".packet-item");
-    var a = document.createElement("p");
-    a.className = "packet-a";
-    a.textContent = item.getAttribute("data-a");
-    btn.replaceWith(a);
-    item.classList.add("revealing");
-  });
-  function resetPacket(){
-    packetQuery = ""; $("packetSearch").value = "";
-    packetMode = "show"; segSet($("packetModeSeg"), "show");
-    renderPacket();
+  /* =======================  PACKET ANSWERS + TEACHER Q&A  ======================= */
+  function qaPanel(pre, getSections, emptyMsg){
+    var query = "", mode = "show";
+    var listEl = $(pre+"List");
+    segInit($(pre+"ModeSeg"), function(v){ mode = v; render(); });
+    $(pre+"Search").addEventListener("input", function(e){ query = e.target.value.trim(); render(); });
+    listEl.addEventListener("click", function(e){
+      var btn = e.target.closest(".packet-reveal"); if (!btn) return;
+      var item = btn.closest(".packet-item");
+      var a = document.createElement("p");
+      a.className = "packet-a";
+      a.textContent = item.getAttribute("data-a");
+      btn.replaceWith(a);
+      item.classList.add("revealing");
+    });
+    function itemHTML(it){
+      var ans = mode === "hide" ? '<button class="packet-reveal">Show answer</button>' : '<p class="packet-a">'+highlight(it.a, query)+'</p>';
+      return '<div class="packet-item" data-a="'+esc(it.a)+'"><p class="packet-q">'+highlight(it.q, query)+'</p>'+ans+'</div>';
+    }
+    function render(){
+      var q = query.toLowerCase(), shown = 0, total = 0;
+      var html = getSections().map(function(sec){
+        var items = sec.items.filter(function(it){ total++; return !q || (it.q + " " + it.a).toLowerCase().indexOf(q) !== -1; });
+        shown += items.length;
+        if (!items.length) return "";
+        return (sec.section ? '<h3 class="packet-section">'+esc(sec.section)+'<span class="n">'+items.length+'</span></h3>' : '')+
+          '<div class="packet-list">'+items.map(itemHTML).join("")+'</div>';
+      }).join("");
+      listEl.innerHTML = html || '<div class="empty">'+emptyMsg+'</div>';
+      $(pre+"Count").textContent = (q ? shown + " of " + total : total) + " questions" + (mode === "hide" ? " \u00b7 tap a card to check yourself" : "");
+    }
+    function reset(){
+      query = ""; $(pre+"Search").value = "";
+      mode = "show"; segSet($(pre+"ModeSeg"), "show");
+      render();
+    }
+    return {reset:reset, render:render};
   }
-  function renderPacket(){
-    var q = packetQuery.toLowerCase(), shown = 0, total = 0;
-    var html = cur.packet.map(function(sec){
-      var items = sec.items.filter(function(it){ total++; return !q || (it.q + " " + it.a).toLowerCase().indexOf(q) !== -1; });
-      shown += items.length;
-      if (!items.length) return "";
-      return '<h3 class="packet-section">'+esc(sec.section)+'<span class="n">'+items.length+'</span></h3><div class="packet-list">'+
-        items.map(function(it){
-          var ans = packetMode === "hide"
-            ? '<button class="packet-reveal">Show answer</button>'
-            : '<p class="packet-a">'+highlight(it.a, packetQuery)+'</p>';
-          return '<div class="packet-item" data-a="'+esc(it.a)+'"><p class="packet-q">'+highlight(it.q, packetQuery)+'</p>'+ans+'</div>';
-        }).join("")+'</div>';
-    }).join("");
-    $("packetList").innerHTML = html || '<div class="empty">Nothing in the packet matches that search.</div>';
-    $("packetCount").textContent = (q ? shown + " of " + total : total) + " questions" + (packetMode === "hide" ? " · tap a card to check yourself" : "");
-  }
+  var packetPanel = qaPanel("packet", function(){ return cur.packet; }, "Nothing in the packet matches that search.");
+  var tqaPanel = qaPanel("tqa", function(){ return cur.teacherQA && cur.teacherQA.length ? [{section:"", items:cur.teacherQA}] : []; }, "Nothing in your teacher\u2019s Q&amp;A matches that search.");
 
   /* =======================  BOOT  ======================= */
   var hash = (location.hash || "").replace("#","").toLowerCase();
