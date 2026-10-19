@@ -375,6 +375,20 @@
   .apb.t3{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); }
   .apb.t2{ color:var(--accent-2); background:var(--accent-2-soft); border-color:var(--accent-2); }
   .apb.t1{ color:var(--ink-soft); border-color:var(--border); }
+  .notes-head{ margin-bottom:16px; }
+  h2.section-h.notes-title{ margin:0 0 6px; }
+  .notes-sub{ color:var(--ink-soft); font-size:0.92rem; margin:0; max-width:64ch; line-height:1.5; }
+  .notes-sheet{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:8px 26px 18px;
+    box-shadow:0 2px 12px var(--shadow); columns:2 340px; column-gap:40px; }
+  .notes-block{ break-inside:avoid; padding-top:16px; }
+  .notes-block h3{ font-family:var(--font-display); font-weight:620; font-variation-settings:"opsz" 30, "SOFT" 40; font-size:1.05rem;
+    margin:0 0 8px; display:flex; align-items:baseline; gap:8px; }
+  .notes-block h3 .n{ font-family:var(--font-mono); font-size:0.66rem; font-weight:600; color:var(--accent); letter-spacing:0.08em; }
+  .notes-block p.why{ color:var(--ink-faint); font-size:0.8rem; margin:-4px 0 8px; }
+  .notes-block ul{ margin:0; padding-left:1.05em; }
+  .notes-block li{ font-size:0.9rem; line-height:1.5; margin-bottom:5px; }
+  .notes-block li::marker{ color:var(--accent); }
+  @media (max-width:640px){ .notes-sheet{ padding:4px 18px 14px; } }
   .apb.tt{ color:var(--accent); background:var(--accent-soft); border-color:var(--accent-line); }
   .vocab-item .vtags{ display:flex; gap:6px; align-items:center; flex:none; align-self:center; }
   .vocab-item .vtags .vcat{ align-self:auto; }
@@ -406,7 +420,12 @@
   .picker h2{ font-family:var(--font-display); font-weight:650; font-variation-settings:"opsz" 144, "SOFT" 30; font-size:clamp(1.7rem,5vw,2.2rem);
     letter-spacing:-0.02em; line-height:1.08; margin:10px 0 8px; }
   .picker .lede{ color:var(--ink-soft); margin:0 0 20px; font-size:0.95rem; }
-  .picker-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .picker-list{ display:flex; flex-direction:column; gap:10px; margin:0 -6px 20px; padding:3px 6px 6px; position:relative;
+    overflow-y:auto; min-height:0; flex:0 1 auto; overscroll-behavior:contain; scrollbar-width:thin; }
+  .picker-list.more{ -webkit-mask-image:linear-gradient(#000 calc(100% - 46px), transparent); mask-image:linear-gradient(#000 calc(100% - 46px), transparent); }
+  .picker-card{ display:flex; flex-direction:column; max-height:calc(100vh - 48px); max-height:calc(100dvh - 48px); }
+  .picker-card > *{ flex-shrink:0; }
+  .picker-card > .picker-list{ flex-shrink:1; }
   .chap-opt{ position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:6px 14px; text-align:left; width:100%;
     font:inherit; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; cursor:pointer;
     transition:border-color .25s, box-shadow .25s, transform .25s var(--ease-out), background .25s; }
@@ -492,6 +511,7 @@
       <button role="tab" id="tab-time" aria-selected="false" aria-controls="panel-time" tabindex="-1">Timeline</button>
       <button role="tab" id="tab-packet" aria-selected="false" aria-controls="panel-packet" tabindex="-1">Packet Answers</button>
       <button role="tab" id="tab-tqa" aria-selected="false" aria-controls="panel-tqa" tabindex="-1" hidden>Teacher Q&amp;A</button>
+      <button role="tab" id="tab-notes" aria-selected="false" aria-controls="panel-notes" tabindex="-1" hidden>Notes Page</button>
     </nav></div>
   </div>
 
@@ -688,6 +708,15 @@
       </div>
       <p class="packet-note tqa-note">Straight from your teacher's Knowt set, so expect these on the test.</p>
       <div id="tqaList"></div>
+    </section>
+
+    <!-- NOTES PAGE -->
+    <section id="panel-notes" class="panel" role="tabpanel" aria-labelledby="tab-notes" hidden>
+      <div class="notes-head">
+        <h2 class="section-h notes-title">What to put on your notes page</h2>
+        <p class="notes-sub" id="notesIntro"></p>
+      </div>
+      <div class="notes-sheet" id="notesSheet"></div>
     </section>
   </main>
 </div>
@@ -2868,6 +2897,556 @@ CH.push((function(){
   };
 })());
 
+CH.push((function(){
+
+  var CATS = ["State-Building","Environment","Economics","Culture","Social Structure"];
+
+  var VOCAB = [
+    // ---- State-Building ----
+    ["Christopher Columbus","Explorer sponsored by Spain's Isabella and Ferdinand who reached the Caribbean in 1492 while trying to get to the East Indies or China.","State-Building"],
+    ["conquistadores","Spanish conquerors like Cortés and Pizarro who took over land in the Americas and spread smallpox while doing it.","State-Building"],
+    ["colonies","Lands claimed by a home country and settled by immigrants from it. Under mercantilism they existed to make the home country rich.","State-Building"],
+    ["Aztec Empire","Mesoamerican empire with lots of gold and lots of enemies. Cortés took it down by 1521.","State-Building"],
+    ["Inca Empire","Andean empire of about 12 million people at its height. Pizarro attacked it in 1532 and the Spanish finished conquering it by 1572.","State-Building"],
+    ["Hernán Cortés","Conquistador who marched on Tenochtitlan in 1519, used the Aztecs' enemies as allies, and conquered the empire by 1521.","State-Building"],
+    ["New Spain","The Spanish colony Cortés founded after conquering the Aztecs, run from Mexico City.","State-Building"],
+    ["Tenochtitlan","The Aztec capital. The Spanish destroyed it and built Mexico City on the ruins.","State-Building"],
+    ["Mexico City","Spanish capital of New Spain, built right on top of Tenochtitlan's ruins.","State-Building"],
+    ["Francisco Pizarro","Conquistador who attacked the Inca in 1532 and captured their ruler Atahualpa.","State-Building"],
+    ["Atahualpa","Inca ruler Pizarro captured in 1532. The Inca filled a room with gold to free him, but the Spanish killed him anyway in 1533.","State-Building"],
+    ["Lima","Spanish colonial capital in Peru that ran lands from Panama all the way down to Argentina.","State-Building"],
+    ["Treaty of Tordesillas","1494 deal where Spain and Portugal split the Americas along a north-south line. Portugal got Brazil and Spain got the rest.","State-Building"],
+    ["viceroys","Officials the Spanish crown appointed to run its colonies as the king's representatives.","State-Building"],
+    ["audiencias","Royal courts where Spanish settlers could appeal a viceroy's decisions, which kept viceroys from going rogue.","State-Building"],
+    ["St. Augustine","Fort in Florida set up by Pedro Menéndez de Avilés in 1565. Oldest continuous settlement in what became the United States.","State-Building"],
+    ["Jacques Cartier","French explorer who sailed up the St. Lawrence River in 1535 and claimed part of Canada for France.","State-Building"],
+    ["Samuel de Champlain","French explorer from 1609 to 1616 who realized the Americas had enough riches that France didn't need to reach Asia.","State-Building"],
+    ["Quebec","French town and trading post founded in 1608, the start of New France.","State-Building"],
+    ["New France","France's North American colony. It grew slowly and only had about 70,000 Europeans by 1754.","State-Building"],
+    ["La Salle","French trader who explored the Great Lakes in the 1680s and followed the Mississippi River to the Gulf of Mexico, claiming it all for France.","State-Building"],
+    ["John Cabot","Explorer the English king sent in 1497 to find a northwest passage. He claimed land from Newfoundland down to the Chesapeake Bay.","State-Building"],
+    ["Spanish Armada","Spain's huge war fleet. England destroyed all but a third of it in 1588 and became a major naval power.","State-Building"],
+    ["Virginia","English colony on the East Coast where Jamestown was founded.","State-Building"],
+    ["Jamestown","England's first successful colony in the Americas, founded in 1607 on the James River in Virginia.","State-Building"],
+    ["Henry Hudson","Explorer the Dutch sent in 1609. He sailed up the Hudson River looking for a route to Asia, and the Dutch used his trip to claim the area.","State-Building"],
+    ["New Amsterdam","Dutch port town on Manhattan used for trade. The English took it in 1664 and it became New York City.","State-Building"],
+    // ---- Environment ----
+    ["caravel","Small three-masted Portuguese ship from the 1400s that handled storms better than older ships.","Environment"],
+    ["astrolabe","Tool improved by Muslim navigators that told sailors how far north or south of the equator they were.","Environment"],
+    ["magnetic compass","Chinese invention that made it easier to steer a ship in the right direction.","Environment"],
+    ["smallpox","Deadly disease spread by breathing that Europeans brought to the Americas. It killed far more natives than weapons did.","Environment"],
+    ["demography","The study of population patterns and changes. The conquest of the Americas was one of the biggest demographic disasters ever.","Environment"],
+    ["Hispaniola","The Caribbean island Columbus named, now Haiti and the Dominican Republic. He expected gold there but found very little.","Environment"],
+    ["Potosí","City in the Andes that became the biggest silver mining center in Spanish America.","Environment"],
+    ["Zacatecas","Silver mining city in Mexico.","Environment"],
+    ["galleons","Big, heavily armed Spanish ships that carried silver across the Pacific to Manila.","Environment"],
+    ["sugarcane","Crop that grew perfectly in Brazil's tropical climate and drove the demand for enslaved Africans.","Environment"],
+    ["northwest passage","A water route through or around North America to Asia that French, English, and Dutch explorers kept searching for.","Environment"],
+    ["Columbian Exchange","The swap of animals, plants, cultures, ideas, technology, and diseases between Afro-Eurasia and the Americas that started with Columbus in 1492.","Environment"],
+    ["deforestation","Cutting down forests. Colonists cleared trees for farms, which along with soil depletion hurt the American environment.","Environment"],
+    // ---- Economics ----
+    ["encomienda","Early 1500s Spanish labor system where landowners forced native people to work for them in exchange for food and shelter. Known for brutality.","Economics"],
+    ["encomenderos","The Spanish landowners in the encomienda system who forced natives to work for them.","Economics"],
+    ["mit'a system","Old Inca labor duty for public works that the Spanish turned into forced labor in the silver mines for tiny pay.","Economics"],
+    ["mercantilism","Economic system where the government controls the economy with high tariffs and colonies and tries to export more than it imports.","Economics"],
+    ["Manila","Trading post in the Spanish Philippines where Europeans swapped American silver for Chinese silk, spices, and gold.","Economics"],
+    ["transatlantic slave trade","The forced shipping of millions of Africans to the Americas, mostly to work on plantations.","Economics"],
+    ["engenhos","Brazilian sugar plantations and mills, named for engines because they processed so much sugar. Owners lost 5 to 10 percent of their workers every year.","Economics"],
+    ["cash crop","A crop grown to sell instead of to eat, like sugar and tobacco.","Economics"],
+    ["London Company","Joint-stock company in England that owned and funded Jamestown, hoping for a profit.","Economics"],
+    ["joint-stock company","Business where lots of investors each put up part of the money and share the profits, like the London Company.","Economics"],
+    ["tobacco","Native American plant that saved Jamestown. By 1620 Virginia colonists were growing high-quality tobacco Europe wanted.","Economics"],
+    ["indentured servitude","Working for an employer without pay for a set number of years in exchange for the trip to America.","Economics"],
+    ["fur trade","Main moneymaker for the French in North America. They traded with Native Americans for furs instead of taking land.","Economics"],
+    // ---- Culture ----
+    ["Tainos","Arawak people native to the Caribbean. Columbus kidnapped some, and disease killed most of the rest.","Culture"],
+    ["Nahuatl","The Aztec language. Very few original writings in it survived because the Spanish burned native books.","Culture"],
+    ["Florentine Codex","Record of Aztec life before and after the conquest that the priest Bernardino de Sahagún started in 1545. One of the most reliable sources on the Aztecs.","Culture"],
+    ["Virgin of Guadalupe","Dark-skinned version of the Virgin Mary worshipped in Mexico for her miracles. A big example of religious syncretism.","Culture"],
+    ["Vodun","Religion mainly in Haiti that comes from West African animist traditions with some Catholic elements. Sometimes called voodoo.","Culture"],
+    ["Santeria","Religion in Cuba that mixes Christianity with the traditions of the Aja people of Africa.","Culture"],
+    ["Candomblé","Religion in Brazil that mixes Christianity with Yoruba traditions from present-day Nigeria.","Culture"],
+    ["syncretism","Blending different religions or cultures into something new, like the Virgin of Guadalupe or Vodun.","Culture"],
+    ["missionaries","Catholic orders like the Dominicans, Jesuits, and Franciscans sent them to convert Latin Americans, and they were super successful.","Culture"],
+    ["Bartolomé de Las Casas","Dominican friar who wrote about Spanish cruelty to natives in 1552.","Culture"],
+    ["Black Legend","The idea that Spanish rule in the Americas was especially cruel. Historians still debate how true it is.","Culture"],
+    // ---- Social Structure ----
+    ["peninsulares","People born in Spain or Portugal on the Iberian Peninsula. They were at the top of colonial society.","Social Structure"],
+    ["creoles","People of European ancestry born in the Americas. Second from the top, and by 1750 they ran New Spain politically.","Social Structure"],
+    ["castas","The mixed-race groups in the middle of the colonial social pyramid.","Social Structure"],
+    ["mestizos","People of mixed European and indigenous ancestry. The highest of the castas.","Social Structure"],
+    ["mulattoes","People of mixed European and African ancestry.","Social Structure"],
+    ["zambos","People of mixed indigenous and African ancestry.","Social Structure"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Big picture", dates:"1492–1750", items:[
+      "Columbus in 1492 kicks off the <b>Columbian Exchange</b>",
+      "Spain almost quit exploring after 20 years of finding little",
+      "Aztec and Inca gold and silver made it worth it again",
+      "Disease and weapons crushed native societies",
+      "New cultures came from mixing <b>native, European, and African</b> traditions"
+    ]},
+    {name:"Why Europeans explored", dates:"late 1400s", items:[
+      "<b>Trade</b>: Italian cities had a monopoly on Asian goods, so others wanted new routes",
+      "<b>Tech</b>: compass from China, astrolabe improved by Muslims, Portuguese <b>caravel</b>",
+      "<b>Religion</b>: Christian duty to convert people",
+      "<b>Wealth</b>: gold and silver",
+      "Easy way to remember it: gold, God, and glory, plus new tech"
+    ]},
+    {name:"Disease disaster", dates:"1500s", items:[
+      "Natives had zero immunity to European germs",
+      "<b>Smallpox</b>, measles, and influenza did most of the killing",
+      "Population dropped over 50 percent in under a century",
+      "Some areas lost up to <b>90 percent</b>",
+      "The <b>Tainos</b> of the Caribbean were nearly wiped out"
+    ]},
+    {name:"Columbian Exchange", dates:"from c. 1500", items:[
+      "To the Americas: pigs, cows, <b>horses</b>, wheat, grapes, sugar, rats, mosquitoes",
+      "To Europe: <b>maize, potatoes</b>, tomatoes, beans, peppers, cacao",
+      "American crops boosted Europe's population in the 1500s and 1600s",
+      "Africans brought okra and rice; yams and manioc went to Africa",
+      "Africa's population grew even during the slave trade because of new foods"
+    ]},
+    {name:"Coerced labor", dates:"early 1500s", items:[
+      "<b>Encomienda</b>: <b>encomenderos</b> forced natives to work for food and shelter",
+      "Spain turned the Inca <b>mit'a</b> into forced mine labor for tiny pay",
+      "Villages had to send a share of their men to the mines",
+      "Both were brutal and coercive"
+    ]},
+    {name:"Silver &amp; mercantilism", dates:"late 1500s", items:[
+      "Silver in Mexico and Peru saved Spain's fortunes",
+      "Mining hubs: <b>Potosí</b> in the Andes and <b>Zacatecas</b> in Mexico",
+      "Mercury made separating silver cheaper",
+      "<b>Mercantilism</b>: colonies exist to send gold and silver home, export more than you import",
+      "A cut of the silver went straight to the Spanish crown"
+    ]},
+    {name:"Silver goes global", dates:"1600s", items:[
+      "<b>China</b> was the biggest buyer of American silver",
+      "<b>Galleons</b> carried it across the Pacific to <b>Manila</b>",
+      "Silver bought silk, spices, and gold",
+      "China made silver its main currency",
+      "By the early 1600s silver ran the global economy"
+    ]},
+    {name:"Sugar &amp; Brazil", dates:"Portugal", items:[
+      "Portugal focused on farming, not mining",
+      "Brazil's climate was perfect for <b>sugarcane</b>",
+      "Natives died or escaped, so Portugal imported enslaved Africans from Kongo and the Swahili coast",
+      "<b>Engenhos</b> lost 5 to 10 percent of workers a year",
+      "Sugar eventually beat silver as Europe's main moneymaker"
+    ]},
+    {name:"Fall of the Aztecs", dates:"1519–1521", items:[
+      "<b>Cortés</b> used the Aztecs' many enemies as allies",
+      "Aztecs offered gold to make him leave, which just made him want more",
+      "Smallpox ripped through Tenochtitlan",
+      "Founded <b>New Spain</b> and built <b>Mexico City</b> on the ruins"
+    ]},
+    {name:"Fall of the Inca", dates:"1532–1572", items:[
+      "<b>Pizarro</b> captured <b>Atahualpa</b> in 1532",
+      "Inca filled a room with gold, Spain killed him anyway in 1533",
+      "Conquest done by 1572",
+      "Germs may have mattered more than guns",
+      "New capital at <b>Lima</b>, ruling from Panama to Argentina"
+    ]},
+    {name:"Running the colonies", dates:"", items:[
+      "<b>Treaty of Tordesillas</b> 1494: Portugal gets Brazil, Spain gets the rest",
+      "<b>Viceroys</b> ruled for the king; <b>audiencias</b> checked them",
+      "Slow ships meant Spain couldn't control things closely",
+      "By 1750 <b>creoles</b> ran New Spain and wanted independence",
+      "<b>St. Augustine</b>, 1565: oldest continuous settlement in the U.S."
+    ]},
+    {name:"Culture &amp; religion", dates:"", items:[
+      "Cortés had native books burned, so few <b>Nahuatl</b> sources survive",
+      "Most Aztec info comes from biased Spanish writers",
+      "<b>Florentine Codex</b> by Sahagún, 1545, is a reliable source",
+      "Spanish and Portuguese took over as main languages",
+      "Missionaries made Latin America mostly Catholic",
+      "Syncretism: <b>Virgin of Guadalupe, Vodun, Santeria, Candomblé</b>"
+    ]},
+    {name:"Colonial social pyramid", dates:"race-based", items:[
+      "1. <b>Peninsulares</b>, born in Spain or Portugal",
+      "2. <b>Creoles</b>, Europeans born in the Americas",
+      "3. <b>Castas</b>: <b>mestizos</b>, then <b>mulattoes</b>, then <b>zambos</b>",
+      "4. Indigenous people and enslaved Africans",
+      "Skin color = power and status"
+    ]},
+    {name:"French colonies", dates:"1535–1680s", items:[
+      "<b>Cartier</b> 1535 up the St. Lawrence, claimed Canada",
+      "<b>Quebec</b> founded 1608; <b>Champlain</b> explored 1609–1616",
+      "Made money off <b>furs</b>, not gold",
+      "<b>La Salle</b> claimed the Mississippi River valley in the 1680s",
+      "Traded instead of taking land, so better relations with natives",
+      "Only 70,000 Europeans in New France by 1754 vs one million in English colonies"
+    ]},
+    {name:"English colonies", dates:"1497–1640s", items:[
+      "<b>John Cabot</b> 1497 claimed Newfoundland to Chesapeake Bay",
+      "Beat the <b>Spanish Armada</b> in 1588 and became a naval power",
+      "<b>Jamestown</b> 1607, owned by the <b>London Company</b>",
+      "No gold, swampy land, disease; Powhatan food kept it alive",
+      "<b>Tobacco</b> saved it by 1620; peace with natives only in the 1640s",
+      "First Africans in 1619 came as indentured servants; slavery laws came later"
+    ]},
+    {name:"Dutch &amp; the environment", dates:"1609–1664", items:[
+      "<b>Henry Hudson</b> 1609 claimed the Hudson River Valley",
+      "<b>New Amsterdam</b> on Manhattan was a trade hub for furs and tobacco",
+      "England took it in 1664; it became New York City",
+      "Europeans farmed harder: <b>deforestation</b> and soil depletion",
+      "Denser towns meant more water strain and pollution"
+    ]},
+    {name:"Maritime vs land empires", dates:"compare", items:[
+      "Romans, Muslims, and Mongols either let local traditions survive or layered theirs on top",
+      "Spain and Portugal wiped out most native social structures within a century",
+      "Disease nearly emptied the Americas, which made that possible"
+    ]},
+    {name:"How harsh were the Spanish?", dates:"debate", items:[
+      "<b>Las Casas</b> wrote about Spanish cruelty in 1552",
+      "<b>Black Legend</b>: idea Spain was especially evil, named by Juderías in 1914",
+      "Jealous rivals and Protestants liked believing it",
+      "Spanish historians answered with a White Legend",
+      "<b>Lewis Hanke</b> said Spain had lots of reformers",
+      "Global view today: brutality was everywhere, hard to say Spain was worse"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"Columbian Exchange", head:["Direction","Plants","Animals","Disease","Technology and ideas"], rows:[
+      ["Afro-Eurasia to the Americas","Wheat, grapes, okra, sugar, rice, barley, oranges, lettuce, coffee","Pigs, cows, horses, oxen, chickens, sheep, goats, rats","Bubonic plague, typhus, influenza, measles, smallpox","Written alphabet, farming tech, firearms, architecture, corporate structure"],
+      ["Americas to Afro-Eurasia","Potatoes, tomatoes, beans, peppers, yams, manioc, chocolate, tobacco, avocado, maize, squash, vanilla","Turkeys, llamas, alpacas, guinea pigs","Syphilis","Rubber, quinine"]
+    ]},
+    {title:"Comparing the colonial powers", head:["","Spain","Portugal","France","England","Netherlands"], rows:[
+      ["Main area","Mexico, Caribbean, most of South America","Brazil","Canada, Great Lakes, Mississippi valley","East Coast of North America","Hudson River Valley, Manhattan"],
+      ["How they made money","Silver, then sugar and tobacco","Sugar","Furs","Tobacco","Trade in furs and tobacco"],
+      ["Labor","Encomienda, mit'a, enslaved Africans","Enslaved Africans","Native trappers","Indentured servants, then slaves in the south","Merchants and traders"],
+      ["Settlement","Large, permanent, conquered empires","Plantations","Few permanent settlers","Lots of permanent settlers","Small trading towns"],
+      ["Relations with natives","Conquest and forced labor","Forced labor","Best of the group, based on trade","Fights over land","Trade partners"]
+    ]},
+    {title:"Comparing transoceanic voyages, c. 1300 to c. 1800", head:["Empire","Explorer","Where","Purpose","Impact"], rows:[
+      ["China","Zheng He","India, Middle East, Africa","Open trade and spread Chinese culture","China decided to stop exploring"],
+      ["England","James Cook","Australia, New Zealand","Collect plants, chart islands, study stars","Contact with Australia and Hawaii, mapped the Pacific"],
+      ["Portugal","Vasco da Gama","West Africa, India","Open a sea route from Europe to India","More trade between India and Europe"],
+      ["Spain","Christopher Columbus","Caribbean, Central America","Find a western route to India and China","Spain led colonization of the Americas"],
+      ["Spain","Ferdinand Magellan","South America, Philippines","Prove you could reach Asia sailing west","Linked the Americas and Asia across the Pacific"]
+    ]},
+    {title:"Ethnic blending in Latin America today", head:["Country","Indigenous","European","African","Indigenous and European","African and European","Other"], rows:[
+      ["Mexico","28%","—","—","62%","—","10%"],
+      ["Nicaragua","5%","17%","9%","69%","—","—"],
+      ["Haiti","—","—","95%","—","—","5%"],
+      ["Brazil","1%","48%","7%","—","43%","1%"],
+      ["Bolivia","20%","5%","1%","68%","—","6%"],
+      ["Argentina","—","97%","—","—","—","3%"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["1492","Columbus reaches the Caribbean"],
+    ["1494","Treaty of Tordesillas splits the Americas between Spain and Portugal"],
+    ["1497","John Cabot claims land for England"],
+    ["early 1500s","Spain sets up the encomienda system"],
+    ["1519","Cortés marches on Tenochtitlan"],
+    ["1521","Aztec Empire falls; New Spain founded"],
+    ["1532","Pizarro captures Atahualpa"],
+    ["1533","Spanish kill Atahualpa"],
+    ["1535","Cartier sails up the St. Lawrence"],
+    ["1545","Sahagún starts the Florentine Codex"],
+    ["1552","Las Casas writes about Spanish cruelty"],
+    ["1565","St. Augustine founded in Florida"],
+    ["1572","Spanish finish conquering the Inca"],
+    ["late 1500s","Potosí and Zacatecas become silver hubs"],
+    ["1588","England beats the Spanish Armada"],
+    ["1607","Jamestown founded"],
+    ["1608","Quebec founded"],
+    ["1609","Henry Hudson explores for the Dutch"],
+    ["1619","First Africans arrive in Virginia as indentured servants"],
+    ["1620","Virginia tobacco booming"],
+    ["1640s","Peace between Virginia and local tribes"],
+    ["1664","England takes New Amsterdam"],
+    ["1680s","La Salle claims the Mississippi River valley"],
+    ["1750","Creoles dominate politics in New Spain"],
+    ["1754","New France has only about 70,000 Europeans"]
+  ];
+
+  var CONTENT_Q = [
+    ["What was the Columbian Exchange?",["A trade deal between Spain and Portugal","The sharing of plants, animals, ideas, and diseases between Afro-Eurasia and the Americas","Columbus's trade route to China","The swap of silver for silk in Manila"],1],
+    ["Why did Spain almost stop exploring the Americas?",["England defeated them","They found little of value in the first 20 years","The Pope banned it","Their ships kept sinking"],1],
+    ["What rekindled Spanish interest in the Americas?",["Finding the northwest passage","Contact with the gold and silver of the Aztec and Inca","The fur trade","The Treaty of Tordesillas"],1],
+    ["Why did Spain and Portugal look for new routes to Asia?",["Italian cities controlled trade with Asia and set the prices","The Mongols closed the Silk Roads","They wanted to reach Australia","China invited them"],0],
+    ["What did the astrolabe help sailors figure out?",["Their speed","How far north or south of the equator they were","The depth of the water","The weather"],1],
+    ["What was a caravel?",["A Spanish war galleon","A small three-masted Portuguese ship that handled storms well","A navigation tool","A Chinese junk"],1],
+    ["What killed the most native people in the Americas?",["Guns","Disease","Famine","Civil war"],1],
+    ["About how much did the native population fall from disease in less than a century?",["10 percent","More than 50 percent","5 percent","25 percent"],1],
+    ["Which animal transformed the culture of Plains Indians?",["Cow","Horse","Pig","Sheep"],1],
+    ["Which crop became so popular in Ireland that people think it's native there?",["Maize","Potato","Tomato","Cacao"],1],
+    ["How did the Columbian Exchange affect Africa's population?",["It collapsed from disease","It grew because of new foods like manioc and yams","It stayed exactly the same","Everyone moved to Brazil"],1],
+    ["What was the encomienda system?",["A tax on silver","Forced native labor for Spanish landowners in exchange for food and shelter","A royal court","A trade route"],1],
+    ["How did the Spanish change the mit'a system?",["They ended it","They turned it into forced labor in the silver mines","They paid workers fairly","They only used it for roads"],1],
+    ["Which city became the biggest silver mining center?",["Lima","Potosí","Quebec","Manila"],1],
+    ["What is mercantilism?",["Free trade with no tariffs","Government control of the economy using tariffs and colonies to export more than it imports","A banking system","Trading only with China"],1],
+    ["Which country was the most eager buyer of American silver?",["England","China","France","Brazil"],1],
+    ["Where did Europeans swap silver for silk and spices?",["Manila","Lima","Quebec","Hispaniola"],0],
+    ["What did the Portuguese rely on in Brazil?",["Silver","Sugar","Furs","Tobacco"],1],
+    ["Why did Portugal import enslaved Africans?",["Africans asked to come","Disease killed natives and others escaped into the jungle","The Pope ordered it","It was cheaper than horses"],1],
+    ["What were engenhos?",["Silver mines","Brazilian sugar plantations and mills","Spanish courts","Dutch trading posts"],1],
+    ["What is a cash crop?",["A crop grown to eat","A crop grown to sell","A crop paid for with silver","A crop grown by the government"],1],
+    ["How did Cortés beat the Aztecs?",["He had a huge army from Spain","He used the Aztecs' enemies as allies and smallpox hit the city","The Aztecs surrendered without fighting","The Inca helped him"],1],
+    ["What did the Spanish build on top of Tenochtitlan?",["Lima","Mexico City","Cuzco","St. Augustine"],1],
+    ["What happened to Atahualpa?",["He escaped to the mountains","He was freed after paying gold","The Spanish killed him even after the Inca paid a room of gold","He became a viceroy"],2],
+    ["What did the Treaty of Tordesillas do?",["Ended the Spanish Armada","Split the Americas between Spain and Portugal","Gave Canada to France","Ended the slave trade"],1],
+    ["What is the oldest continuous settlement in the U.S.?",["Jamestown","St. Augustine","Quebec","New Amsterdam"],1],
+    ["What were audiencias?",["Spanish royal courts that checked viceroys","Native councils","Sugar mills","Dutch trading companies"],0],
+    ["Who were the creoles?",["People born in Spain","People of European ancestry born in the Americas","Mixed indigenous and African people","Enslaved Africans"],1],
+    ["Why are there so few firsthand Aztec accounts?",["The Aztecs had no writing","The Spanish burned native books","They were lost in a flood","The Aztecs hid them"],1],
+    ["What are the two main languages of Latin America?",["English and French","Spanish and Portuguese","Nahuatl and Quechua","Spanish and Dutch"],1],
+    ["Which is an example of religious syncretism in Mexico?",["Vodun","The Virgin of Guadalupe","Candomblé","Santeria"],1],
+    ["Candomblé in Brazil mixes Christianity with which traditions?",["Aja","Yoruba","Aztec","Inca"],1],
+    ["Who was at the very top of the colonial social pyramid?",["Creoles","Peninsulares","Mestizos","Viceroys only"],1],
+    ["What were mestizos?",["Mixed European and African","Mixed European and indigenous","Mixed indigenous and African","Born in Spain"],1],
+    ["What was a northwest passage?",["A road across Canada","A water route through or around North America to Asia","A Spanish silver route","A Dutch canal"],1],
+    ["What did the French make most of their money from?",["Gold","Furs","Sugar","Silver"],1],
+    ["Why did the French get along better with Native Americans?",["They traded instead of taking land","They married into every tribe","They had no army","They brought no diseases"],0],
+    ["What event made England a naval power?",["Founding Jamestown","Defeating the Spanish Armada in 1588","Taking New Amsterdam","Cabot's voyage"],1],
+    ["Which company owned Jamestown?",["Dutch East India Company","London Company","Hudson's Bay Company","Virginia Tobacco Company"],1],
+    ["What crop saved Jamestown?",["Cotton","Tobacco","Sugar","Rice"],1],
+    ["What was indentured servitude?",["Lifelong slavery","Working without pay for a set number of years in exchange for the trip over","Paid factory work","Military service"],1],
+    ["What city was New Amsterdam?",["Boston","New York City","Philadelphia","Quebec"],1],
+    ["Which environmental problem did colonists cause?",["Desertification from overgrazing camels","Deforestation and soil depletion","Rising sea levels","Volcanic soil loss"],1],
+    ["How were the Spanish and Portuguese empires different from earlier land empires?",["They kept native cultures exactly the same","They erased most native social structures within a century","They never used force","They only traded"],1],
+    ["What is the Black Legend?",["A Spanish ship","The idea that Spanish rule was especially cruel","An Aztec myth","A pirate group"],1],
+    ["Textbook MC: An Aztec mural from the 1530s with a cross plus Aztec animals best shows that",["the Aztecs were isolated from Spain","the Aztecs kept some of their culture under Spanish influence","all Aztecs became Christian","Aztec religion was the same as Christianity"],1],
+    ["Textbook MC: Forced mine labor under the Spanish was most similar to labor used",["to build the pyramids in ancient Egypt","in Tang bureaucracy","in early Western capitalism","in the trans-Saharan salt trade"],0],
+    ["Textbook MC: What did the huge flow of American silver do to the world?",["Helped Spain beat England in 1588","Caused inflation and made silver worth less","Made gold the world currency","Moved South Americans to Europe"],1],
+    ["Textbook MC: A family of a European man, a native woman, and their child was rarer in French colonies because",["the French hated natives","French settlers rarely settled permanently","France banned those marriages","most French settlers were women"],1]
+  ];
+
+  var TF_Q = [
+    ["Columbus was trying to reach the East Indies or China.",true,"","State-Building"],
+    ["The English explored and settled right after Cabot's 1497 voyage.",false,"They made little attempt for almost a century.","State-Building"],
+    ["The magnetic compass was originally a Chinese invention.",true,"","Environment"],
+    ["Guns killed more native people than disease did.",false,"Disease killed the majority.","Environment"],
+    ["Some American lands lost up to 90 percent of their people.",true,"","Environment"],
+    ["Mesoamericans ate a lot of beef before Europeans arrived.",false,"They had no pigs or cows until Europeans brought them.","Environment"],
+    ["American crops helped Europe's population grow.",true,"Especially in the 1500s and 1600s.","Environment"],
+    ["Africa's population shrank during the 1500s and 1600s.",false,"It grew because of new foods from the Americas.","Environment"],
+    ["Columbus found tons of gold on Hispaniola.",false,"Gold was sparse, so he kidnapped Tainos instead.","Economics"],
+    ["Mercury made silver mining more profitable.",true,"It separated silver from the ore.","Economics"],
+    ["Under mercantilism, a country wants to import more than it exports.",false,"It wants to export more than it imports.","Economics"],
+    ["China started using silver as its main currency.",true,"","Economics"],
+    ["Spain focused on sugar while Portugal focused on silver.",false,"It's the opposite at first.","Economics"],
+    ["Sugar eventually beat silver as the main moneymaker for European empires.",true,"","Economics"],
+    ["Engenhos lost 5 to 10 percent of their workers every year.",true,"","Economics"],
+    ["The Aztecs had no enemies in Mesoamerica.",false,"Their militarism made lots of enemies who helped Cortés.","State-Building"],
+    ["The Aztec Empire fell by 1521.",true,"","State-Building"],
+    ["The Spanish freed Atahualpa after the ransom was paid.",false,"They killed him in 1533.","State-Building"],
+    ["The Treaty of Tordesillas gave Brazil to Portugal.",true,"","State-Building"],
+    ["Jamestown is the oldest continuous settlement in the U.S.",false,"St. Augustine, 1565, is.","State-Building"],
+    ["Slow communication made it hard for Spain to control its colonies directly.",true,"","State-Building"],
+    ["By 1750 creoles dominated politics in New Spain.",true,"","Social Structure"],
+    ["Lots of original Nahuatl writings survived.",false,"The Spanish burned most native books.","Culture"],
+    ["Most Latin Americans today are Roman Catholic.",true,"","Culture"],
+    ["Vodun is practiced mainly in Haiti.",true,"","Culture"],
+    ["Santeria mixes Christianity with Yoruba traditions.",false,"That's Candomblé. Santeria mixes in Aja traditions.","Culture"],
+    ["Peninsulares were born in the Americas.",false,"They were born in Spain or Portugal. Creoles were born in the Americas.","Social Structure"],
+    ["Zambos were of mixed indigenous and African ancestry.",true,"","Social Structure"],
+    ["Skin color became a sign of power and status in Latin America.",true,"","Social Structure"],
+    ["The French usually settled permanently and took native land.",false,"They mostly traded for furs.","State-Building"],
+    ["Cartier claimed part of Canada for France.",true,"In 1535.","State-Building"],
+    ["England destroyed most of the Spanish Armada in 1588.",true,"All but a third.","State-Building"],
+    ["Jamestown made money right away from gold.",false,"There was no gold; tobacco saved it later.","Economics"],
+    ["The first Africans in Virginia came as indentured servants.",true,"In 1619.","Social Structure"],
+    ["Slavery was more common in the northern English colonies.",false,"Slavery became the norm in the south.","Social Structure"],
+    ["The Dutch used New Amsterdam as a trade hub.",true,"","Economics"],
+    ["The Dutch kept New Amsterdam forever.",false,"England took it in 1664.","State-Building"],
+    ["European farming caused deforestation and soil depletion in the Americas.",true,"","Environment"],
+    ["Las Casas defended the Spanish treatment of natives.",false,"He criticized their cruelty.","Culture"],
+    ["Historians agree the Spanish were crueler than every other European power.",false,"It's still hard to determine.","Culture"]
+  ];
+
+  var PACKET = [
+    {section:"Introduction", items:[
+      {q:"What is the Columbian Exchange?", a:"It's the huge swap of animals, plants, people, ideas, technology, and diseases between Afro-Eurasia and the Americas that started with Columbus in 1492. Europe sent horses, pigs, cows, wheat, sugar, and deadly diseases like smallpox, while the Americas sent maize, potatoes, tomatoes, and cacao back. It killed off most native people, boosted populations in Europe and Africa, and set up the Atlantic slave trade."},
+      {q:"Describe the initial reasons for exploration.", a:"Europeans wanted a new route to Asia and were hoping to find gold, silver, and other valuable stuff."},
+      {q:"Why did the Spanish almost stop further exploration?", a:"They found so little of value in the first 20 years that it didn't seem worth it."},
+      {q:"What rekindled Spanish interest in exploration?", a:"Running into the Aztec and Inca empires, which had tons of gold and silver."},
+      {q:"How did European conquest impact life in the Americas?", a:"Weapons and disease wiped out native populations and forced survivors under new rulers and a new religion, but new cultures grew from mixing native, European, and African traditions."}
+    ]},
+    {section:"Why Did the Europeans Want to Explore?", items:[
+      {q:"Reason for exploration 1", a:"Italian port cities had a monopoly on trade with Asia, so Spain, Portugal, and later others wanted their own routes."},
+      {q:"Reason for exploration 2", a:"New tech like the compass, the astrolabe, and the caravel let sailors go farther out into the ocean."},
+      {q:"Reason for exploration 3", a:"Lots of Europeans felt it was their Christian duty to convert people in other lands."},
+      {q:"Reason for exploration 4", a:"They wanted to get rich, especially off gold and silver."},
+      {q:"Analysis: Using the four motives, was Christopher Columbus a success or a failure?", a:"Mostly a success, because even though he never found a route to Asia or much gold, he opened up the Americas for Spain to get rich, spread Christianity, and test out the new tech."}
+    ]},
+    {section:"Diseases & Demographic Catastrophe", items:[
+      {q:"Define demography.", a:"The study of population patterns and how they change."},
+      {q:"Define Tainos.", a:"Arawak people native to the Caribbean who mostly died from European disease."},
+      {q:"Define conquistadors.", a:"Spanish conquerors like Cortés and Pizarro who took over the Americas."},
+      {q:"Define smallpox.", a:"A deadly disease spread through breathing that Europeans brought over and that killed most native people."},
+      {q:"What is the estimated percentage of number dead in the Americas due to disease?", a:"Over 50 percent in less than a century, and up to 90 percent in some places."}
+    ]},
+    {section:"Columbian Exchange", items:[
+      {q:"What types of livestock were brought to the Americas?", a:"Pigs, cows, horses, oxen, chickens, sheep, and goats."},
+      {q:"What types of crops were brought to the Americas?", a:"Wheat, grapes, sugar, rice, barley, oranges, lettuce, and coffee."},
+      {q:"What types of crops were taken back to Europe with the European explorers?", a:"Maize, potatoes, tomatoes, beans, peppers, and cacao."},
+      {q:"What items were brought from Africa to the Americas?", a:"Enslaved people, plus crops like okra and rice."},
+      {q:"What items did American plantations send back to Europe?", a:"Tobacco and cacao, and later lots of sugar."},
+      {q:"How did the Columbian Exchange impact cultures in the Americas?", a:"Native populations got destroyed by disease, new animals like horses changed how Plains Indians lived, and European food like pork and beef became a normal part of the diet."},
+      {q:"How did the Columbian Exchange impact Europe?", a:"New crops like potatoes caused big population growth, and American silver and sugar made European countries rich."},
+      {q:"What impact did the Columbian Exchange have on Africa?", a:"Millions of people got taken in the slave trade, but new foods like manioc and yams actually made Africa's population grow."}
+    ]},
+    {section:"Economic Changes", items:[
+      {q:"What was the encomienda system?", a:"A Spanish labor system where landowners forced native people to work for them in exchange for food and shelter."},
+      {q:"Who were encomenderos?", a:"The Spanish landowners who forced natives to work under the encomienda system."},
+      {q:"How did metal become the primary source of fortune for Europeans in the Americas?", a:"Gold barely panned out, but huge silver finds in Mexico and Peru, plus using mercury to separate it, made silver super profitable."},
+      {q:"What two cities became the primary sources of the mining of silver?", a:"Potosí in the Andes and Zacatecas in Mexico."},
+      {q:"What was the main purpose of the colonies for Spain?", a:"To send home as much gold and silver as possible."},
+      {q:"What country was an enthusiastic consumer of silver?", a:"China."},
+      {q:"What were galleons?", a:"Big, heavily armed Spanish ships that carried silver across the Pacific."},
+      {q:"What role did the Spanish Philippines play in the silver trade?", a:"Manila was the trading post where Europeans swapped American silver for Asian goods."},
+      {q:"What goods were the Europeans able to get in Asia with the American silver?", a:"Silk, spices, and even gold."},
+      {q:"What product did the Portuguese come to rely on for their prosperity in the New World?", a:"Sugar."},
+      {q:"Why did Portugal turn to the importation of African slaves?", a:"Disease had killed most of the natives and the rest kept escaping into the jungle, so there weren't enough workers."},
+      {q:"What type of work conditions faced the imported African slaves?", a:"Backbreaking work, bad food, barely any shelter, and tropical heat and disease, so plantations lost 5 to 10 percent of workers every year."},
+      {q:"What is a cash crop?", a:"A crop grown to sell, not to eat."},
+      {q:"Analysis: How was the encomienda system a type of coercive labor?", a:"Natives were forced to work and only got food and shelter back, so they had no real choice or pay."},
+      {q:"Analysis: How did the Spanish turn the mit'a system into a form of coercive labor?", a:"They took the old Inca public work duty and forced villages to send their men into dangerous silver mines for tiny pay."},
+      {q:"Analysis: How did the silver trade strengthen the Spanish economy?", a:"A cut of all the silver went straight to the crown, which paid for a strong military and trade with places like China."},
+      {q:"Analysis: Why would European nations find it more profitable to focus on cash crops versus silver or other natural resources?", a:"Mines eventually run out, but cash crops like sugar can be grown and sold over and over to huge markets in Europe."}
+    ]},
+    {section:"Political Changes", items:[
+      {q:"Chart, Aztec: Spanish conquistador", a:"Hernán Cortés."},
+      {q:"Chart, Aztec: Timeline of events that led to takeover", a:"Cortés landed in 1519, teamed up with the Aztecs' enemies, smallpox hit Tenochtitlan, and the empire fell in 1521."},
+      {q:"Chart, Aztec: Product demanded", a:"Gold."},
+      {q:"Chart, Aztec: New capital city", a:"Mexico City, built on Tenochtitlan's ruins."},
+      {q:"Chart, Inca: Spanish conquistador", a:"Francisco Pizarro."},
+      {q:"Chart, Inca: Timeline of events that led to takeover", a:"Pizarro captured Atahualpa in 1532, killed him in 1533 after getting a room full of gold, and finished the conquest by 1572."},
+      {q:"Chart, Inca: Product demanded", a:"A room full of gold as ransom for Atahualpa."},
+      {q:"Chart, Inca: New capital city", a:"Lima."},
+      {q:"What was the Treaty of Tordesillas of 1494?", a:"A deal where Spain and Portugal split the Americas along a line, giving Brazil to Portugal and the rest to Spain."},
+      {q:"What is the oldest continuous settlement in what is now the United States?", a:"St. Augustine in Florida, founded in 1565."},
+      {q:"What is a viceroy, and what did they do?", a:"An official picked by the Spanish king to run a colony as the crown's representative."},
+      {q:"What was the purpose of the audiencias?", a:"They were royal courts where settlers could appeal a viceroy's decisions, which kept viceroys in check."},
+      {q:"Who were the creoles?", a:"People of European ancestry who were born in the Americas."},
+      {q:"Analysis: How was the Spanish takeover of the Aztecs similar to the Inca?", a:"In both, a small group of conquistadors grabbed gold, got huge help from smallpox, and set up a new Spanish capital."},
+      {q:"Analysis: How was the Spanish takeover of the Aztecs different to the Inca?", a:"Cortés won by teaming up with the Aztecs' enemies, while Pizarro won by capturing the Inca ruler and using him as a hostage."},
+      {q:"Analysis: How will the fact that transportation and communication between Spain and the New World was slow impact colonial development?", a:"Spain couldn't control the colonies closely, so local elites like the creoles gained power and eventually wanted independence."}
+    ]},
+    {section:"Cultural & Social Changes", items:[
+      {q:"Why are there so few firsthand accounts of the indigenous peoples of the Americas?", a:"Conquistadors like Cortés had native books burned because they thought they were unholy."},
+      {q:"What impact has the lack of firsthand accounts had on historical knowledge of the pre-European American societies?", a:"Most of what we know comes from Spanish writers who were biased and didn't know Nahuatl well, so the picture is limited."},
+      {q:"What are the two primary languages of Latin America? Why?", a:"Spanish and Portuguese, because Spain and Portugal conquered the region and spread their languages."},
+      {q:"What is the primary religion of Latin America? Why?", a:"Roman Catholicism, because Dominican, Jesuit, and Franciscan missionaries converted tons of people."},
+      {q:"How is the Virgin of Guadalupe an example of religious syncretism?", a:"She's a dark-skinned Virgin Mary worshipped in Mexico, mixing Catholic belief with native identity."},
+      {q:"How is Vodun an example of religious syncretism?", a:"It mixes West African animist traditions with parts of Catholicism, mostly in Haiti."},
+      {q:"How is Santeria an example of religious syncretism?", a:"It mixes Christianity with the traditions of the Aja people from Africa, mostly in Cuba."},
+      {q:"How is Candomblé an example of religious syncretism?", a:"It mixes Christianity with Yoruba traditions from Nigeria, mostly in Brazil."},
+      {q:"Define peninsulares.", a:"People born in Spain or Portugal who sat at the top of colonial society."},
+      {q:"Define castas.", a:"The mixed-race groups in the middle of the colonial social pyramid."},
+      {q:"Define mestizos.", a:"People with mixed European and indigenous ancestry."},
+      {q:"Define mulattoes.", a:"People with mixed European and African ancestry."},
+      {q:"Define zambos.", a:"People with mixed indigenous and African ancestry."},
+      {q:"What was the signifier of power and status in the Americas?", a:"Skin color."},
+      {q:"Draw a social pyramid detailing the social hierarchy in colonial Latin America.", a:"Top to bottom, draw peninsulares, then creoles, then the castas with mestizos over mulattoes over zambos, then indigenous people and enslaved Africans at the base."},
+      {q:"How were the Spanish and Portuguese maritime empires different from previous land-based empires?", a:"Land empires like the Romans, Muslims, and Mongols mostly let local cultures survive or layered theirs on top, but Spain and Portugal erased most native social structures within a century."}
+    ]},
+    {section:"The French Colonies", items:[
+      {q:"What was the northwest passage?", a:"A water route through or around North America to Asia that explorers kept looking for."},
+      {q:"Where did Jacques Cartier explore and claim for France?", a:"He sailed up the St. Lawrence River in 1535 and claimed part of Canada."},
+      {q:"What would be the primary resource France would find to make money off of in the New World?", a:"Furs."},
+      {q:"What area did La Salle explore and claim for France?", a:"The Great Lakes and the whole Mississippi River down to the Gulf of Mexico."},
+      {q:"What about the French presence in the New World differed from the Spanish and the English? Why?", a:"The French rarely settled permanently and traded with natives instead of taking their land, so they got along better but grew way slower."}
+    ]},
+    {section:"The English Colonies", items:[
+      {q:"What area did John Cabot explore and claim for England?", a:"From Newfoundland down to the Chesapeake Bay."},
+      {q:"What event allowed England to declare itself a naval power and begin competing for resources in the Americas? Explain.", a:"Beating the Spanish Armada in 1588, when England destroyed all but a third of Spain's fleet."},
+      {q:"What is significant about Jamestown, founded 1607?", a:"It was England's first successful colony in the Americas."},
+      {q:"What company funded and owned the Jamestown colony?", a:"The London Company, a joint-stock company."},
+      {q:"What early issues almost put an end to the Jamestown colony?", a:"There was no gold, and the swampy land made lots of settlers sick and die."},
+      {q:"What product saved the Jamestown colony?", a:"Tobacco."},
+      {q:"What led the local Native Americans, who had at first helped the Jamestown colonists, to turn on them?", a:"The colonists kept taking more land to grow tobacco."},
+      {q:"What is indentured servitude?", a:"Working for someone without pay for a set number of years in exchange for the trip to America."},
+      {q:"Why do you think the early colonies relied more on indentured servitude early on rather than the importation of African slaves?", a:"Indentured servants were cheaper and easy to find among poor English people, and slavery laws didn't exist in Virginia until later in the 1600s."}
+    ]},
+    {section:"The Dutch Experience", items:[
+      {q:"What area did Henry Hudson explore and claim for the Dutch?", a:"The Hudson River Valley and Manhattan."},
+      {q:"What current city used to be known as New Amsterdam?", a:"New York City."},
+      {q:"What was the primary purpose of New Amsterdam and the New Netherlands colony, prompting the British to forcefully take it in 1664?", a:"It was a trade hub where the Dutch bought furs and Virginia tobacco and shipped them to the Netherlands."},
+      {q:"What types of environmental problems did the Europeans create in the New World?", a:"Deforestation, soil depletion, strain on water, and pollution from crowded towns."},
+      {q:"Use the venn triagram to compare French, English, and Dutch colonization.", a:"All three looked for a northwest passage and made money off North American trade, the French focused on furs and good native relations, the English settled permanently and grew tobacco, and the Dutch used New Amsterdam as a trade hub."}
+    ]},
+    {section:"Textbook Short-Answer Practice", items:[
+      {q:"SAQ 1A: Other than geography, cite and explain one difference between British and French settlements in the Americas.", a:"The British settled permanently and took land to farm, while the French mostly traded for furs and rarely stayed."},
+      {q:"SAQ 1B: Other than geography, cite and explain one difference between Spanish and Portuguese settlements in the Americas.", a:"Spain got rich mostly off silver mining, while Portugal focused on sugar plantations in Brazil."},
+      {q:"SAQ 1C: Other than geography, cite and explain one difference between Dutch and French settlements in the Americas.", a:"The Dutch built New Amsterdam as a port hub for all kinds of trade, while the French spread out across the continent trading for furs and converting natives."},
+      {q:"SAQ 2A: Cite one technological improvement that originated outside of Europe and explain how it helped European voyages.", a:"The magnetic compass from China helped sailors steer in the right direction far out at sea."},
+      {q:"SAQ 2B: Pick one explorer and explain how his voyages affected the sponsoring empire beyond the chart.", a:"Columbus's voyages led Spain to the Aztec and Inca silver that paid for a huge military and global trade."},
+      {q:"SAQ 2C: Pick a different explorer and explain how his voyages affected the indigenous population.", a:"Cartier's claim brought French traders and priests who traded with natives for furs and tried to convert them to Christianity."}
+    ]}
+  ];
+
+  // Guide for the blank NOTES page in the unit packet
+  var NOTES_PAGE = {
+    intro:"Your packet has a full blank notes page for this chapter. The reading guide skips some of the vocab and a few big ideas, so put these on that page. It's all short enough to fit on one page.",
+    blocks:[
+      {title:"Vocab the reading guide never asks about", why:"These are on the packet's vocab list but no question covers them.", items:[
+        "<b>Caravel</b>: small three-masted Portuguese ship that survived storms",
+        "<b>Hispaniola</b>: island Columbus named, now Haiti and the Dominican Republic",
+        "<b>Atahualpa</b>: Inca ruler Pizarro captured in 1532 and killed in 1533 after the gold ransom",
+        "<b>New Spain</b>: colony Cortés set up after the Aztecs fell, run from Mexico City",
+        "<b>Engenhos</b>: Brazilian sugar plantations, lost 5 to 10 percent of workers a year",
+        "<b>Transatlantic slave trade</b>: Africans shipped to the Americas, mostly for sugar",
+        "<b>Nahuatl</b>: Aztec language, few writings survived",
+        "<b>Florentine Codex</b>: Sahagún's record of Aztec life, started 1545, a reliable source",
+        "<b>Champlain, Quebec 1608, New France</b>: French fur trade colony, only 70,000 Europeans by 1754"
+      ]},
+      {title:"Mercantilism", why:"Big AP idea the guide only hints at.", items:[
+        "Government controls the economy with tariffs and colonies",
+        "Colonies exist to make the home country rich",
+        "Goal is to export more than you import",
+        "Explains why Spain wanted silver and why everyone wanted cash crops"
+      ]},
+      {title:"Silver goes global", items:[
+        "Potosí and Zacatecas silver, mercury made mining cheaper",
+        "Manila galleons carried it across the Pacific to the Philippines",
+        "China wanted it so badly it made silver its main currency",
+        "First truly global trade network, Americas to Asia to Europe"
+      ]},
+      {title:"Columbian Exchange chart", why:"Know one example of each, both ways.", items:[
+        "To the Americas: horses, pigs, cows, wheat, sugar, smallpox",
+        "To Afro-Eurasia: maize, potatoes, tomatoes, cacao, tobacco, syphilis",
+        "Africa got manioc and yams, so its population grew even with the slave trade"
+      ]},
+      {title:"How harsh were the Spanish?", why:"The Historical Perspectives box, good for SAQs.", items:[
+        "<b>Las Casas</b>, 1552: wrote about Spanish cruelty",
+        "<b>Black Legend</b>: Juderías, 1914, said rivals exaggerated Spain's evil out of jealousy and anti-Catholic bias",
+        "<b>Lewis Hanke</b>: Spain had lots of reformers too",
+        "Today: brutality was everywhere, hard to say Spain was worse"
+      ]},
+      {title:"Key dates", items:[
+        "1492 Columbus, 1494 Tordesillas, 1497 Cabot",
+        "1519 to 1521 Cortés takes the Aztecs",
+        "1532 Pizarro, 1572 Inca fully conquered",
+        "1565 St. Augustine, 1588 Armada, 1607 Jamestown",
+        "1608 Quebec, 1609 Hudson, 1619 first Africans in Virginia, 1664 English take New Amsterdam"
+      ]},
+      {title:"Big themes for the test", items:[
+        "Coerced labor: encomienda, mit'a, slavery, indentured servitude",
+        "Disease did more damage than weapons",
+        "Race-based social hierarchy, skin color = status",
+        "Syncretism in religion and culture",
+        "Compare the colonizers: Spain silver, Portugal sugar, France furs, England tobacco, Dutch trade"
+      ]}
+    ]
+  };
+
+  return {
+    id:"16", num:16, short:"Colonial Americas",
+    title:"The Americas in the Early Colonial Period", years:"1492–1750 C.E.",
+    pages:"302–318", heading:"Chapter 16 Study Hub",
+    blurb:"Columbus, the Columbian Exchange, silver and sugar, the fall of the Aztecs and Inca, and the French, English, and Dutch moving in.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET, notesPage:NOTES_PAGE
+  };
+})());
+
 (function(){
   "use strict";
 
@@ -3038,6 +3617,11 @@ CH.push((function(){
     }).join("");
     pickSelect(BY_ID[last] ? last : ORDER[ORDER.length-1], false);
   }
+  function syncPickerFade(){
+    pickerList.classList.toggle("more", pickerList.scrollTop + pickerList.clientHeight < pickerList.scrollHeight - 4);
+  }
+  pickerList.addEventListener("scroll", syncPickerFade, {passive:true});
+  window.addEventListener("resize", function(){ if (!picker.hidden) syncPickerFade(); });
   function pickSelect(id, focus){
     pickerSel = id;
     Array.prototype.forEach.call(pickerList.querySelectorAll(".chap-opt"), function(b){
@@ -3104,6 +3688,11 @@ CH.push((function(){
     picker.hidden = false;
     root.classList.add("locked");
     var src = $("chipLabel");
+    var selOpt = pickerList.querySelector('.chap-opt[aria-checked="true"]');
+    if (selOpt && pickerList.scrollHeight > pickerList.clientHeight){
+      pickerList.scrollTop = Math.max(0, selOpt.offsetTop - (pickerList.clientHeight - selOpt.offsetHeight) / 2);
+    }
+    syncPickerFade();
     var dst = pickerList.querySelector('.chap-opt[aria-checked="true"] .ch-pill');
     // the card starts slightly lowered and scaled, so measure where the pill ends up first
     var dstRect = dst.getBoundingClientRect();
@@ -3145,11 +3734,12 @@ CH.push((function(){
     packetPanel.reset();
     $("tab-tqa").hidden = !(cur.teacherQA && cur.teacherQA.length);
     tqaPanel.reset();
+    renderNotesPage();
     selectTab("sheet", false);
   }
 
   /* =======================  TABS  ======================= */
-  var TABS = ["sheet","vocab","cards","quiz","time","packet","tqa"];
+  var TABS = ["sheet","vocab","cards","quiz","time","packet","tqa","notes"];
   var curTab = "sheet", tabToken = 0;
   var tabInk = $("tabInk");
 
@@ -3677,6 +4267,18 @@ CH.push((function(){
     }
     return {reset:reset, render:render};
   }
+  /* =======================  NOTES PAGE GUIDE  ======================= */
+  function renderNotesPage(){
+    var np = cur.notesPage;
+    $("tab-notes").hidden = !np;
+    if (!np) return;
+    $("notesIntro").textContent = np.intro;
+    $("notesSheet").innerHTML = np.blocks.map(function(b, i){
+      return '<div class="notes-block"><h3><span class="n">'+String(i+1).padStart(2,"0")+'</span>'+b.title+'</h3>'+
+        (b.why ? '<p class="why">'+b.why+'</p>' : '')+'<ul>'+b.items.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul></div>';
+    }).join("");
+  }
+
   var packetPanel = qaPanel("packet", function(){ return cur.packet; }, "Nothing in the packet matches that search.");
   var tqaPanel = qaPanel("tqa", function(){ return cur.teacherQA && cur.teacherQA.length ? [{section:"", items:cur.teacherQA}] : []; }, "Nothing in your teacher\u2019s Q&amp;A matches that search.");
 
@@ -3695,7 +4297,11 @@ CH.push((function(){
     renderPicker();
     root.classList.add("locked");
     var sel = pickerList.querySelector('.chap-opt[aria-checked="true"]');
-    if (sel) sel.focus({preventScroll:true});
+    if (sel){
+      sel.focus({preventScroll:true});
+      if (pickerList.scrollHeight > pickerList.clientHeight) pickerList.scrollTop = Math.max(0, sel.offsetTop - (pickerList.clientHeight - sel.offsetHeight) / 2);
+    }
+    syncPickerFade();
   }
 })();
 
