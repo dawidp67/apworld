@@ -312,6 +312,30 @@
     border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; line-height:1.38; transition:all .2s; }
   .match-btn[data-term]{ font-family:var(--font-display); font-weight:600; font-size:0.95rem; }
   .match-btn[aria-pressed="true"]{ border-color:var(--accent); background:var(--accent-soft); }
+  .mt-hint{ color:var(--ink-soft); font-size:0.9rem; margin:-8px 0 18px; max-width:70ch; }
+  .mt-grid{ display:grid; grid-template-columns:minmax(200px, 0.8fr) 2fr; gap:18px; align-items:start; }
+  .mt-bank-wrap{ position:sticky; top:72px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px 10px; }
+  .mt-bank-wrap .label{ margin:0 0 8px; }
+  .mt-bank{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .mt-bank li{ display:flex; gap:9px; align-items:baseline; font-family:var(--font-display); font-weight:600; font-size:0.95rem; transition:opacity .2s; }
+  .mt-bank li .lt{ font-family:var(--font-mono); font-size:0.78rem; color:var(--accent-2); flex:none; width:1.4em; }
+  .mt-bank li.used{ opacity:0.38; text-decoration:line-through; text-decoration-thickness:1px; }
+  .mt-defs{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .mt-def{ display:flex; gap:12px; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:10px 14px; transition:border-color .2s, background .2s; }
+  .mt-def .num{ font-family:var(--font-mono); font-size:0.76rem; color:var(--ink-faint); flex:none; width:1.6em; }
+  .mt-def .txt{ flex:1; font-size:0.92rem; line-height:1.45; }
+  .mt-def select{ flex:none; font-family:var(--font-mono); font-size:0.95rem; font-weight:600; width:4.2em; padding:7px 6px; border-radius:9px;
+    border:1px solid var(--border-strong); background:var(--surface-2); color:var(--ink); cursor:pointer; }
+  .mt-def select:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .mt-def.right{ border-color:var(--success); background:var(--success-bg); }
+  .mt-def.wrong{ border-color:var(--danger); background:var(--danger-bg); }
+  .mt-def .fix{ display:block; font-size:0.82rem; font-weight:600; color:var(--danger); margin-top:4px; }
+  .mt-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  @media (max-width:700px){
+    .mt-grid{ grid-template-columns:1fr; }
+    .mt-bank-wrap{ position:static; }
+    .mt-bank{ display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; }
+  }
   .match-btn.matched{ background:var(--success-bg); border-color:var(--success); cursor:default; opacity:0.7; }
   .match-btn.miss{ background:var(--danger-bg); border-color:var(--danger); }
   .match-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
@@ -609,7 +633,8 @@
                 <button data-val="mixed" aria-pressed="true">Mixed</button>
                 <button data-val="mc" aria-pressed="false">Multiple choice</button>
                 <button data-val="tf" aria-pressed="false">True / False</button>
-                <button data-val="match" aria-pressed="false">Matching</button>
+                <button data-val="test" aria-pressed="false">Test matching</button>
+                <button data-val="match" aria-pressed="false">Tap to match</button>
                 <button data-val="type" aria-pressed="false">Type the term</button>
               </div>
             </div>
@@ -644,6 +669,27 @@
         <div class="quiz-foot">
           <span class="feedback" id="quizFeedback" aria-live="polite"></span>
           <button class="btn primary" id="quizNextBtn" hidden>Next →</button>
+        </div>
+      </div>
+
+      <div id="mtest" class="mtest" hidden>
+        <div class="quiz-meta">
+          <span id="mtCount"></span>
+          <span class="quiz-tools"><span id="mtScore"></span><button class="btn small" id="mtQuit">Quit</button></span>
+        </div>
+        <p class="quiz-q mt-title">Matching</p>
+        <p class="mt-hint">Pick the letter of the term that matches each definition, just like the test. Each letter is used once, and some terms in the bank won't be used.</p>
+        <div class="mt-grid">
+          <div class="mt-bank-wrap"><p class="label">Word bank</p><ol class="mt-bank" id="mtBank"></ol></div>
+          <ol class="mt-defs" id="mtDefs"></ol>
+        </div>
+        <div class="quiz-foot">
+          <span class="feedback" id="mtResult" aria-live="polite"></span>
+          <span class="mt-actions">
+            <button class="btn" id="mtBack" hidden>Change settings</button>
+            <button class="btn secondary" id="mtNew" hidden>New set</button>
+            <button class="btn primary" id="mtCheck">Check answers</button>
+          </span>
         </div>
       </div>
 
@@ -3447,6 +3493,413 @@ CH.push((function(){
   };
 })());
 
+CH.push((function(){
+
+  var CATS = ["State-Building","Environment","Economics","Culture","Social Structure"];
+
+  var VOCAB = [
+    // ---- State-Building ----
+    ["Songhay Empire","West African empire around Gao on the Niger River, created by Sunni Ali starting in 1464. It lasted about 100 years before Moroccans with guns took it down.","State-Building"],
+    ["Sunni Ali","Songhay ruler from 1464 to 1492 who conquered both sides of the Niger River, including Timbuktu, and built a strong centralized government.","State-Building"],
+    ["Askia Muhammad","Also called Askia the Great. Sunni Ali's nephew who grew Songhay to about the size of Alaska, built schools and mosques, and went to Mecca with tons of gold.","State-Building"],
+    ["Gao","City on the Niger River at the center of the Songhay people. It got rich from trans-Saharan trade.","State-Building"],
+    ["Timbuktu","Songhay city famous as a center of Islamic scholarship. Sunni Ali conquered it.","State-Building"],
+    ["Mali Empire","West African empire that conquered Gao before Songhay. Fighting between Malian factions in the early 1400s let Gao break free.","State-Building"],
+    ["Dahomey","West African kingdom that got stronger by raiding other villages for slaves and selling them to Europeans for guns.","State-Building"],
+    ["Oyo","West African society that got rich selling captives to Europeans, like Dahomey.","State-Building"],
+    ["Kongo Kingdom","Central West African kingdom where the Portuguese came for slaves in the late 1400s. The slave trade permanently weakened it.","State-Building"],
+    ["King Afonso","Kongo ruler who wrote to the King of Portugal in 1526 complaining that slave traders were taking his people, even nobles, and undermining his power.","State-Building"],
+    ["Benin","West African kingdom whose artists carved images of Europeans into their art as early as the 1500s.","State-Building"],
+    ["Prince Henry the Navigator","Portuguese prince who loved navigation tech and paid for voyages down Africa's Atlantic coast.","State-Building"],
+    ["Vasco da Gama","Portuguese explorer who attacked the Swahili city-states in 1498 and took over their trade, throwing East Africa into decline.","State-Building"],
+    ["Saint Domingue","French colony where Toussaint L'Ouverture led slave revolts. It became Haiti, the first country in the Americas to end slavery in 1804.","State-Building"],
+    ["Toussaint L'Ouverture","Leader of the slave revolts in Saint Domingue in the late 1700s that led to Haiti's independence.","State-Building"],
+    // ---- Environment ----
+    ["Niger River","West African river at the heart of the Songhay Empire. Sunni Ali controlled it with a navy.","Environment"],
+    ["bananas","Crop from Southeast Asia that caused big population growth in Africa south of the Sahara before 1450.","Environment"],
+    ["maize, peanuts, and manioc","American crops that came to Africa through the Columbian Exchange and became staples, which grew the population.","Environment"],
+    ["Madagascar","Island off southeast Africa where many slaves from the Indian Ocean trade were taken.","Environment"],
+    // ---- Economics ----
+    ["Atlantic trade system","The global trading network connecting Europe, Africa, and the Americas, built around the slave trade. Also called the triangular trade.","Economics"],
+    ["triangular trade","Three-legged trade route: European manufactured goods like guns to Africa, enslaved Africans to the Americas, and cash crops like tobacco and sugar back to Europe.","Economics"],
+    ["barracoons","Holding pens on the West African coast, also called slave castles, where captives waited to be shipped out.","Economics"],
+    ["Île de Gorée","Gorée Island off Senegal, home of the House of Slaves, a holding prison tourists can visit today.","Economics"],
+    ["sugar and rum","The two products financing fortunes in Britain, France, and the Netherlands by the 1700s.","Economics"],
+    ["indentured servants","European workers who came for about seven years in exchange for passage. Planters didn't like them because they weren't used to the work and went free after.","Economics"],
+    ["Indian Ocean slave trade","Long-running trade sending East Africans to North Africa, the Middle East, and India. It peaked in the 1700s and 1800s.","Economics"],
+    // ---- Culture ----
+    ["creole","New languages mixing European colonizers' languages with West African words and grammar.","Culture"],
+    ["Gullah","Creole language from South Carolina and Georgia where slaves once made up 75 percent of the population. Also called Geechee.","Culture"],
+    ["Geechee","Another name for the Gullah creole language of South Carolina and Georgia.","Culture"],
+    ["Santeria","Religion in Cuba mixing Christianity with traditional African religion.","Culture"],
+    ["Vodun","Religion in Haiti mixing Christianity with traditional African religion.","Culture"],
+    ["Candomblé","Religion in Brazil mixing Christianity with traditional African religion.","Culture"],
+    ["religious syncretism","Combining different religious beliefs and practices, like Africans blending Christianity with drumming, dancing, and spirit possession.","Culture"],
+    ["African American church","A mix of Christianity and African spiritual traditions that's one of the oldest institutions in African American communities.","Culture"],
+    ["Negro spirituals","Songs that blended European Christian music with African religious songs.","Culture"],
+    ["banjo","Instrument invented by enslaved Africans, very similar to West African stringed instruments.","Culture"],
+    ["gumbo","Southern U.S. dish with roots in African cooking.","Culture"],
+    ["griots","West African oral historians whose stories later became the basis for written poetry and novels.","Culture"],
+    ["Epic of Sundiata","West African oral epic about the founder of the Mali Empire, passed down for generations before being written.","Culture"],
+    ["Enlightenment","1700s movement whose ideas about freedom and equality pushed people to want abolition.","Culture"],
+    // ---- Social Structure ----
+    ["Middle Passage","The brutal ship journey across the Atlantic, the middle part of a captive's trip. It took about six weeks and up to half a ship's captives could die.","Social Structure"],
+    ["African Diaspora","The scattering of Africans out of Africa, mostly through the slave trade.","Social Structure"],
+    ["polygyny","Taking more than one wife. It rose in West Africa because so many men were taken as slaves.","Social Structure"],
+    ["abolition","Ending slavery. Slavery was abolished throughout the Americas by 1888.","Social Structure"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Big picture", dates:"1450–1750", items:[
+      "The <b>Atlantic slave trade</b> is the main story of this chapter",
+      "It wrecked many West African societies",
+      "Africa in 1750 was almost unrecognizable from 1450",
+      "African cultures still shaped the Americas through the <b>African Diaspora</b>"
+    ]},
+    {name:"Africa before 1450", dates:"600–1450", items:[
+      "<b>Bananas</b> from Southeast Asia boosted population south of the Sahara",
+      "Islam spread through Abbasid power and Muslim merchants",
+      "Trade brought new tech to the continent"
+    ]},
+    {name:"Songhay Empire", dates:"1464–c. 1591", items:[
+      "<b>Gao</b> on the <b>Niger River</b>, broke free from <b>Mali</b>",
+      "<b>Sunni Ali</b> 1464: conquered both sides of the Niger, took <b>Timbuktu</b>",
+      "Bigger than Mali by the 1480s, very centralized government",
+      "<b>Askia Muhammad</b>: schools, mosques, Mecca trip, tolerance",
+      "Fell after about 100 years to <b>Moroccans with guns</b>"
+    ]},
+    {name:"Europeans arrive", dates:"late 1400s", items:[
+      "<b>Prince Henry the Navigator</b> funded trips down the coast",
+      "Trading posts set up with help from local rulers",
+      "Rulers traded slaves for guns and cannons",
+      "<b>Dahomey</b> grew strong by raiding for slaves",
+      "<b>Benin</b> art started showing Europeans",
+      "<b>Vasco da Gama</b> 1498 hit the Swahili city-states, which declined"
+    ]},
+    {name:"Why Africans?", dates:"", items:[
+      "Plenty of land in the Americas, not enough workers",
+      "Native workers died of disease or escaped easily",
+      "<b>Indentured servants</b> weren't used to the work and went free after about 7 years",
+      "<b>Portugal</b> got to West Africa first and started it"
+    ]},
+    {name:"Triangular trade", dates:"Atlantic trade system", items:[
+      "Leg 1: European manufactured goods like guns to Africa",
+      "Leg 2: enslaved Africans to the Americas",
+      "Leg 3: tobacco, sugar, and cash crops to Europe",
+      "<b>Sugar and rum</b> made Britain, France, and the Dutch rich by the 1700s"
+    ]},
+    {name:"Capture &amp; the Middle Passage", dates:"", items:[
+      "Coastal rulers raided neighbors; also sold prisoners and criminals",
+      "<b>King Afonso</b> 1526: raids out of control, his power undermined",
+      "Held in <b>barracoons</b>, like <b>Île de Gorée</b>",
+      "<b>Middle Passage</b>: about 6 weeks, up to half could die",
+      "About 25 percent of all captives died before reaching the Americas"
+    ]},
+    {name:"Africans in the Americas", dates:"African Diaspora", items:[
+      "Languages mostly lost because captives came from all over",
+      "<b>Creole</b> languages formed; still dominant in the Caribbean",
+      "U.S. exception: <b>Gullah / Geechee</b>",
+      "About 10 percent were Muslim, first big Islamic presence in the Americas"
+    ]},
+    {name:"Religion, music, food", dates:"syncretism", items:[
+      "<b>Santeria</b> Cuba, <b>Vodun</b> Haiti, <b>Candomblé</b> Brazil",
+      "The African American church",
+      "Gospel, blues, jazz, rock, hip-hop, samba, reggae, country",
+      "Spirituals and the <b>banjo</b>",
+      "Rice, okra, and <b>gumbo</b>"
+    ]},
+    {name:"Effects on Africa", dates:"", items:[
+      "Hit hardest: West Africa, today's <b>Ghana and Benin</b>",
+      "Over two-thirds taken were men, so <b>polygyny</b> rose and women did men's jobs",
+      "<b>Dahomey and Oyo</b> got rich; guns made wars more common and bloodier",
+      "Kingdoms like Kongo weakened and depended on European goods",
+      "Set up European imperialism in the late 1800s",
+      "Positive: maize, peanuts, and manioc grew the population"
+    ]},
+    {name:"Ending the slave trade", dates:"1800s", items:[
+      "<b>Enlightenment</b> ideas like Rousseau's said all people deserve freedom",
+      "Slave revolts, especially where Africans outnumbered Europeans",
+      "<b>Toussaint L'Ouverture</b> in <b>Saint Domingue</b>: Haiti ends slavery 1804",
+      "Slavery gone in the Americas by 1888",
+      "Haiti and the U.S. were the only ones to end it through war"
+    ]},
+    {name:"Indian Ocean slave trade", dates:"peak 1700s–1800s", items:[
+      "East Africans sold to North Africa, the Middle East, and India",
+      "Many taken to islands like <b>Madagascar</b>",
+      "Worked in ports, homes, as sailors or soldiers",
+      "More community and some rights in Islamic societies, like marriage",
+      "African words, music, and customs spread to Oman and India"
+    ]},
+    {name:"What was slavery's impact?", dates:"debate", items:[
+      "<b>Eric Williams</b> 1944: no slavery, no Industrial Revolution or capitalism",
+      "<b>Eugene Genovese</b> 1974: social and cultural history of slavery",
+      "<b>Joseph Holloway</b> 1999: African culture survives in the Americas",
+      "<b>Edward Baptist</b> 2014: slavery and cotton built U.S. industrial power"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"Slavery before and after Europeans", head:["","Before Europeans","After Europeans"], rows:[
+      ["Who was enslaved","Prisoners of war, criminals, debtors","Huge numbers of people captured in raids"],
+      ["Why","Showed wealth and power since land was shared","Labor for plantations and mines in the Americas"],
+      ["Buyers","Local elites and Arab merchants","European traders"],
+      ["Where they went","Stayed in Africa or went to the Middle East","Across the Atlantic to the Americas"],
+      ["Scale and effect","Smaller, slaves could be part of society","Massive, violent, devastated West Africa"]
+    ]},
+    {title:"Where enslaved Africans were taken", head:["Destination","Percentage"], rows:[
+      ["Portuguese colonies","39%"],
+      ["British West Indian colonies","18%"],
+      ["Spanish colonies","18%"],
+      ["French colonies","14%"],
+      ["British mainland colonies","6%"],
+      ["Dutch West Indian colonies","2%"],
+      ["Other","3%"]
+    ]},
+    {title:"Atlantic vs Indian Ocean slave trade", head:["","Atlantic","Indian Ocean"], rows:[
+      ["Taken from","West and Central Africa","East Africa"],
+      ["Sent to","The Americas","North Africa, the Middle East, India, Madagascar"],
+      ["Work","Plantations and mines","Ports, households, sailors, soldiers"],
+      ["Life","Brutal plantation life, families split","Lived in towns, worked next to free people, some rights in Islamic areas"],
+      ["Peak","1500s to mid-1800s","1700s and 1800s"]
+    ]},
+    {title:"Developments in literature", head:["Work","Place","Dates","Why it matters"], rows:[
+      ["Works of Shakespeare","England","1564–1616","Set the standard for European prose, poetry, and drama"],
+      ["Don Quixote by Cervantes","Spain","1547–1616","First great novel in European literature"],
+      ["Epic of Sundiata","Mali Empire","1210–1260","Story of Mali's founder, passed down orally before being written"],
+      ["Journey to the West","China","1592","Novel full of Buddhist, Daoist, and Confucian symbolism"],
+      ["Kabuki theater","Japan","1600s","Flashy, stylized plays about love and conflict"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["before 1450","Bananas boost African population; Islam spreads"],
+    ["early 1400s","Mali weakens and Gao breaks free"],
+    ["1464","Sunni Ali takes power and starts the Songhay Empire"],
+    ["1470s","Sunni Ali conquers Timbuktu and Jenne"],
+    ["late 1400s","Portuguese reach the Kongo looking for slaves"],
+    ["1480s","Songhay passes Mali in size"],
+    ["1492","Sunni Ali dies"],
+    ["1498","Vasco da Gama attacks the Swahili city-states"],
+    ["early 1500s","Atlantic slave trade begins"],
+    ["1500s","Benin artists start showing Europeans in their art"],
+    ["1526","King Afonso writes to the King of Portugal"],
+    ["late 1500s","Moroccans with guns end the Songhay Empire"],
+    ["1700s","Sugar and rum make Britain, France, and the Dutch rich"],
+    ["1700s","Enlightenment thinkers push for freedom and equality"],
+    ["1700s–1800s","Indian Ocean slave trade peaks"],
+    ["1776","Kilwa agrees to sell 1,000 slaves a year to a French trader"],
+    ["late 1700s","Toussaint L'Ouverture leads revolts in Saint Domingue"],
+    ["1804","Haiti becomes the first country in the Americas to end slavery"],
+    ["1839","Amistad rebellion"],
+    ["1888","Slavery abolished throughout the Americas"]
+  ];
+
+  var CONTENT_Q = [
+    ["What caused population growth in Africa south of the Sahara before 1450?",["Maize from the Americas","Bananas from Southeast Asia","Rice from China","Wheat from Europe"],1],
+    ["Where was the Songhay people's main city?",["Timbuktu","Gao","Kilwa","Mombasa"],1],
+    ["Who started the Songhay Empire in 1464?",["Askia Muhammad","Sunni Ali","Mansa Musa","King Afonso"],1],
+    ["Which city did Sunni Ali conquer that was famous for Islamic scholarship?",["Cairo","Timbuktu","Zanzibar","Kilwa"],1],
+    ["What did Askia Muhammad do for Islam in West Africa?",["Banned it","Built schools and mosques","Replaced it with Christianity","Ignored it"],1],
+    ["Who ended the Songhay Empire?",["The Portuguese","Moroccans with firearms","The Mali Empire","The Ottomans"],1],
+    ["Who paid for Portuguese voyages along Africa's coast?",["Vasco da Gama","Prince Henry the Navigator","King Afonso","Columbus"],1],
+    ["What did some African rulers get in exchange for slaves?",["Silver coins","Gunpowder and cannons","Silk","Land in Europe"],1],
+    ["Which kingdom grew stronger by raiding villages for slaves?",["Songhay","Dahomey","Kongo","Mali"],1],
+    ["What happened to the Swahili city-states after 1498?",["They grew richer","The Portuguese took their trade and they declined","They conquered Portugal","They converted to Christianity"],1],
+    ["Why did Europeans turn to African slaves?",["Africans volunteered","Native workers died or escaped and indentured servants weren't ideal","The Pope required it","Africa had no other trade goods"],1],
+    ["Which country started the Atlantic slave trade?",["England","Portugal","France","Netherlands"],1],
+    ["What went from Europe to Africa in the triangular trade?",["Enslaved people","Manufactured goods like guns","Sugar","Tobacco"],1],
+    ["What went from the Americas to Europe in the triangular trade?",["Guns","Cash crops like tobacco and sugar","Enslaved Africans","Silk"],1],
+    ["Which two products financed fortunes in Britain by the 1700s?",["Silk and spices","Sugar and rum","Gold and silver","Cotton and wool"],1],
+    ["What was King Afonso's complaint?",["Europeans weren't paying enough","Traders were taking his people, even nobles, and he was losing control","Portugal wouldn't buy his slaves","He wanted more missionaries"],1],
+    ["Where were captives held before being shipped?",["Engenhos","Barracoons","Caravels","Mosques"],1],
+    ["What was the Middle Passage?",["A trade route through the Sahara","The ship journey across the Atlantic","A mountain pass in Africa","A canal in Egypt"],1],
+    ["About what percent of African captives died before reaching the Americas?",["5 percent","25 percent","75 percent","90 percent"],1],
+    ["Why were African languages mostly not kept in the Americas?",["They were banned by the Pope","Captives came from many groups and didn't share a language","Africans only wrote, not spoke","They all learned Latin"],1],
+    ["What is a creole language?",["An old African language","A mix of a European language with West African words and grammar","A Native American language","A type of Arabic"],1],
+    ["Why do creole languages still dominate in the Caribbean?",["The Caribbean had a bigger share of enslaved Africans","Europeans never went there","The British required it","It's the official UN language"],0],
+    ["Which U.S. creole language is an exception?",["Cajun","Gullah or Geechee","Pidgin","Creek"],1],
+    ["Which religion is from Brazil?",["Vodun","Santeria","Candomblé","Sufism"],2],
+    ["How did Islam first get a real presence in the Americas?",["Ottoman missionaries","Enslaved African Muslims, about 10 percent","Columbus converted","Arab traders settled Mexico"],1],
+    ["Which instrument did enslaved Africans invent in the Americas?",["Guitar","Banjo","Piano","Violin"],1],
+    ["Which region of Africa was hit hardest by the slave trade?",["North Africa","West Africa, like Ghana and Benin","South Africa","East Africa"],1],
+    ["How did the slave trade affect gender in West Africa?",["More men stayed behind","Over two-thirds taken were men, so polygyny rose","It had no effect","Women were taken more"],1],
+    ["Why did wars in Africa get bloodier?",["Raiding societies got guns from Europeans","Europeans fought there","Disease made people angry","Islam required it"],0],
+    ["How did the slave trade set up later European imperialism?",["It made Africa richer than Europe","It weakened kingdoms and made them depend on European goods","It created African navies","It ended all trade"],1],
+    ["What positive effect did the Columbian Exchange have on Africa?",["New crops like maize and manioc grew the population","It ended slavery","It brought peace","It stopped disease"],0],
+    ["How did the Enlightenment push abolition?",["It said slavery was profitable","Its ideas about freedom and equality clashed with slavery","It banned trade","It started in Africa"],1],
+    ["Which was the first country in the Americas to end slavery?",["United States","Haiti","Brazil","Mexico"],1],
+    ["Who led the slave revolts in Saint Domingue?",["Simón Bolívar","Toussaint L'Ouverture","King Afonso","Sunni Ali"],1],
+    ["Where did most Indian Ocean slaves end up working?",["Silver mines","Ports and households","Sugar plantations","Cotton fields"],1],
+    ["Who argued that slavery made capitalism and the Industrial Revolution possible?",["Edward Baptist","Eric Williams","Joseph Holloway","Eugene Genovese"],1],
+    ["Which destination got the most enslaved Africans?",["British mainland colonies","Portuguese colonies","Dutch colonies","Spanish colonies"],1],
+    ["Textbook MC: The slave trade map shows most slaves were sent",["to North America for cotton","to Brazil and the Caribbean for sugar","to North America for sugar","to the Caribbean for mines"],1],
+    ["Textbook MC: To show the triangular trade, the map would need",["European manufactured goods to Africa and American cash crops to Europe","American manufactured goods to Africa","European goods to South America","African artifacts to Europe"],0],
+    ["Textbook MC: Songhay was different from Ghana and Mali because it",["had a stronger central government","expanded its territory","was ruled by a Muslim","traded gold"],0],
+    ["Textbook MC: Sunni Ali's centralized rule was most like which European ruler?",["John Calvin","William and Mary","Louis XIV","John Locke"],2],
+    ["Textbook MC: Afonso's letter and the 1776 Kilwa deal both show",["African kingdoms taking part in the slave trade","African kingdoms ending it","Europeans forcing it on unwilling kingdoms","Europeans giving in to Africans"],0],
+    ["Textbook MC: In both passages, an African leader is trying to",["give Europeans full control","help ordinary Africans profit","regulate the slave trade so his kingdom profits","make the trade unprofitable"],2]
+  ];
+
+  var TF_Q = [
+    ["The Songhay people were based around Gao on the Niger River.",true,"","State-Building"],
+    ["Sunni Ali was a super devout Muslim who protected all scholars.",false,"He was Muslim but not very devout and cracked down on some scholars.","Culture"],
+    ["Askia Muhammad practiced religious toleration.",true,"","Culture"],
+    ["The Songhay Empire lasted about 500 years.",false,"Only about 100 years.","State-Building"],
+    ["Prince Henry the Navigator funded voyages along Africa's coast.",true,"","State-Building"],
+    ["Dahomey grew stronger by raiding for slaves.",true,"","State-Building"],
+    ["Vasco da Gama helped the Swahili city-states grow richer.",false,"He attacked them in 1498 and they declined.","Economics"],
+    ["Slavery didn't exist in Africa before Europeans arrived.",false,"It existed long before, but on a smaller scale.","Social Structure"],
+    ["Indentured servants usually worked for about seven years.",true,"","Economics"],
+    ["Portugal first took enslaved Africans to Europe as household servants.",true,"","Economics"],
+    ["In the triangular trade, cash crops went from the Americas to Europe.",true,"","Economics"],
+    ["King Afonso wanted the slave trade to grow without limits.",false,"He complained it was out of control and hurting Kongo.","State-Building"],
+    ["Barracoons were holding pens on the African coast.",true,"","Economics"],
+    ["The Middle Passage usually took about six weeks.",true,"","Social Structure"],
+    ["Almost no captives died on the Middle Passage.",false,"Up to half a ship could die; about 25 percent overall.","Social Structure"],
+    ["Most enslaved Africans kept their original languages for generations.",false,"Most lost them within a generation.","Culture"],
+    ["Gullah is a creole language from South Carolina and Georgia.",true,"","Culture"],
+    ["Vodun is from Brazil.",false,"Vodun is from Haiti. Candomblé is from Brazil.","Culture"],
+    ["About 10 percent of enslaved Africans practiced Islam.",true,"","Culture"],
+    ["Jazz, blues, and samba all have African roots.",true,"","Culture"],
+    ["Gumbo has roots in African cooking.",true,"","Culture"],
+    ["Most people taken in the slave trade were women.",false,"Over two-thirds were men.","Social Structure"],
+    ["Polygyny increased in West Africa because of the slave trade.",true,"","Social Structure"],
+    ["The slave trade made African wars less common.",false,"Guns made them more common and bloodier.","State-Building"],
+    ["Africa's population grew partly thanks to American crops.",true,"Maize, peanuts, and manioc.","Environment"],
+    ["Enlightenment ideas helped start the abolition movement.",true,"","Culture"],
+    ["Haiti ended slavery in 1804.",true,"","State-Building"],
+    ["Slavery was abolished throughout the Americas by 1888.",true,"","Social Structure"],
+    ["Indian Ocean slaves mostly worked on sugar plantations.",false,"Mostly in ports and households.","Economics"],
+    ["Slaves in Islamic communities had some rights, like marriage.",true,"","Social Structure"],
+    ["The Portuguese colonies received the largest share of enslaved Africans.",true,"About 39 percent.","Economics"],
+    ["British mainland colonies in North America got most enslaved Africans.",false,"Only about 6 percent.","Economics"],
+    ["Eric Williams tied slavery to the rise of capitalism.",true,"","Culture"],
+    ["The slave trade made West African kingdoms more independent of Europe.",false,"They became dependent on European goods.","Economics"]
+  ];
+
+  var PACKET = [
+    {section:"African Civilizations at the Beginning of the Era", items:[
+      {q:"What two factors had led to the growth of Africa in the period before 1450?", a:"Bananas from Southeast Asia boosted the population, and Islam spread through Muslim merchants and trade."},
+      {q:"Describe the Songhay Empire's rise.", a:"Gao broke free when Mali weakened, then Sunni Ali took over in 1464 and conquered both sides of the Niger River, including Timbuktu, making an empire bigger than Mali."},
+      {q:"How did the Songhay Empire fall?", a:"After about 100 years, Moroccans with firearms conquered it."},
+      {q:"As the Portuguese and later other European traders set up trading posts along Africa's coasts, what became the primary product they traded for?", a:"Enslaved Africans."},
+      {q:"Why were Africans willing to participate in this trade?", a:"Rulers got gunpowder and cannons that gave them an edge over their neighbors, and their city-states got rich."},
+      {q:"What happened to the Swahili city-states of East Africa?", a:"Vasco da Gama attacked them in 1498 and the Portuguese took over their trade, so they fell into a big decline."}
+    ]},
+    {section:"Africans & the Atlantic Slave Trade", items:[
+      {q:"For what reasons did Europeans turn to the African slave trade?", a:"They needed tons of cheap labor in the Americas, but natives died from disease or escaped and indentured servants weren't ideal."},
+      {q:"Chart: The African slave trade before Europeans", a:"Smaller scale, mostly prisoners of war, criminals, and servants kept to show wealth, plus some sold to Arab merchants."},
+      {q:"Chart: The African slave trade after Europeans", a:"Massive and violent, with raids capturing huge numbers of people shipped across the Atlantic to work plantations."},
+      {q:"Why did the English turn away from the use of indentured servants in the 13 colonies?", a:"They weren't used to the hard farm work and climate, and they went free after about seven years."},
+      {q:"Which country started the use of African slaves?", a:"Portugal."},
+      {q:"Draw a visual of the Triangle Trade showing the products that were transferred on each leg of the trip.", a:"Draw a triangle with Europe sending guns and manufactured goods to Africa, Africa sending enslaved people to the Americas, and the Americas sending sugar, tobacco, and cash crops to Europe."},
+      {q:"What two products began to finance fortunes in Portugal, Britain, France, and the Netherlands?", a:"Sugar and rum."},
+      {q:"How did Africans gain the slaves they sold to the Europeans?", a:"Coastal kingdoms raided their neighbors, and rulers also handed over prisoners of war, servants, and criminals."},
+      {q:"Why were African leaders willing to participate in this trade?", a:"They got rich and got European guns that made their kingdoms stronger."},
+      {q:"What issues did African leaders, such as King Afonso, begin to see arise in their kingdoms due to the slave trade?", a:"Raids got out of control, even nobles were taken, the kingdom was losing people, and his subjects traded without him so he lost power."},
+      {q:"Where were Africans taken to await sale to the Europeans?", a:"Holding pens on the coast called barracoons or slave castles, like the House of Slaves on Gorée Island."},
+      {q:"What was the Middle Passage? Describe it.", a:"The six-week ship ride across the Atlantic where captives were crammed below deck with barely any food or water, and up to half could die."}
+    ]},
+    {section:"African Presence in the Americas", items:[
+      {q:"Why were African languages largely not transplanted to the New World?", a:"Captives came from tons of different groups with no shared language, so most lost theirs within a generation."},
+      {q:"What is the creole language?", a:"A new language mixing a European language like English or French with West African words and grammar."},
+      {q:"Why does the creole language still dominate in the Caribbean islands still today?", a:"The Caribbean had a much bigger share of enslaved Africans than North America."},
+      {q:"While creole languages were largely lost in the United States, what language is one exception?", a:"Gullah, also called Geechee, in South Carolina and Georgia."},
+      {q:"In what ways were African religions combined with elements of Christianity?", a:"Africans mixed Christianity with their traditions like drumming, dancing, and belief in spirits that could possess people."},
+      {q:"What are some examples of this religious syncretism of Christianity and African religions?", a:"Santeria in Cuba, Vodun in Haiti, Candomblé in Brazil, and the African American church."},
+      {q:"How was Islam introduced to the Americas?", a:"About 10 percent of enslaved Africans were Muslim, which made the first real Islamic presence in the Americas."},
+      {q:"What modern musical forms were influenced by African music brought during the Atlantic slave trade?", a:"Gospel, blues, jazz, rock and roll, hip-hop, samba, reggae, and country."},
+      {q:"Why were so many of Africa's musical traditions maintained in the Americas?", a:"Enslaved people used music to survive long workdays and to secretly communicate, like when planning escapes."},
+      {q:"What influences did Africans have on food in the Americas?", a:"They brought rice and okra and how to cook them, and dishes like gumbo come from African cooking."}
+    ]},
+    {section:"Effects of the Slave Trade on Africa", items:[
+      {q:"Which area of Africa was most influenced by the Atlantic slave trade? Why?", a:"West Africa, like present-day Ghana and Benin, because that's where most Africans were kidnapped or sold from."},
+      {q:"What happened in terms of gender distribution in Africa as a result of the Atlantic slave trade?", a:"Over two-thirds of those taken were men, so women outnumbered men, polygyny rose, and women took on men's jobs."},
+      {q:"Why did intergroup warfare become more common and bloodier in Africa as a result of the Atlantic slave trade?", a:"Raiding kingdoms traded slaves for guns, so they could easily beat neighbors without guns and kept raiding for more."},
+      {q:"How did the Atlantic slave trade set the stage for the European imperialism of the late 19th century?", a:"It weakened African kingdoms and made them depend on European goods, so Europeans had an easier time conquering Africa later."},
+      {q:"What one positive effect did the Columbian Exchange have on Africa? Explain.", a:"New crops like maize, peanuts, and manioc became staples and made the population grow."}
+    ]},
+    {section:"The End of the Atlantic Slave Trade", items:[
+      {q:"How did the Enlightenment lead to the push for abolition and the end of the Atlantic slave trade?", a:"Thinkers like Rousseau said everyone deserves freedom and equality, and lots of people realized slavery didn't fit those ideas."},
+      {q:"What role did slave revolts in the Americas have on the ending of the Atlantic slave trade?", a:"Revolts like Toussaint L'Ouverture's in Saint Domingue were so successful that Haiti ended slavery in 1804, the first country in the Americas to do it."}
+    ]},
+    {section:"The Indian Ocean Slave Trade", items:[
+      {q:"Who primarily bought slaves in the Indian Ocean slave trade?", a:"Buyers in North Africa, the Middle East, and India."},
+      {q:"What was the typical fate for a slave sold in the Indian Ocean slave trade?", a:"Working in seaports, shipping, or as household servants, sometimes as sailors or soldiers, with more community and some rights in Islamic areas."},
+      {q:"What impact did the African diaspora have on the Indian Ocean area?", a:"African words, music, and customs spread to places like Oman and India."}
+    ]},
+    {section:"Textbook Short-Answer Practice", items:[
+      {q:"SAQ 1A: Describe two ways that Vodou is an example of religious syncretism.", a:"It mixes spirits from many African and Native groups, and it uses Catholic prayers and saints to stand for its spirits."},
+      {q:"SAQ 1B: Describe another example of religious syncretism that came from the Atlantic slave trade.", a:"Candomblé in Brazil mixes Christianity with Yoruba traditions from Nigeria."},
+      {q:"SAQ 2A: Explain one economic cause of the growth of the Atlantic slave trade.", a:"Sugar plantations in Brazil and the Caribbean were super profitable and needed tons of cheap labor."},
+      {q:"SAQ 2B: Explain one social effect of the Atlantic slave trade on Africa.", a:"So many men were taken that polygyny increased and women had to do men's jobs."},
+      {q:"SAQ 2C: Explain one economic effect of the Atlantic slave trade in the Americas.", a:"Slave labor made plantation colonies hugely profitable, and sugar and rum made European empires rich."}
+    ]}
+  ];
+
+  // Guide for the blank NOTES page in the unit packet
+  var NOTES_PAGE = {
+    intro:"Your packet has a full blank notes page for this chapter. The reading guide skips some of the vocab and a few big ideas, so put these on that page. It's all short enough to fit on one page.",
+    blocks:[
+      {title:"Vocab the reading guide never asks about", why:"These are on the packet's vocab list but no question covers them.", items:[
+        "<b>Niger River</b>: West African river at the center of the Songhay Empire",
+        "<b>Sunni Ali</b>: started the Songhay Empire in 1464, took Timbuktu",
+        "<b>Dahomey</b>: kingdom that got rich and strong raiding for slaves",
+        "<b>Oyo</b>: another slave-raiding society that got rich off the trade",
+        "<b>Atlantic trade system</b>: the whole Europe, Africa, Americas trade network",
+        "<b>Saint Domingue</b>: French colony that became Haiti after Toussaint L'Ouverture's revolts, ended slavery 1804",
+        "<b>Vasco da Gama</b>: Portuguese explorer who attacked the Swahili city-states in 1498"
+      ]},
+      {title:"Songhay extras", why:"The guide only asks rise and fall.", items:[
+        "<b>Askia Muhammad</b>, Sunni Ali's nephew: grew it to about Alaska's size",
+        "Built schools and mosques, went to Mecca with gold like Mansa Musa",
+        "Tolerated other religions",
+        "Way more centralized than Ghana and Mali, which ran on alliances"
+      ]},
+      {title:"Europeans on the coast", items:[
+        "<b>Prince Henry the Navigator</b> paid for Portugal's trips down Africa",
+        "Portugal first took slaves back to Europe as house servants",
+        "<b>Benin</b> artists carved Europeans into their art by the 1500s"
+      ]},
+      {title:"Numbers to know", why:"Easy multiple-choice points.", items:[
+        "About <b>25 percent</b> of captives died before reaching the Americas",
+        "Over <b>two-thirds</b> of those taken were men",
+        "Portuguese colonies got <b>39 percent</b>, British mainland only <b>6 percent</b>",
+        "Slaves were <b>75 percent</b> of the population in Gullah areas",
+        "About <b>10 percent</b> of enslaved Africans were Muslim"
+      ]},
+      {title:"What was slavery's impact?", why:"The Historical Perspectives box, good for SAQs.", items:[
+        "<b>Eric Williams</b> 1944: slavery made capitalism and the Industrial Revolution possible",
+        "<b>Genovese</b> 1974: social and cultural life of slaves",
+        "<b>Holloway</b> 1999: African culture lives on, like in New Orleans and Gullah culture",
+        "<b>Baptist</b> 2014: slavery and cotton built U.S. industrial power"
+      ]},
+      {title:"Key dates", items:[
+        "1464 Sunni Ali, 1492 he dies",
+        "1498 da Gama hits the Swahili coast",
+        "1526 King Afonso's letter",
+        "1804 Haiti ends slavery, 1888 slavery gone in the Americas"
+      ]},
+      {title:"Big themes for the test", items:[
+        "Africans took part in the trade, it wasn't only forced on them",
+        "Guns for slaves made wars bloodier and some kingdoms stronger",
+        "Culture survived through syncretism: religion, language, music, food",
+        "Compare Atlantic vs Indian Ocean slavery",
+        "Short-term profit, long-term weakness that set up imperialism"
+      ]}
+    ]
+  };
+
+  return {
+    id:"17", num:17, short:"Africa",
+    title:"Africa in the Early Colonial Period", years:"1450–1750 C.E.",
+    pages:"320–333", heading:"Chapter 17 Study Hub",
+    blurb:"The Songhay Empire, the Portuguese on the coast, the Atlantic slave trade and the Middle Passage, and how African cultures shaped the Americas.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET, notesPage:NOTES_PAGE
+  };
+})());
+
 (function(){
   "use strict";
 
@@ -3965,7 +4418,7 @@ CH.push((function(){
   function resetQuiz(){
     qCat = "all";
     fillCatSeg($("qCatSeg"), [["content","Big-picture questions"]].concat(cur.hasTeacher ? [["teacher","Teacher\u2019s terms"]] : [], cur.hasAP ? [["hi","AP 8+ only"]] : []));
-    quizSetup.hidden = false; quizActive.hidden = true; quizDone.hidden = true;
+    quizSetup.hidden = false; quizActive.hidden = true; quizDone.hidden = true; $("mtest").hidden = true;
     showBest();
   }
   function showBest(){
@@ -4035,6 +4488,7 @@ CH.push((function(){
     return forms.map(normalize);
   }
   $("quizStart").addEventListener("click", function(){
+    if (qMode === "test"){ startMatchTest(); return; }
     if (qMode === "mc") qItems = shuffle(mcPool()).slice(0, qCount);
     else if (qMode === "tf") qItems = shuffle(tfPool()).slice(0, qCount);
     else if (qMode === "type") qItems = shuffle(typePool()).slice(0, qCount);
@@ -4217,6 +4671,89 @@ CH.push((function(){
     } else { wrap.hidden = true; }
   }
   $("quizRetake").addEventListener("click", function(){ $("quizStart").click(); });
+
+  /* ---------- Test-style matching: word bank with letters, numbered definitions ---------- */
+  var MT_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  var mt = null;
+  function startMatchTest(){
+    var pool = vocabPool().filter(function(v, i, a){
+      return a.findIndex(function(o){ return o.def === v.def || o.term === v.term; }) === i;
+    });
+    // skip terms that give each other away, like a definition that names another term in the bank
+    function key(t){ return t.replace(/\s*\(.*\)\s*/g," ").trim().toLowerCase(); }
+    function clashes(v, chosen){
+      var vd = v.def.toLowerCase(), vk = key(v.term);
+      return chosen.some(function(o){ return vd.indexOf(key(o.term)) !== -1 || o.def.toLowerCase().indexOf(vk) !== -1; });
+    }
+    var want = Math.min(qCount, 15, pool.length);
+    var nExtra = Math.min(3, Math.max(1, Math.round(want / 5)));
+    var chosen = [];
+    shuffle(pool).forEach(function(v){ if (chosen.length < want + nExtra && !clashes(v, chosen)) chosen.push(v); });
+    var n = Math.min(want, Math.max(0, chosen.length - 1));
+    if (n < 2){ $("quizBest").textContent = "Not enough terms for matching with those settings. Try a different theme."; return; }
+    var asked = chosen.slice(0, n);
+    var extras = chosen.slice(n, n + nExtra);
+    var bank = shuffle(asked.concat(extras));
+    mt = {asked: shuffle(asked), bank: bank, checked: false};
+    $("mtCount").textContent = n + " definitions \u00b7 " + bank.length + " terms";
+    $("mtScore").textContent = "";
+    $("mtBank").innerHTML = bank.map(function(v, i){
+      return '<li data-l="'+MT_LETTERS[i]+'"><span class="lt">'+MT_LETTERS[i]+'.</span><span>'+esc(v.term)+'</span></li>';
+    }).join("");
+    var opts = '<option value="">\u2014</option>' + bank.map(function(v, i){ return '<option value="'+MT_LETTERS[i]+'">'+MT_LETTERS[i]+'</option>'; }).join("");
+    $("mtDefs").innerHTML = mt.asked.map(function(v, i){
+      return '<li class="mt-def" data-i="'+i+'"><span class="num">'+(i+1)+'.</span><span class="txt">'+esc(blankOwn(v))+'</span>'+
+        '<select aria-label="Letter for definition '+(i+1)+'">'+opts+'</select></li>';
+    }).join("");
+    $("mtResult").textContent = ""; $("mtResult").className = "feedback";
+    $("mtCheck").hidden = false; $("mtNew").hidden = true; $("mtBack").hidden = true;
+    quizSetup.hidden = true; quizDone.hidden = true; quizActive.hidden = true; $("mtest").hidden = false;
+    replay($("mtest"), "enter-q");
+  }
+  // hide the term inside its own definition so it isn't a giveaway
+  function blankOwn(v){
+    var forms = [v.term].concat((v.term.match(/\(([^)]*)\)/) || [null, null]).slice(1)).concat([v.term.replace(/\s*\(.*\)\s*/g," ").trim()]);
+    var out = v.def;
+    forms.filter(function(f){ return f && f.length > 2; }).sort(function(a,b){ return b.length - a.length; }).forEach(function(f){
+      out = out.replace(new RegExp(escRe(f), "ig"), "_____");
+    });
+    return out;
+  }
+  function syncBankUsed(){
+    var used = {};
+    Array.prototype.forEach.call($("mtDefs").querySelectorAll("select"), function(sel){ if (sel.value) used[sel.value] = 1; });
+    Array.prototype.forEach.call($("mtBank").children, function(li){ li.classList.toggle("used", !!used[li.getAttribute("data-l")]); });
+    var filled = Object.keys(used).length;
+    if (!mt.checked) $("mtScore").textContent = filled + "/" + mt.asked.length + " filled";
+  }
+  $("mtDefs").addEventListener("change", function(e){ if (e.target.tagName === "SELECT" && mt && !mt.checked) syncBankUsed(); });
+  $("mtCheck").addEventListener("click", function(){
+    if (!mt || mt.checked) return;
+    var right = 0;
+    Array.prototype.forEach.call($("mtDefs").children, function(li){
+      var v = mt.asked[+li.getAttribute("data-i")];
+      var correct = MT_LETTERS[mt.bank.indexOf(v)];
+      var sel = li.querySelector("select");
+      var ok = sel.value === correct;
+      if (ok) right++;
+      li.classList.add(ok ? "right" : "wrong");
+      sel.disabled = true;
+      if (!ok) li.querySelector(".txt").insertAdjacentHTML("beforeend", '<span class="fix">Answer: '+correct+'. '+esc(v.term)+'</span>');
+    });
+    mt.checked = true;
+    var total = mt.asked.length, pct = Math.round(right / total * 100);
+    $("mtScore").textContent = right + "/" + total;
+    $("mtResult").textContent = right + " of " + total + " right \u00b7 " + pct + "%";
+    $("mtResult").className = "feedback " + (pct >= 80 ? "ok" : "no");
+    $("mtCheck").hidden = true; $("mtNew").hidden = false; $("mtBack").hidden = false;
+    var best = store("best");
+    if (!best || (right/total) > (best.score/best.total)) store("best", {score:right, total:total, mode:"test matching"});
+    showBest();
+  });
+  $("mtNew").addEventListener("click", function(){ startMatchTest(); window.scrollTo({top: $("panel-quiz").getBoundingClientRect().top + window.scrollY - 70, behavior: reduceMotion ? "auto" : "smooth"}); });
+  function leaveMatchTest(){ $("mtest").hidden = true; quizSetup.hidden = false; replay(quizSetup, "enter-q"); }
+  $("mtBack").addEventListener("click", leaveMatchTest);
+  $("mtQuit").addEventListener("click", leaveMatchTest);
   $("quizQuit").addEventListener("click", function(){ quizActive.hidden = true; quizDone.hidden = true; quizSetup.hidden = false; replay(quizSetup, "enter-q"); });
   $("quizBack").addEventListener("click", function(){ quizDone.hidden = true; quizActive.hidden = true; quizSetup.hidden = false; replay(quizSetup, "enter-q"); });
 
