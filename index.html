@@ -3900,6 +3900,482 @@ CH.push((function(){
   };
 })());
 
+CH.push((function(){
+
+  var CATS = ["State-Building","Environment","Economics","Culture","Social Structure"];
+
+  var VOCAB = [
+    // ---- State-Building ----
+    ["tsar","Title for Russian rulers, from the Latin word Caesar, linking them to the Roman Empire.","State-Building"],
+    ["divine right","The idea that rulers get their power from God. Tsars claimed it through the Orthodox Church.","State-Building"],
+    ["Moscow","Muscovy's capital. It became a big fur and timber trade center and replaced Kiev as Russia's main city.","State-Building"],
+    ["Kiev","Old capital of Kievan Rus and a slave market hub. It lost importance as Moscow rose, and Batu's Mongols sacked it in 1240.","State-Building"],
+    ["Ivan III (Ivan the Great)","Prince of Moscow, ruled 1462 to 1505. Stopped paying tribute to the Mongols, called himself tsar, married the last Byzantine emperor's niece, and tripled Russia's size.","State-Building"],
+    ["Novgorod","Rival Russian city-state Ivan III conquered. He punished its boyars by taking their land and moving them to Moscow.","State-Building"],
+    ["Kremlin","The central fortress of Moscow. Ivan III rebuilt its walls with towers designed by Italian architects.","State-Building"],
+    ["Ivan IV (Ivan the Terrible)","Tsar from 1547 to 1584 who took Kazan, Astrakhan, and Siberia, used the Oprichnina to terrorize boyars, and killed his own son.","State-Building"],
+    ["Kazan","Khanate held by Golden Horde descendants that Ivan IV conquered. Most people there stayed Muslim.","State-Building"],
+    ["Astrakhan","Khanate on the Volga that Ivan IV conquered, celebrated with St. Basil's Cathedral.","State-Building"],
+    ["Siberia","Huge region east of the Urals. Russia pushed across it for furs and reached the Pacific by 1639.","State-Building"],
+    ["Cossacks","Fierce peasant warriors, many of them runaway serfs, who lived on the steppes and were hired to fight for Russia's expansion.","State-Building"],
+    ["Stroganovs","Major Russian landowners Ivan IV let hire Cossacks to conquer Siberia for the fur trade.","State-Building"],
+    ["Oprichnina","Ivan IV's black-clad secret police on horseback, drawn from lower bureaucrats and merchants to stay loyal to him instead of the boyars.","State-Building"],
+    ["Time of Troubles","Period of near anarchy from 1603 to 1613 when Russia had no strong ruler.","State-Building"],
+    ["Zemsky Sobor","The Assembly of the Land, a national assembly that chose Michael Romanov as tsar in 1613.","State-Building"],
+    ["Romanov Dynasty","Family that ruled Russia from 1613 to 1917, starting with Michael Romanov.","State-Building"],
+    ["Treaty of Nerchinsk","1689 treaty with China's Qing Dynasty that set Russia's eastern border.","State-Building"],
+    ["Peter I (Peter the Great)","Tsar from 1682 to 1725 who westernized Russia, took control of the Church, built St. Petersburg, and made Russia a military power.","State-Building"],
+    ["Streltsy","Boyar-led elite military corps that backed Peter's half-sister Sophia. Peter broke them up and folded them into the regular army.","State-Building"],
+    ["Table of Ranks","Peter's list of military and government jobs that went to the most qualified people, not just nobles.","State-Building"],
+    ["provinces","The administrative regions Peter split Russia into, first 8 and later 50, run by salaried officials.","State-Building"],
+    ["Catherine II (Catherine the Great)","German-born tsarina from 1762 to 1796 who wrote to Enlightenment thinkers, expanded Russia hugely, but ended up more despotic.","State-Building"],
+    ["Partitions of Poland","When Russia, Prussia, and Austria split Poland among themselves. Poland didn't come back until the 1900s.","State-Building"],
+    ["Russo-Turkish Wars","Wars from 1768 to 1774 and 1787 to 1792 where Catherine took Black Sea land and Crimea from the Ottomans.","State-Building"],
+    ["Yemelyan Pugachev","Cossack who claimed to be Catherine's dead husband Peter III and led a peasant rebellion in 1774.","State-Building"],
+    ["Pugachev Rebellion","1774 peasant and Cossack uprising that controlled land between the Volga and the Urals before being crushed. It made Catherine even harsher on peasants.","State-Building"],
+    ["Crimean War","1853 war Russia lost to the Ottomans, Britain, and France. The loss convinced reformers serfdom was holding Russia back.","State-Building"],
+    // ---- Environment ----
+    ["Ural Mountains","The mountains that mark the border between Europe and Asia. Russia sits on both sides.","Environment"],
+    ["Volga River","Major river that flows into the Caspian Sea. Controlling it let Moscow trade straight with Persia and the Ottomans.","Environment"],
+    ["Caspian Sea","Inland sea at the end of the Volga. Catherine also expanded along it.","Environment"],
+    ["Black Sea","Sea Catherine gained land along from the Ottomans, opening a trade route up the Danube.","Environment"],
+    ["steppes","Grassy, treeless plains where the Cossacks lived.","Environment"],
+    ["Alaska","Russia's fur traders crossed the Pacific and reached it in 1741.","Environment"],
+    ["St. Petersburg","Peter's warm-water port on the Baltic, taken from Sweden, built on drained marshes in a grid. It became the new capital.","Environment"],
+    // ---- Economics ----
+    ["fur trade","Russia's big export to Europe and China, the main reason it pushed into Siberia and even to North America.","Economics"],
+    ["Arkhangelsk (Archangel)","Russian port on the northwest coast used to import English cloth after a 1555 trade deal.","Economics"],
+    ["Silk Roads","Southern trade routes Russia used to import silk from India and Persia.","Economics"],
+    ["head tax","Peter's 1718 tax on every person instead of on land, which crushed peasants even more.","Economics"],
+    // ---- Culture ----
+    ["Eastern Orthodoxy","Branch of Christianity Russia followed, modeled on the Byzantine Empire in Constantinople, not Catholic or Protestant.","Culture"],
+    ["Russian Orthodox Church","Church the tsars used to unite people behind them and back up their divine right to rule.","Culture"],
+    ["St. Basil's Cathedral","Cathedral in Red Square Ivan IV built to celebrate beating Kazan and Astrakhan, showing the tsar and Church were united.","Culture"],
+    ["patriarch","Head of the Russian Orthodox Church. Peter the Great abolished the position.","Culture"],
+    ["Holy Synod","Council of clergy run by a government official that Peter put in place of the patriarch, putting the Church under the tsar.","Culture"],
+    ["Old Believers","Religious group that opposed earlier Church reforms and didn't like Peter's changes either.","Culture"],
+    ["Winter Palace","The tsars' famous home in St. Petersburg, built in the mid-1700s.","Culture"],
+    ["Enlightenment","Western movement about reason, progress, and natural law. It barely touched Russia until Catherine.","Culture"],
+    ["philosophes","Western European Enlightenment thinkers Catherine wrote letters to, like Voltaire.","Culture"],
+    ["Westernization","Copying Western Europe's tech, customs, and ideas, which Peter and Catherine pushed in Russia.","Culture"],
+    ["Slavophilism","Conservative movement saying Russia should develop from its own history and culture instead of copying the West.","Culture"],
+    // ---- Social Structure ----
+    ["Mongols","Ruled Russia for about 240 years. Russia missed the Renaissance and Reformation because of their control.","Social Structure"],
+    ["boyars","Russia's noble landowning class at the top of society. They often clashed with the tsars.","Social Structure"],
+    ["serfs (serfdom)","Peasants tied to a noble's land in exchange for a plot and protection. They were basically owned along with the land.","Social Structure"],
+    ["mirs","Village communes that kept peasants in check.","Social Structure"],
+    ["Pale of Settlement","The area Catherine made Russia's Jews live in, which set them apart and made them easier targets.","Social Structure"],
+    ["pogroms","Violent attacks on Jews that became common in Russia by the 1800s.","Social Structure"],
+    ["Emancipation Act","Alexander II's 1861 law freeing 23 million serfs, the largest emancipation in history.","Social Structure"]
+  ].map(function(v){ return {term:v[0], def:v[1], cat:v[2]}; });
+
+  var SHEET = [
+    {name:"Big picture", dates:"1462–1861", items:[
+      "Is Russia European or Asian? It sits on both sides of the <b>Urals</b>",
+      "Strong autocratic rulers drive the story",
+      "Expands east into <b>Siberia</b> but stays tied to Europe",
+      "Westernizes under <b>Peter</b> and <b>Catherine</b>, but <b>serfdom</b> stays until 1861"
+    ]},
+    {name:"Looking East", dates:"", items:[
+      "<b>Eastern Orthodoxy</b> modeled on Byzantine Constantinople",
+      "Tsars used the <b>Russian Orthodox Church</b> to claim <b>divine right</b>",
+      "Mongol control meant no Renaissance or Reformation",
+      "Princes got rich and powerful collecting Mongol tribute"
+    ]},
+    {name:"Trade", dates:"", items:[
+      "<b>Fur trade</b> to Europe and China, reached as far as San Francisco",
+      "<b>Arkhangelsk</b>: English cloth after a 1555 deal",
+      "Silk from India and Persia via the Silk Roads",
+      "Exports: grain, leather, iron, hemp, wood, tar; famous for honey and caviar",
+      "Capital always in Europe, so it stayed tied to the West"
+    ]},
+    {name:"Ivan III", dates:"1462–1505", items:[
+      "Stopped paying Mongol tribute, ending the Mongol yoke",
+      "Called himself <b>tsar</b>, from Caesar",
+      "Married Zoe, niece of the last Byzantine emperor",
+      "Took <b>Novgorod</b>, tripled Russia's size",
+      "Rebuilt the <b>Kremlin</b>; Moscow replaces Kiev"
+    ]},
+    {name:"Social classes", dates:"almost static", items:[
+      "<b>Tsar</b> on top",
+      "<b>Boyars</b>: noble landowners",
+      "Merchants",
+      "Peasants sinking into <b>serfdom</b> through debt",
+      "Boyars vs tsars, like nobles vs kings in the West"
+    ]},
+    {name:"Ivan IV", dates:"1547–1584", items:[
+      "Took <b>Kazan, Astrakhan, Siberia</b> from Golden Horde descendants",
+      "<b>St. Basil's Cathedral</b> celebrates it",
+      "<b>Stroganovs</b> hired <b>Cossacks</b> to grab Siberia and the Volga",
+      "<b>Oprichnina</b> terrorized boyars",
+      "Killed his son and whole cities, died with no strong heir"
+    ]},
+    {name:"Pushing east", dates:"1639–1814", items:[
+      "Reached the Pacific by 1639, Alaska 1741, California 1814",
+      "Like Europeans in North America: furs, Christianity, natives lose to guns and disease",
+      "<b>Time of Troubles</b> 1603–1613",
+      "<b>Zemsky Sobor</b> picks Michael <b>Romanov</b> in 1613; Romanovs rule until 1917",
+      "<b>Treaty of Nerchinsk</b> 1689 with Qing China"
+    ]},
+    {name:"Peter takes control", dates:"1682–1725", items:[
+      "Three rival groups: the Church, the boyars, the royal family",
+      "Beat half-sister Sophia and the <b>Streltsy</b>",
+      "Abolished the <b>patriarch</b>, made the <b>Holy Synod</b> under the tsar",
+      "Monks had to be 50 so young men served as soldiers"
+    ]},
+    {name:"Window on the West", dates:"", items:[
+      "Toured Western Europe in 1697, 6 feet 9, hard to hide",
+      "Took Baltic land from Sweden: <b>St. Petersburg</b>",
+      "Moved the capital there to watch the boyars",
+      "Built in a grid by peasants and Swedish prisoners"
+    ]},
+    {name:"Peter's reforms", dates:"", items:[
+      "Western clothes and <b>shaved beards</b>, which angered the Church",
+      "Medical school, naval academy, required math for noble sons 1714",
+      "Women: no veils, joined social events, married by choice",
+      "State shipyards and iron mines in the Urals",
+      "<b>Head tax</b> 1718, <b>Table of Ranks</b>, provinces with salaried officials, a senate",
+      "Peasants barely helped, and many sank deeper into serfdom"
+    ]},
+    {name:"Catherine the Great", dates:"1762–1796", items:[
+      "German-born Protestant who learned Russian and joined the Orthodox Church",
+      "Wrote to <b>philosophes</b>, tried to codify laws and end torture",
+      "Gave in to boyars: no taxes or state service for them by 1785",
+      "Let landowners control serfs even more",
+      "Schools for girls and smallpox inoculation",
+      "Started enlightened, ended despotic"
+    ]},
+    {name:"Catherine's expansion", dates:"", items:[
+      "<b>Russo-Turkish Wars</b>: Black Sea coast and Crimea",
+      "Steppes past the Urals and along the Caspian",
+      "<b>Partitions of Poland</b> with Prussia and Austria",
+      "Expensive, and dragged Russia into the Balkans",
+      "Gained lots of Jews: <b>Pale of Settlement</b>, later <b>pogroms</b>"
+    ]},
+    {name:"Serfdom", dates:"1649–1861", items:[
+      "Debt and heavy taxes pushed peasants into serfdom",
+      "Helped the government control peasants, gave nobles free labor",
+      "1649 law tied serfs to their birthplace; <b>mirs</b> kept them in check",
+      "England freed its last serfs in 1574; Russia kept serfdom much longer",
+      "About one-third of Russians were serfs by the mid-1800s"
+    ]},
+    {name:"Pugachev &amp; the Cossacks", dates:"1774", items:[
+      "<b>Cossacks</b>: runaway serfs and fierce fighters on the steppes",
+      "Sometimes rebels, sometimes hired to fight Swedes, Tartars, Ottomans",
+      "<b>Pugachev</b> claimed to be Peter III and led a peasant revolt",
+      "Held land between the Volga and the Urals, then got executed",
+      "Result: Catherine cracked down even harder on peasants"
+    ]},
+    {name:"Crimean War &amp; emancipation", dates:"1853–1861", items:[
+      "Russia vs Ottomans, backed by Britain and France",
+      "Biggest European war between 1815 and 1914, hundreds of thousands dead",
+      "Russia lost badly: poor, outdated weapons, uneducated soldiers",
+      "Reformers blamed serfdom",
+      "<b>Alexander II</b> 1861: freed 23 million serfs, the largest emancipation ever"
+    ]},
+    {name:"How revolutionary was Peter?", dates:"debate", items:[
+      "<b>Korb</b>, an Austrian at the time: Peter was great, Russians weren't",
+      "<b>Huntington</b>: Russia still different from the West",
+      "<b>Spielvogel</b>: changes were mostly technical",
+      "<b>Palmer</b>: a real social revolution that ended isolation",
+      "<b>Knobloch</b>: mostly military, Asian influence continued"
+    ]}
+  ];
+
+  var TABLES = [
+    {title:"France and Russia in the 1700s", head:["","France","Russia"], rows:[
+      ["Greatest leader","Louis XIV","Peter the Great"],
+      ["Politics","Absolutist under Louis XV, no effective legislature, wanted to expand","Absolutist under Elizabeth, no legislature at all, wanted to expand"],
+      ["Class and gender","Three legal estates, women had few rights","Legal gap between nobles and serfs, women had few rights"],
+      ["Culture","Center of baroque art, fashion, literature; Enlightenment flourished","Traditional; Peter brought some changes; Enlightenment not widespread until Catherine"],
+      ["Revolution","1789","1917"]
+    ]},
+    {title:"Landmarks in the abolition of serfdom and slavery", head:["Country","Year","How"], rows:[
+      ["Russia","1723","Slavery but not serfdom abolished"],
+      ["Haiti","1804","Only country to end slavery through a slave rebellion"],
+      ["Russia","1861","Largest emancipation of serfs or slaves in history"],
+      ["United States","1865","Only country to end slavery through civil war"],
+      ["Brazil","1888","Last country in the Americas to end slavery"]
+    ]},
+    {title:"Types of labor in the early modern period", head:["Laborer","Where","Work","Freedoms and limits"], rows:[
+      ["Nomad","Europe, Asia, Africa","Herding and animal breeding","No permanent land, free to move"],
+      ["Slave","Americas, Africa","Domestic and farm labor","Property with few or no rights"],
+      ["Serf","Europe, India, China, Japan","Subsistence farming, most of the crop to the lord","Tied to the land, little legal protection"],
+      ["Free peasant","Europe, China","Farming and crafts","Own land or business, paid taxes and tithes"],
+      ["Guild member","Europe","Skilled crafts","Started as apprentice, could work independently later"]
+    ]},
+    {title:"Eurasian land empires", head:["Empire","Key leaders","Peak","Conflicts"], rows:[
+      ["Ottoman","Mehmed II, Suleiman","1517–1699","Tolerant but ruled lots of different groups"],
+      ["Mughal","Babur, Akbar, Shah Jahan, Aurangzeb","1556–1605","Muslim rulers over a Hindu majority"],
+      ["Russian","Ivan III, Ivan IV, Peter, Catherine","1584–1682","Failed to assimilate Ukrainians and Belarusians"],
+      ["Manchu (Qing)","Kangxi, Qianlong","1644–1690","Ethnic minority disliked by the Chinese they ruled"]
+    ]}
+  ];
+
+  var TIMELINE = [
+    ["1453","Byzantine Empire falls"],
+    ["1462","Ivan III takes power in Moscow"],
+    ["1480","Russia stops paying the Mongols"],
+    ["1505","Ivan III dies after tripling Russia"],
+    ["1547","Ivan IV crowned tsar"],
+    ["1550s","Ivan IV takes Kazan and Astrakhan"],
+    ["1555","Trade deal with England through Arkhangelsk"],
+    ["1584","Ivan IV dies with no strong heir"],
+    ["1603–1613","Time of Troubles"],
+    ["1613","Zemsky Sobor picks Michael Romanov"],
+    ["1639","Russians reach the Pacific"],
+    ["1649","Law ties serfs to the land they were born on"],
+    ["1682","Peter the Great's reign begins"],
+    ["1689","Treaty of Nerchinsk with Qing China"],
+    ["1697","Peter tours Western Europe"],
+    ["1703","St. Petersburg founded on the Baltic"],
+    ["1714","Required math education for noble sons"],
+    ["1718","Head tax replaces land tax"],
+    ["1725","Peter the Great dies"],
+    ["1741","Russian traders reach Alaska"],
+    ["1762","Catherine the Great takes the throne"],
+    ["1768–1792","Russo-Turkish Wars win the Black Sea coast and Crimea"],
+    ["1774","Pugachev Rebellion"],
+    ["1785","Catherine frees boyars from taxes and state service"],
+    ["1795","Partitions of Poland finished"],
+    ["1853","Crimean War begins"],
+    ["1861","Alexander II frees the serfs"],
+    ["1917","Romanov Dynasty ends with the Russian Revolution"]
+  ];
+
+  var CONTENT_Q = [
+    ["What mountains mark the border between Europe and Asia?",["Alps","Ural Mountains","Himalayas","Caucasus"],1],
+    ["Which branch of Christianity took root in Russia?",["Roman Catholic","Eastern Orthodoxy","Protestant","Coptic"],1],
+    ["How did Russian princes gain power under the Mongols?",["By leading armies against them","By collecting tribute for them","By converting them","By trading silk"],1],
+    ["What did Russia mainly export to Europe and China?",["Silk","Furs","Spices","Sugar"],1],
+    ["Which port let Russia import English cloth?",["St. Petersburg","Arkhangelsk","Kiev","Odessa"],1],
+    ["How did Ivan III throw off the Mongol yoke?",["He won a huge battle in China","He stopped paying them tribute when they were too weak to collect","He converted them to Christianity","He married a Mongol princess"],1],
+    ["Where does the word tsar come from?",["Greek for king","Latin Caesar","Mongol khan","Arabic sultan"],1],
+    ["Why did Ivan III marry Zoe?",["To get Mongol support","She was the last Byzantine emperor's niece, giving him Orthodox legitimacy","To get Polish land","To end a war with Sweden"],1],
+    ["Who was at the top of Russia's social pyramid under the tsar?",["Merchants","Boyars","Serfs","Cossacks"],1],
+    ["What was a serf?",["A free peasant","A peasant tied to a noble's land","A slave from Africa","A soldier"],1],
+    ["Which khanates did Ivan IV conquer first?",["Crimea and Poland","Kazan and Astrakhan","Novgorod and Kiev","Siberia and Alaska"],1],
+    ["What did St. Basil's Cathedral symbolize?",["Peace with the Mongols","The union of the tsar and the Church","Ivan's marriage","Trade with Persia"],1],
+    ["Who were the Cossacks?",["Mongol nobles","Fierce peasant warriors on the steppes","Orthodox priests","Swedish soldiers"],1],
+    ["How was Russia's push into Siberia like Europe's push into North America?",["Both were about gold","Both were about furs and spreading Christianity","Both were peaceful","Neither involved native people"],1],
+    ["What was the Oprichnina?",["Ivan IV's loyal secret police","A church council","A trade company","A peasant army"],0],
+    ["Why was Ivan IV called the Terrible?",["He lost every war","He killed his son and entire cities","He couldn't speak Russian","He sold Alaska"],1],
+    ["What was the Time of Troubles?",["Mongol rule","A period of near anarchy from 1603 to 1613","The Crimean War","Peter's reforms"],1],
+    ["Who chose Michael Romanov as tsar?",["The patriarch","The Zemsky Sobor","The boyars of Novgorod","The Mongols"],1],
+    ["How long did the Romanovs rule?",["1613 to 1917","1462 to 1584","1682 to 1725","1762 to 1861"],0],
+    ["Who were the Streltsy?",["Peter's navy","A boyar-led elite military corps","Cossack rebels","Church leaders"],1],
+    ["How did Peter take control of the Church?",["He became patriarch","He abolished the patriarch and created the Holy Synod","He converted to Catholicism","He banned religion"],1],
+    ["Why did Peter raise the age to become a monk to 50?",["Monks were too young","He wanted young men to serve as soldiers first","The Church asked him to","To save money"],1],
+    ["What was Peter's Window on the West?",["Moscow","St. Petersburg, a Baltic port","Arkhangelsk","Kiev"],1],
+    ["Why was making men shave their beards so controversial?",["Beards had religious meaning for the Church","Razors were expensive","Women complained","It was illegal"],0],
+    ["What did the Table of Ranks do?",["Ranked nobles by wealth","Gave jobs to the most qualified people regardless of class","Ranked churches","Listed serfs by village"],1],
+    ["How did Peter's reforms affect most peasants?",["They became free","They barely helped, and many sank deeper into serfdom","They all got land","They moved to St. Petersburg"],1],
+    ["Where was Catherine the Great born?",["Russia","Germany","France","Poland"],1],
+    ["Why did Catherine give in to the boyars?",["She needed their support against peasant revolts","They were her family","The Church ordered it","She was afraid of Prussia"],0],
+    ["What did the Partitions of Poland do?",["Made Poland independent","Split Poland between Russia, Prussia, and Austria","Gave Poland to Sweden","United Poland and Russia"],1],
+    ["What did Catherine gain from the Ottomans?",["Siberia","The Black Sea coast and Crimea","Alaska","Kazan"],1],
+    ["What was Slavophilism?",["Copying France","The belief Russia should develop from its own history, not the West","A peasant rebellion","A trade policy"],1],
+    ["What was the Pale of Settlement?",["A Cossack fort","An area Russia's Jews were required to live in","Peter's new capital","A village commune"],1],
+    ["How did serfdom benefit the Russian government?",["It raised wages","It kept peasants under control through the nobles","It ended rebellions forever","It made Russia industrial"],1],
+    ["What was the result of the Pugachev Rebellion?",["Serfs were freed","Catherine cracked down harder on peasants","Pugachev became tsar","The Cossacks were wiped out"],1],
+    ["How did the Crimean War lead to emancipation?",["Russia won and celebrated","Losing showed serfdom was making Russia weak","The Ottomans demanded it","Britain paid for it"],1],
+    ["Who freed the serfs in 1861?",["Catherine the Great","Alexander II","Peter the Great","Ivan IV"],1],
+    ["Why was Russia's emancipation significant?",["It was the largest emancipation in history","It was the first in Europe","It happened by war","It freed slaves in Africa"],0],
+    ["Which was true of both France and Russia in the 1700s?",["Both had strong legislatures","Both were absolutist with no effective legislature","Both had freed their serfs","Both were Protestant"],1],
+    ["Textbook MC: What let Russia send ships to the remotest oceans?",["A Mediterranean port","Expansion into Siberia","A Volga shipyard","Building St. Petersburg"],3],
+    ["Textbook MC: Which reform made some Church leaders dislike Peter?",["Military technology","Requiring men to shave their beards","Forming the Streltsy","Geometry for boys"],1],
+    ["Textbook MC: Whose experience best argues against praising Peter?",["Peasants","Upper-class women","Boyars","Military officers"],0],
+    ["Textbook MC: Cossacks and American cowboys both",["lived on the frontier of an expanding country","were exiled criminals","allied with natives","spread city life"],0],
+    ["Textbook MC: Why use Cossacks to expand into Siberia?",["They liked cold weather","They lived near Muslims","They were known as fierce warriors","They were Ukrainian"],2],
+    ["Textbook MC: A peasant forced to work six days for the manor and pay a head tax was under",["slavery","serfdom","free peasantry","a guild"],1],
+    ["Textbook MC: How did serfdom affect Russia's economy?",["Farming was inefficient, with poor harvests and famines","Landlords went to prison","Peasants became middle class","The government got rich"],0]
+  ];
+
+  var TF_Q = [
+    ["Russia lies on both sides of the Ural Mountains.",true,"","Environment"],
+    ["Russia went through the Renaissance just like Western Europe.",false,"Mongol control meant no Renaissance or Reformation.","Culture"],
+    ["Russia imported silk from India and Persia.",true,"Through the Silk Roads.","Economics"],
+    ["Russian honey and caviar became famous worldwide.",true,"","Economics"],
+    ["Russia's capital was always in Asia.",false,"Kiev, Moscow, and St. Petersburg are all in Europe.","State-Building"],
+    ["Ivan III defeated the Mongols in a giant battle to end their rule.",false,"He just stopped paying tribute when they couldn't enforce it.","State-Building"],
+    ["Ivan III married the niece of the last Byzantine emperor.",true,"Zoe.","State-Building"],
+    ["Italian architects designed towers for the Kremlin.",true,"","Culture"],
+    ["Kiev grew more important as Moscow rose.",false,"Kiev declined as Moscow rose.","State-Building"],
+    ["Merchants were the most numerous class in Russia.",false,"Peasants were.","Social Structure"],
+    ["Ivan IV used gunpowder and land mines to expand.",true,"He brought a Dane in 1552 to teach land mines.","State-Building"],
+    ["Most people around Kazan converted to Orthodox Christianity.",false,"Most stayed Muslim.","Culture"],
+    ["Russians reached the Pacific Ocean by 1639.",true,"","Environment"],
+    ["The Oprichnina came from the boyar class.",false,"From lower bureaucrats and merchants, so they'd stay loyal to Ivan.","State-Building"],
+    ["The Romanovs ruled until 1917.",true,"","State-Building"],
+    ["The Treaty of Nerchinsk set a border with Qing China.",true,"In 1689.","State-Building"],
+    ["Peter the Great was very short.",false,"He was 6 feet 9 inches.","State-Building"],
+    ["Peter took Baltic land from Sweden.",true,"That's where St. Petersburg was built.","State-Building"],
+    ["Peter strengthened the patriarch's power.",false,"He abolished the patriarch.","Culture"],
+    ["Peter's reforms helped women somewhat.",true,"No veils, social events, and marrying by choice.","Social Structure"],
+    ["Peter's head tax made life easier for peasants.",false,"It made them more oppressed.","Economics"],
+    ["The Russian upper class spoke French and read French novels.",true,"","Culture"],
+    ["Catherine the Great was born a Russian Orthodox princess.",false,"She was a German-born Protestant who converted.","State-Building"],
+    ["Catherine exempted boyars from taxes and state service.",true,"In 1785.","Social Structure"],
+    ["Catherine set up schools for girls.",true,"","Culture"],
+    ["The Partitions of Poland gave Russia a much larger Jewish population.",true,"","Social Structure"],
+    ["Pogroms were violent attacks on Jews.",true,"","Social Structure"],
+    ["Russia freed its serfs before England did.",false,"England freed its last serfs in 1574.","Social Structure"],
+    ["A 1649 law tied Russian serfs to their birthplace.",true,"","Social Structure"],
+    ["Pugachev claimed to be Peter III.",true,"Catherine's dead husband.","State-Building"],
+    ["The Pugachev Rebellion led to better conditions for serfs.",false,"Catherine got even harsher.","State-Building"],
+    ["Russia won the Crimean War.",false,"It lost badly.","State-Building"],
+    ["The 1861 emancipation freed about 23 million serfs.",true,"","Social Structure"],
+    ["Russia had a strong legislature like Britain in the 1700s.",false,"It had no legislature at all.","State-Building"],
+    ["France's revolution came more than a century before Russia's.",true,"1789 vs 1917.","State-Building"]
+  ];
+
+  var PACKET = [
+    {section:"Introduction", items:[
+      {q:"What is the division between the European and Asian continents?", a:"The Ural Mountains."},
+      {q:"Is Russia European or Asian? How do you know?", a:"Both, since it sits on both sides of the Urals, but its capitals were always in Europe and its rulers looked west."}
+    ]},
+    {section:"Looking East", items:[
+      {q:"Describe the creation of the Russian Orthodox Church.", a:"Russia copied the Byzantine Orthodox model, and the tsars set up the Russian Orthodox Church to unite people and back their divine right to rule."},
+      {q:"How did Russian princes begin to gain wealth and power under Mongol rule?", a:"They collected the Mongols' tribute, which made them rich and strong enough to eventually break free."},
+      {q:"What about Russia's geographical position placed it in a pivotal position when it came to trade?", a:"It sat between Europe and Asia, so it could trade both east and west."},
+      {q:"What would Russia export to Europe and China?", a:"Furs."},
+      {q:"Where all would they gain this product from?", a:"Siberia, and even North America down the Pacific coast as far as San Francisco."},
+      {q:"What two Russian products would become famous worldwide?", a:"Honey and caviar."},
+      {q:"Why did Russia always remain tightly linked to Europe despite its expansion to the east?", a:"Its capitals were in Europe, it was shaped by the Vikings, and its rulers looked west for technology and Enlightenment ideas."}
+    ]},
+    {section:"Ivan III, Ivan the Great", items:[
+      {q:"Action Ivan III took to gain power 1", a:"He stopped paying tribute to the Mongols, ending the Mongol yoke."},
+      {q:"Action Ivan III took to gain power 2", a:"He called himself tsar to link himself to Roman Caesars."},
+      {q:"Action Ivan III took to gain power 3", a:"He married Zoe, the last Byzantine emperor's niece, which gave him Orthodox legitimacy."},
+      {q:"Action Ivan III took to gain power 4", a:"He conquered and united Russian city-states like Novgorod and tripled Russia's size."},
+      {q:"Draw a diagram of the Russian social hierarchy.", a:"Draw a pyramid with the tsar on top, then the boyars, then merchants, and peasants and serfs as the biggest group on the bottom."},
+      {q:"Describe the tensions between the boyars and the Russian rulers.", a:"Boyars wanted to keep their own power and fought rulers' expansion, so Ivan took their land and moved them to Moscow to watch them."}
+    ]},
+    {section:"Ivan IV, Ivan the Terrible", items:[
+      {q:"What became one of the primary goals of Ivan IV upon being crowned tsar in 1547?", a:"Expanding Russia east by taking Kazan, Astrakhan, and Siberia."},
+      {q:"What building did he commission to commemorate his victories? What did it serve as a visual reminder of?", a:"St. Basil's Cathedral, a reminder that the tsar and the Church were united."},
+      {q:"Who were the Cossacks?", a:"Fierce peasant warriors, many of them runaway serfs, who were hired to conquer Siberia."},
+      {q:"How did the Russian movement east resemble European influence westward in the Americas?", a:"Both were driven by the fur trade, spread Christianity, and beat native people with guns and disease."},
+      {q:"What all did Ivan IV do that earned him the nickname the Terrible?", a:"He used the Oprichnina to terrorize boyars, killed whole cities, and even killed his own son."}
+    ]},
+    {section:"Time of Troubles and the Romanovs", items:[
+      {q:"What was the Time of Troubles?", a:"A period of near anarchy from 1603 to 1613 when Russia had no strong ruler."},
+      {q:"What leader was chosen by the Assembly of the Land finally in 1613 to get them out of the chaos?", a:"Michael Romanov."},
+      {q:"What year would this person's family rule until?", a:"1917."}
+    ]},
+    {section:"Peter the Great", items:[
+      {q:"Conflicting group 1 and its agenda", a:"The Church, which wanted to keep traditional values and beliefs."},
+      {q:"Conflicting group 2 and its agenda", a:"The boyars, who wanted to gain and hold on to power."},
+      {q:"Conflicting group 3 and its agenda", a:"The tsar's royal family, who fought each other for the throne."},
+      {q:"How did Peter the Great gain power?", a:"He beat his half-sister Sophia and her Streltsy, forced her into a convent, and later broke up the Streltsy."},
+      {q:"How did Peter the Great confirm his power over the Russian Orthodox Church?", a:"He abolished the patriarch and replaced it with the Holy Synod, run by an official who answered to him."},
+      {q:"Why did Peter the Great change the age to become a monk to 50?", a:"He wanted young men to serve as soldiers first."},
+      {q:"What was Peter's Window on the West, how did he gain it, and how was it built?", a:"St. Petersburg, a Baltic port he took from Sweden, built in a grid by peasants and Swedish prisoners draining marshes."},
+      {q:"Why was Peter's order for men to shave their beards controversial and how did he enforce it?", a:"Beards had religious meaning, so it disrespected the Church, and he enforced it by cutting nobles' beards himself."},
+      {q:"How did he reform education? Who benefitted from this reform?", a:"He started a medical school and naval academy and required math for sons of nobles and officials, so mostly the upper class benefitted."},
+      {q:"How did Peter's reforms affect women?", a:"They got to take off their veils, join some social events, and marry by their own choice."},
+      {q:"How did Peter's reforms affect Russia's peasants and serfs?", a:"They got worse off, with a new head tax and forced work in shipyards pushing them deeper into serfdom."},
+      {q:"What political reforms did Peter initiate?", a:"The Table of Ranks, provinces run by salaried officials, and a senate to advise when he was away."}
+    ]},
+    {section:"Catherine the Great", items:[
+      {q:"Who was Catherine the Great?", a:"A German-born Protestant who became Russia's tsarina from 1762 to 1796."},
+      {q:"How did Catherine become tsarina?", a:"She married Peter III and took the throne after his suspicious death in 1762."},
+      {q:"What reforms did Catherine make?", a:"She tried to codify Russian laws, end torture, start schools for girls, and push smallpox inoculation."},
+      {q:"What group did she have to give in to some? Why? What powers did she give them?", a:"The boyars, because she needed them against peasant revolts, so she freed them from taxes and state service in 1785."},
+      {q:"What group of people ultimately lost power under Catherine? How?", a:"The serfs, because she let landowners control their movement even more."},
+      {q:"How did Catherine expand the empire? At what cost?", a:"She took the Black Sea coast and Crimea from the Ottomans, pushed past the Urals, and split Poland, but it was expensive and dragged Russia into Balkan fights."},
+      {q:"What were several of Catherine's successes?", a:"Schools for girls, smallpox inoculation, continuing Westernization, and huge expansion."},
+      {q:"How were Jews treated under Catherine's reign in Russia?", a:"She forced them to live in the Pale of Settlement, which set them apart and made them targets for pogroms later."},
+      {q:"Analysis: Many call Catherine an enlightened ruler. Do you agree or disagree? Explain.", a:"Disagree, because she talked about Enlightenment ideas but gave nobles more power and made serfs' lives worse, so she ended up a despot."}
+    ]},
+    {section:"Russian Serfdom", items:[
+      {q:"How did serfdom benefit the Russian government?", a:"It kept peasants under control through the nobles."},
+      {q:"Who initiated the Pugachev Rebellion and what impact did the rebellion have in Russia?", a:"Yemelyan Pugachev, a Cossack, and it failed and made Catherine even harsher on peasants."},
+      {q:"What fraction of Russia's population were serfs by the mid-1800s?", a:"About one-third."},
+      {q:"Crimean War: Why was it fought?", a:"Russia and the Ottomans were fighting over power in the Black Sea region."},
+      {q:"Crimean War: Who fought in it?", a:"Russia against the Ottomans, Britain, and France."},
+      {q:"Crimean War: How many people died?", a:"Several hundred thousand."},
+      {q:"Crimean War: Who lost?", a:"Russia."},
+      {q:"Crimean War: How did this war lead to the abolition of serfdom in Russia?", a:"Reformers blamed the loss on serfdom keeping Russia poor with uneducated soldiers, so Alexander II ended it."},
+      {q:"How did the abolition of serfdom work in Russia?", a:"Alexander II's 1861 Emancipation Act freed 23 million serfs over decades, paid nobles back, and let serfs buy the land they worked."},
+      {q:"Why was Russia's emancipation significant?", a:"It was the largest emancipation of people in bondage in history."}
+    ]},
+    {section:"France & Russia, 1750", items:[
+      {q:"Chart: Greatest leader", a:"Russia had Peter the Great, France had Louis XIV, and both were famous all-powerful rulers."},
+      {q:"Chart: Politics", a:"Both were absolutist and wanted to expand, but France had a legislature that never met while Russia had none at all."},
+      {q:"Chart: Class structure and gender", a:"Both had strict legal classes and women with few rights, with France split into three estates and Russia split between nobles and serfs."},
+      {q:"Chart: Culture", a:"France was the center of art, fashion, and the Enlightenment, while Russia stayed traditional until Peter and Catherine."},
+      {q:"Chart: Revolution", a:"Both had revolutions from money problems and class limits, France in 1789 and Russia in 1917."}
+    ]},
+    {section:"Extra Short-Answer Practice", items:[
+      {q:"Practice: Explain one similarity between Russian expansion into Siberia and European expansion into the Americas.", a:"Both were driven by the fur trade and pushed Christianity on native people."},
+      {q:"Practice: Explain one way Peter the Great's reforms changed Russia and one way they didn't.", a:"He made Russia a military power with a Western-style navy, but peasants stayed stuck in serfdom."},
+      {q:"Practice: Explain one reason Russia ended serfdom in 1861.", a:"Losing the Crimean War showed serfdom was keeping Russia poor and weak."}
+    ]}
+  ];
+
+  // Guide for the blank NOTES page in the unit packet
+  var NOTES_PAGE = {
+    intro:"Your packet has a full blank notes page for this chapter. The reading guide skips some of the vocab and a few big ideas, so put these on that page. It's all short enough to fit on one page.",
+    blocks:[
+      {title:"Map words the reading guide never asks about", why:"These are on the packet's vocab list but no question covers them.", items:[
+        "<b>Volga River</b>: flows into the Caspian, let Moscow trade straight with Persia and the Ottomans",
+        "<b>Caspian Sea</b> and <b>Black Sea</b>: where Russia pushed south",
+        "<b>Steppes</b>: grassy plains where the Cossacks lived",
+        "<b>Arkhangelsk</b>: northwest port for English cloth after 1555",
+        "<b>Alaska</b> 1741, Pacific coast 1639, California 1814"
+      ]},
+      {title:"Other vocab to define", items:[
+        "<b>Kremlin</b>: Moscow's fortress, rebuilt by Ivan III",
+        "<b>Oprichnina</b>: Ivan IV's secret police against the boyars",
+        "<b>Old Believers</b>: opposed Church reforms and Peter",
+        "<b>Winter Palace</b>: the tsars' home in St. Petersburg",
+        "<b>Philosophes</b>: Enlightenment thinkers Catherine wrote to",
+        "<b>Table of Ranks</b>: jobs by skill, not birth",
+        "<b>Mirs</b>: village communes that kept peasants in check"
+      ]},
+      {title:"Westernization vs Slavophilism", why:"Good compare question.", items:[
+        "<b>Westernization</b>: copy Western tech, clothes, and ideas, pushed by Peter and Catherine",
+        "<b>Slavophilism</b>: Russia should build on its own history and culture"
+      ]},
+      {title:"Labor systems chart", why:"Ties this chapter to slavery in 16 and 17.", items:[
+        "Nomad: free to move, no permanent land",
+        "Slave: property, few rights",
+        "Serf: tied to the land, lord takes most of the crop",
+        "Free peasant: owns land, pays taxes",
+        "Guild member: apprentice first, then independent"
+      ]},
+      {title:"How revolutionary was Peter?", why:"The Historical Perspectives box, good for SAQs.", items:[
+        "<b>Korb</b>: Peter was great but Russians weren't, hard job",
+        "<b>Spielvogel</b>: mostly technical changes",
+        "<b>Palmer</b>: a real social revolution",
+        "<b>Knobloch</b>: mostly military, Asian influence stayed"
+      ]},
+      {title:"Key dates", items:[
+        "1462 Ivan III, 1547 Ivan IV, 1603 to 1613 Time of Troubles, 1613 Romanovs",
+        "1682 Peter, 1689 Treaty of Nerchinsk, 1762 Catherine, 1774 Pugachev",
+        "1853 Crimean War, 1861 serfs freed, 1917 Romanovs end"
+      ]},
+      {title:"Big themes for the test", items:[
+        "Tsars used the Orthodox Church for legitimacy",
+        "Expansion east was like European colonization",
+        "Westernization helped the elite, not peasants",
+        "Serfdom lasted way longer than in Western Europe",
+        "Compare Russia to France and to other land empires"
+      ]}
+    ]
+  };
+
+  return {
+    id:"18", num:18, short:"Russia",
+    title:"Russia Unifies and Expands", years:"1462–1861 C.E.",
+    pages:"335–350", heading:"Chapter 18 Study Hub",
+    blurb:"Ivan the Great and Ivan the Terrible, the Romanovs, Peter and Catherine westernizing Russia, and serfdom from 1649 all the way to 1861.",
+    cats:CATS, vocab:VOCAB, sheet:SHEET, tables:TABLES,
+    timeline:TIMELINE, contentQ:CONTENT_Q, tfQ:TF_Q, packet:PACKET, notesPage:NOTES_PAGE
+  };
+})());
+
 (function(){
   "use strict";
 
