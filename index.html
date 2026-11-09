@@ -191,6 +191,8 @@
   .seg button:hover{ color:var(--ink); border-color:var(--border-strong); }
   .seg button[aria-pressed="true"]{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-2-ink); font-weight:600; }
   .seg button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .setting-hint{ font-size:0.78rem; color:var(--ink-soft); margin:0; max-width:34ch; line-height:1.4; }
+  .setting.off .seg{ opacity:0.4; pointer-events:none; }
   input[type="text"]{ font-family:var(--font-body); font-size:0.9rem; padding:9px 12px; border-radius:9px;
     border:1px solid var(--border); background:var(--surface); color:var(--ink); max-width:100%; transition:border-color .2s, box-shadow .2s; }
   input[type="text"]:focus-visible{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
@@ -296,6 +298,10 @@
   @keyframes shake{ 25%{ transform:translateX(-4px); } 75%{ transform:translateX(4px); } }
   .quiz-foot{ margin-top:18px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
   .feedback{ font-size:0.9rem; font-weight:600; }
+  .quiz-foot .feedback{ flex:1 1 260px; min-width:0; }
+  .feedback .fb-note{ display:block; margin-top:4px; font-weight:400; color:var(--ink-soft); line-height:1.45; }
+  .lvl-tag{ font-weight:600; letter-spacing:0.06em; text-transform:uppercase; font-size:0.68rem; padding:2px 7px; border-radius:6px; border:1px solid var(--border); margin-left:6px; vertical-align:1px; }
+  .lvl-tag.l3{ color:var(--accent-2-ink); background:var(--accent-2); border-color:var(--accent-2); }
   .feedback.ok{ color:var(--success); }
   .feedback.no{ color:var(--danger); }
 
@@ -637,6 +643,15 @@
                 <button data-val="match" aria-pressed="false">Tap to match</button>
                 <button data-val="type" aria-pressed="false">Type the term</button>
               </div>
+            </div>
+            <div class="setting" id="qDiffWrap">
+              <span class="label">Difficulty</span>
+              <div class="seg" id="qDiffSeg">
+                <button data-val="easy" aria-pressed="false">Easy–Medium</button>
+                <button data-val="mixed" aria-pressed="true">Mixed, up to AP</button>
+                <button data-val="hard" aria-pressed="false">Hard (AP level)</button>
+              </div>
+              <p class="setting-hint" id="diffHint"></p>
             </div>
             <div class="setting">
               <span class="label">How many</span>
@@ -4376,6 +4391,1068 @@ CH.push((function(){
   };
 })());
 
+/* =======================  AP-LEVEL QUESTION BANK  =======================
+   mc: [stem, [correct, wrong, wrong, wrong], explanation, theme, level]
+       level 2 = medium (cause and effect, "why"); level 3 = hard (AP style: compare, continuity and change, evidence, sourcing)
+   tf: [statement, isTrue, explanation, theme]   (all level 3)
+   The correct answer is always listed first here; the quiz shuffles the choices.
+   Chapter ids match the "id" of each chapter above.                                  */
+var AP_BANK = {
+
+/* ---- Chapter 9 ---- */
+"9": {
+mc: [
+ ["Why did the camel transform trade across the Sahara after 300 C.E.?",
+  ["It could cross long stretches of desert with little water while carrying heavy loads",
+   "It could outrun horses in battle, so North African armies could conquer the savanna and forests beyond",
+   "It could pull plows, so desert oases could be farmed on a large scale",
+   "It could live in town stables, so merchants no longer needed to travel in groups"],
+  "A camel can drink over 50 gallons at once and then go a long time without water, so it replaced horses and donkeys for desert crossings.", "Economics", 2],
+ ["Which statement best describes how Bantu-speakers spread across about a third of Africa?",
+  ["Small groups moved gradually over centuries, carrying farming, ironworking, and language",
+   "One king sent armies to conquer region after region within a few decades",
+   "Arab merchants resettled whole communities to supply the caravan trade",
+   "They sailed along the coast in Indonesian ships, settling one port at a time"],
+  "The migration was not one invasion or an organized campaign. It was small groups moving over time, from about 3000 B.C.E. to 400 C.E.", "State-Building", 2],
+ ["What was the most important effect of Mansa Musa's 1324 pilgrimage to Mecca?",
+  ["It showed the Islamic world how wealthy Mali was",
+   "It gave Mali formal control over the holy cities of Arabia",
+   "It opened a direct sea route between Mali and China",
+   "It ended Mali's dependence on trans-Saharan trade"],
+  "He traveled with about 100 camels, thousands of people, and gold to give away, which advertised Mali's wealth to everyone along the way.", "State-Building", 2],
+ ["Swahili is a Bantu language with many Arabic words in it. This is best explained by",
+  ["long contact between Bantu-speakers and Muslim merchants on the Indian Ocean coast",
+   "an Abbasid army that conquered East Africa in the 700s and imposed Arabic",
+   "Persian farmers who settled the coast and replaced Bantu-speaking communities there by the 800s",
+   "a Songhay ruler who made Arabic the official language of East African trade"],
+  "Swahili (literally 'coasters') grew out of Indian Ocean trade, where Muslim merchants mixed Arabic words into a Bantu language.", "Culture", 2],
+ ["Which factor does the chapter give as the main reason Great Zimbabwe was abandoned by the end of the 1400s?",
+  ["Overgrazing that wore out the land around the capital",
+   "An invasion by Songhay armies from West Africa",
+   "The loss of its gold fields to Swahili merchants on the coast",
+   "A plague carried by Mongol armies across Africa"],
+  "About 20,000 people lived there, and their herds wore out the land, so people left.", "Environment", 2],
+ ["What is the most accurate conclusion to draw from the fact that Bantu-speaking societies were matrilineal?",
+  ["Family ties were traced through mothers, but men still held most political power",
+   "Women usually served as chiefs and governed whole districts of villages",
+   "Fathers were not considered part of the family or its inheritance at all",
+   "Land could be inherited only by daughters, and sons could never own property of any kind"],
+  "Matrilineal is not the same as matriarchal. Most of these societies were still patriarchal.", "Social Structure", 2],
+ ["Why did many African societies hold slaves even before Islam and Europe expanded the slave trade?",
+  ["With no private ownership of land, owning people was a way to show wealth and status",
+   "Slaves were needed to pay the tax that rulers charged on gold exports",
+   "Rulers needed laborers to build stone walls like those of Great Zimbabwe",
+   "Plantation owners needed workers for large inland sugar farms"],
+  "Slaves were usually prisoners of war, debtors, or criminals, and they signaled wealth in places where land was not privately owned.", "Social Structure", 2],
+ ["How did age grades help organize societies that had no strong central government?",
+  ["They divided work and authority by age, so younger people labored and elders advised",
+   "They assigned every family to a caste according to its main occupation",
+   "They decided which chief would inherit leadership from his father",
+   "They ranked soldiers within a permanent standing army of the king"],
+  "Age grades (or age sets) were one way kin-based societies organized themselves without a central ruler.", "Social Structure", 2],
+ ["Which statement best explains a difference between the West African savanna and much of inland Sub-Saharan Africa before 1450?",
+  ["Savanna states grew rich by taxing long-distance trade, while many inland societies relied on kin networks led by chiefs",
+   "Savanna states relied on age grades to rule, while inland societies had merit-based bureaucracies of scholars",
+   "Inland societies built the largest empires by controlling the gold trade, while savanna states stayed small and local in character",
+   "Savanna states rejected Islam and long-distance trade, while inland societies made Islam their state religion"],
+  "Ghana and Mali got rich from the gold trade. Most inland societies had no single ruler, just kin-based networks under chiefs, though bigger kingdoms like Kongo appeared after 1000 C.E.", "State-Building", 3],
+ ["Which statement best describes the impact of Islam on Sub-Saharan Africa between 600 and 1450?",
+  ["It changed politics, trade, and learning in cities like Timbuktu, but most people kept their older traditions",
+   "It caused rapid mass conversion that replaced local beliefs within a few generations of its arrival",
+   "It had almost no effect, since caravans carried goods across the Sahara but not ideas or scholars",
+   "It ended the practice of slavery in West Africa because Islamic law forbade the enslavement of anyone, even prisoners of war"],
+  "The chapter's big idea is continuity and change: Islam did not cause massive conversions, but it changed politics, trade, and culture.", "Culture", 3],
+ ["Hugh Trevor-Roper claimed in 1965 that Africa's past was only the story of 'barbarous tribes.' Which evidence most directly challenges this claim?",
+  ["Large trading states such as Mali, centers of Islamic learning like Timbuktu, and the stone walls of Great Zimbabwe",
+   "The widespread practice of ancestor veneration among Bantu-speaking peoples, with its masks and music",
+   "The use of age grades to organize labor and advice in kin-based societies without central rulers",
+   "The spread of malaria to forest peoples during the long migrations of iron-using Bantu-speaking farmers"],
+  "Organized states, long-distance trade, and monumental architecture show complex societies. The other options describe real features of African life, but none of them shows state building or learning.", "Culture", 3],
+ ["A historian wants to use Ibn Battuta's account of Mali. Which is the most important limitation to keep in mind?",
+  ["He was an outside Muslim legal scholar whose observations reflect his own expectations and a fairly brief visit",
+   "He wrote more than a century before Mali existed as a kingdom, so he could only repeat legends",
+   "He never actually traveled to Africa and relied entirely on rumors gathered in Moroccan markets",
+   "He wrote in Arabic, and historians of this period generally do not use Arabic-language sources"],
+  "He wrote around 1352 after visiting Mali, so it is a real eyewitness source, but a traveler's point of view and purpose shape what he records.", "Culture", 3],
+ ["The Zanj Rebellion (869–883) complicates the idea that slavery in the Islamic world was only household service because it",
+  ["involved large numbers of enslaved East Africans forced to work sugar plantations in Mesopotamia",
+   "was led by Arab merchants who opposed the caliph's new taxes on Indian Ocean trade",
+   "ended slavery in the region after the rebels captured Mecca and took control of the pilgrimage routes",
+   "began when enslaved workers in West Africa revolted against the rulers of the Mali Empire"],
+  "Domestic slavery was common, but the Zanj were set to hard plantation labor. Their leader Ali bin Muhammad took Basra, and the revolt lasted about ten years.", "Social Structure", 3],
+ ["Which statement best compares the spread of malaria by Bantu-speakers with the spread of smallpox by Europeans after 1492?",
+  ["In both cases migrating people carried a disease to groups with little immunity, shifting the balance of power",
+   "In both cases the disease spread mainly through new crops that the migrating people brought with them",
+   "In both cases the migrants themselves lacked immunity, so they suffered most from the disease they spread at first",
+   "In both cases the disease spread only by sea routes and never moved across land with migrating people"],
+  "The Bantu had some immunity to malaria and forest peoples did not. The big difference is speed: the Bantu spread it over centuries, while Europeans' diseases killed huge numbers in decades.", "Environment", 3],
+ ["The construction of Great Zimbabwe's large stone enclosure, along with finds of Persian and Chinese trade goods, best supports which conclusion?",
+  ["A centralized state in southeastern Africa gained wealth and labor by taxing gold and trading across the Indian Ocean",
+   "Zimbabwe was a colony governed from the Swahili city-states and paid them yearly tribute in gold",
+   "Zimbabwe's economy depended on camel caravans that carried salt and gold across the Sahara",
+   "Bantu-speakers stopped building states after about 400 C.E. and returned to living in small villages"],
+  "Great Zimbabwe (1100s–1400s) lay between the Zambezi and Limpopo rivers, got rich from gold, and traded with Swahili cities, Persia, India, and China.", "State-Building", 3],
+ ["Ibn Battuta's travels across Africa and Asia in the 1300s best illustrate which development of this period?",
+  ["Islam provided a shared legal and cultural framework that connected widely separated regions",
+   "Mongol conquest had united Africa and Asia under a single government and law code",
+   "European explorers had already taken control of Indian Ocean trade and travel routes by the 1300s",
+   "Overland trade routes had collapsed completely, so scholars could travel only by sea"],
+  "A Moroccan scholar of Islamic law was welcomed by governments from Mogadishu to Delhi, which shows how far Dar al-Islam reached.", "Culture", 3],
+ ["Which statement identifies a similarity between trans-Saharan and Indian Ocean trade in Africa?",
+  ["Both traded African gold, ivory, and slaves to Muslim merchants and helped spread Islam",
+   "Both were organized and policed throughout the period by a single powerful African empire",
+   "Both depended on camel caravans to carry goods between inland cities and coastal ports",
+   "Both stopped operating soon after 1000 C.E. when Muslim merchants withdrew from Africa"],
+  "Gold crossed the Sahara and ivory, gold, and slaves left the Zanj Coast, and merchants who were Muslim took Islam to both regions. Camels were a Saharan feature only.", "Economics", 3],
+ ["Which factor best explains why larger, more hierarchical kingdoms like Kongo appeared in the Congo River basin after 1000 C.E.?",
+  ["Growing populations led to more competition and fighting, which favored larger centralized states",
+   "Arab armies conquered Central Africa after 1000 and imposed centralized rule on its peoples",
+   "A dry climate forced people to share a few water sources under the authority of strong kings and chiefs",
+   "The decline of ironworking left communities dependent on royal workshops for their tools"],
+  "More people meant more fighting, and bigger kingdoms emerged from this competition.", "State-Building", 3],
+ ["Archaeologists find coral and stone houses, Chinese porcelain, and Indian cotton cloth at Kilwa. Which conclusion is best supported?",
+  ["Indian Ocean trade linked East African port cities to Asian markets and made them wealthy",
+   "Chinese armies controlled the East African coast and demanded tribute from its cities",
+   "East African cities traded only with other parts of Africa and never with overseas merchants",
+   "Swahili cities had no contact with Muslim merchants until after the Portuguese arrived"],
+  "The Zanj Coast sold ivory, gold, and slaves and received porcelain, cotton, and ironwork, and the rich cities built in stone and coral show the result.", "Economics", 3]
+],
+tf: [
+ ["The gold that drove trans-Saharan trade came from within West Africa, but the animal that made the trade practical came from outside the region.", true, "Gold came from near the Senegal River, and camels came from Arabia.", "Economics"],
+ ["Islam's arrival in Sub-Saharan Africa mostly changed the beliefs of the rural majority while leaving politics and trade largely unchanged.", false, "It was the other way around: it did not produce mass conversion, but it changed politics, trade, and learning.", "Culture"],
+ ["The Zanj Rebellion and Mansa Musa's pilgrimage are both evidence that Africa was connected to the wider Islamic world.", true, "East Africans were enslaved in Mesopotamia, and Mali's king traveled to Mecca.", "Culture"],
+ ["Great Zimbabwe was abandoned only because foreign armies invaded it.", false, "Overgrazing damaged the land around the capital.", "Environment"],
+ ["Iron-making gave Bantu-speakers an advantage over some foraging peoples, such as the Batwa.", true, "Better tools and weapons helped the Bantu absorb or push out groups without iron.", "State-Building"],
+ ["Trade along the East African coast began only after Muslim merchants arrived in the 700s.", false, "Kilwa, Malindi, and Mogadishu traded long before Islam. Muslim merchants revived and expanded the trade.", "Economics"],
+ ["The pack animal chart suggests that the best animal for a trade route depends on the environment, such as camels for deserts and llamas for mountains.", true, "Each animal has strengths and problems tied to the land and climate where it is used.", "Environment"]
+]
+},
+
+/* ---- Chapter 10 ---- */
+"10": {
+mc: [
+ ["Why was the Grand Canal important to the Sui and Tang rulers?",
+  ["It moved grain from the productive south to the populous north, tying the regions together",
+   "It protected China's northern border from invasions by nomadic horse-riding peoples along the steppe",
+   "It gave Chinese ships a direct route to India that avoided the overland Silk Roads",
+   "It replaced the civil service exam as the main way of unifying the vast empire"],
+  "The canal linked the wealthy south to the populous north, so food and trade could move freely.", "State-Building", 2],
+ ["Why did Tang rulers use the equal-field system?",
+  ["To weaken the landed aristocracy by giving ordinary families their own farmland",
+   "To pay for Buddhist monasteries by granting them large tax-free estates",
+   "To prepare the economy for large-scale factory production of silk and porcelain",
+   "To transfer political power from the emperor to elected village councils"],
+  "It was a way to break the aristocracy's power, not an act of charity, and it worked for about 100 years.", "Economics", 2],
+ ["How did Champa rice affect Chinese society?",
+  ["Two harvests a year in the warm south produced food surpluses that supported population growth",
+   "Farmers no longer needed irrigation, which freed labor for the growing cities and armies",
+   "China had to import grain from Vietnam, which made the south dependent on foreign trade",
+   "The government abolished farm taxes, which drew many families away from the northern plains into the south"],
+  "Fast-ripening rice from Vietnam produced a huge food surplus.", "Economics", 2],
+ ["In the Confucian social order, merchants ranked below farmers and artisans even when they were wealthy. Which idea best explains this?",
+  ["Merchants produced nothing themselves, unlike the farmers and artisans ranked above them",
+   "Buddhist teaching forbade profit from trade, so Confucian officials scorned merchants",
+   "Tang law banned merchants from owning land, which kept their wealth and status low",
+   "Most merchants were foreigners, and Confucian values ranked foreigners below all Chinese"],
+  "The ranking was scholar-gentry, then farmers, then artisans, then merchants, and it shows a gap between the social ideal and real economic power.", "Social", 2],
+ ["Foot binding in Song China is best understood as",
+  ["a status symbol among aristocratic families that limited women's movement and strengthened patriarchy",
+   "a requirement for Buddhist nuns that symbolized their separation from worldly life and trade",
+   "a law imposed by the Mongols on conquered families to prevent them from escaping to the south of the empire",
+   "a medical treatment for foot disease that became fashionable among wealthy scholar families"],
+  "It was painful and restrictive, and it signaled elite status.", "Social", 2],
+ ["Chinese alchemists discovered gunpowder while searching for a potion for immortality. This best illustrates that",
+  ["major technological advances can come from unintended results of religious or philosophical pursuits",
+   "Confucian officials ordered court inventors to develop weapons for the empire's armies",
+   "gunpowder came to China from Islamic traders traveling the Silk Roads, not from Chinese inventors",
+   "military leaders drove nearly all technological change, with little help from religion or philosophy"],
+  "The discovery in the 800s came out of Daoist alchemy.", "Culture", 2],
+ ["Which statement best describes Vietnam's response to Chinese influence?",
+  ["It borrowed Buddhism and Chinese characters but kept its spoken language and resisted political control",
+   "It borrowed the Chinese spoken language, extended families, and exam system almost unchanged",
+   "It rejected every Chinese idea and technology in order to protect its own cultural identity",
+   "It became a tributary state like Silla and accepted Chinese rule with little resistance"],
+  "Vietnam wanted the benefits of contact without losing its identity, and it defeated a Chinese force in 938 using guerrilla warfare.", "State-Building", 2],
+ ["Which statement identifies a similarity in how Korea and Japan used Chinese models?",
+  ["In both, a strong aristocracy kept the exam system from becoming a true merit-based path open to all classes",
+   "Both became tributary states whose envoys regularly performed the kowtow before the Chinese emperor",
+   "Both rejected Buddhism in favor of Confucianism as the only official belief system of the state",
+   "Both built bureaucracies in which peasants could rise to high office by passing the exams"],
+  "Korea's aristocracy kept the exam closed to peasants. In Japan the exams were never open to all classes, so the reforms failed and feudal rule developed.", "State-Building", 3],
+ ["Which contrast best describes how Silla Korea and Vietnam related to China?",
+  ["Silla accepted tributary status and copied Chinese institutions closely, while Vietnam resisted political domination",
+   "Silla fought China with guerrilla tactics, while Vietnam sent tribute and copied Chinese government",
+   "Silla designed its own capital and writing, while Vietnam copied Chinese city planning exactly",
+   "Both resisted all Chinese influence, but Vietnam was the first of the two to be conquered"],
+  "Silla's capital Kumsong was modeled on Chang'an, but Vietnam had been conquered by the Han and fought to push China out.", "State-Building", 3],
+ ["Neo-Confucianism is best understood as",
+  ["a syncretic system that adapted Confucian ethics by drawing on Daoist and Buddhist ideas",
+   "a return to the strict legal philosophy used by earlier dynasties to control officials",
+   "a Buddhist movement that rejected scripture in favor of meditation and direct experience",
+   "a Confucian reform movement that banned Daoism and Buddhism from the imperial court"],
+  "It developed from 770 to 840 and later spread to Japan, Korea, and Vietnam. The movement that stressed meditation over scripture was Chan (Zen) Buddhism.", "Culture", 3],
+ ["Which statement best explains why Confucian officials pressured the Tang government to seize Buddhist monastery lands in the 700s?",
+  ["Buddhism competed with Confucianism for influence, and monasteries held tax-exempt land the bureaucracy resented",
+   "Buddhism had been outlawed by the Sui, and Tang officials were simply enforcing the old law",
+   "Monasteries had refused to translate the texts that Xuanzang brought back from India",
+   "The Mongols demanded that Tang officials redistribute monastery land to nomadic allies"],
+  "Confucianism and Buddhism clashed. Daoism and Confucianism, in contrast, were often blended in daily practice.", "Culture", 3],
+ ["Which was a long-term consequence of the Song reliance on civilian scholar-officials, including in military roles?",
+  ["The armies were weakened and the costly bureaucracy grew, leaving the dynasty open to northern powers",
+   "Nomadic peoples lost interest in attacking China once scholars took charge of its defense",
+   "The empire expanded far beyond Tang borders because scholar-generals led successful campaigns into Central Asia",
+   "Merchants gained control of the army because officials refused to serve as commanders"],
+  "The scholar gentry had no military training, and nomads took the north (the Jin state). The Mongols ended the Song in 1279.", "State-Building", 3],
+ ["Which statement best describes the long-term significance of Song proto-industrialization?",
+  ["Mass production of silk and porcelain for sale made China an exporter, creating a trade imbalance in its favor",
+   "It replaced farming as the main source of wealth, turning most Chinese into urban factory workers",
+   "It created mechanized factories similar to those that appeared in Britain centuries later",
+   "It allowed wealthy merchants to rule China directly and ended the power of the scholar gentry"],
+  "It was the mass-production phase before true industrialization. Europe wanted Chinese silk and porcelain badly.", "Economics", 3],
+ ["The development of flying cash and paper money in Tang and Song China most directly reflects",
+  ["commercial growth that required easier ways to move value over long distances than carrying coins",
+   "a decline in long-distance trade that forced merchants to return to barter and local markets in the south",
+   "government efforts to eliminate the merchant class by replacing its coins with paper notes",
+   "the adoption of Islamic banking practices that merchants learned from traders in Baghdad"],
+  "Flying cash let a merchant deposit money in one place and withdraw it somewhere else, which is the basic idea behind modern banking.", "Economics", 3],
+ ["Which statement identifies a similarity between Japanese and European feudalism?",
+  ["Both had warrior classes bound by loyalty codes and a hereditary hierarchy with very little mobility",
+   "In both, the monarch held far more real power than the regional nobles who served him",
+   "In both, wealthy merchants stood at the top of the social order, above the warrior class",
+   "In both, a written exam system determined which warriors rose to command large armies"],
+  "Samurai followed bushido and knights followed chivalry. In Japan the daimyo were often stronger than the emperor or the shogun.", "Social", 3],
+ ["Which factor best explains why Japan's attempts at Chinese-style centralization, such as the Taika Reforms, failed to last?",
+  ["Powerful aristocratic clans kept their influence, and the exam system was never opened to all classes",
+   "China invaded Japan and reversed the reforms in order to restore tributary relations",
+   "Buddhist monks led popular uprisings against the reforms and demanded a return to older customs and beliefs",
+   "A Mongol conquest of the islands replaced the Japanese central government with Yuan officials"],
+  "Japan slid toward feudalism instead: the emperor became a figurehead, and clans like the Fujiwara and Minamoto held real power.", "State-Building", 3],
+ ["Joseph Needham's research showed China had real guns by the 900s, challenging earlier European claims that China used gunpowder only for fireworks. This is best seen as evidence that",
+  ["assumptions about European superiority could distort how historians described other societies",
+   "Europeans had invented guns before China, and the Mongols later spread them across Asia and the Middle East",
+   "gunpowder had no real military use anywhere until the 1500s, when it reached Europe",
+   "China had borrowed guns from Japanese craftsmen who first built them in the 900s"],
+  "Henry Hime (1904) doubted Chinese guns, but Needham's later research showed Song China made the first guns.", "Economics", 3],
+ ["Which statement best describes the purpose of the tributary system from China's point of view?",
+  ["It reinforced China's status as the Middle Kingdom through rituals like the kowtow, while neighbors gained trade",
+   "It let Chinese officials collect taxes directly from farmers in neighboring states and fund the army",
+   "It settled Chinese colonists on land in neighboring states in order to spread Chinese culture",
+   "It created military alliances in which neighbors agreed to defend China against steppe nomads"],
+  "Silla gained valuable Chinese goods and regional stability, and the system also spread Chinese government, Confucianism, Buddhism, and writing.", "State-Building", 3]
+],
+tf: [
+ ["Japan's copying of Chinese government under Shotoku Taishi and the Taika Reforms was partly a way to make Japan strong enough to resist Chinese domination.", true, "A strong, centralized Japan would be harder for China to absorb.", "State-Building"],
+ ["The Song Dynasty's smaller territory meant its economy was weaker than the Tang's.", false, "Despite losing the north, Song China had Champa rice, proto-industrialization, paper money, and a booming economy.", "Economics"],
+ ["Confucianism and Buddhism coexisted more easily in China than Confucianism and Daoism did.", false, "Confucianism and Daoism were commonly blended, while Confucianism and Buddhism clashed over influence and tax-exempt monasteries.", "Culture"],
+ ["Vietnamese women generally had less independence than Chinese women because Vietnamese families were extended.", false, "Vietnam preferred nuclear families and gave women more independence. China lived in extended families.", "Social"],
+ ["Merchants held the lowest rank in Confucian theory even though some were very wealthy.", true, "Their rank reflected an ideal about who produced useful goods, not their actual money.", "Social"],
+ ["During the Heian and Minamoto periods, the Japanese emperor held real political power.", false, "The emperor was mostly a figurehead while clans, and later the shogun, held power.", "State-Building"],
+ ["The Tale of Genji shows that a woman of the Heian court could produce a major work of literature.", true, "Murasaki Shikibu, a noblewoman, wrote it, and it is often called the world's first novel.", "Culture"]
+]
+},
+
+/* ---- Chapter 11 ---- */
+"11": {
+mc: [
+ ["How did the monsoon winds shape Indian Ocean trade?",
+  ["Seasonal reversals let merchants plan round trips but often forced them to wait months in port",
+   "They allowed sailing only in winter, so trade stopped across the Indian Ocean for the rest of the year",
+   "They blew in one direction all year, so ships had to return home overland through the mountains",
+   "They steered every ship toward the Spice Islands, so other ports lost most of their trade"],
+  "Winds blew from the northeast in winter and from the southwest in spring and summer.", "Environment", 2],
+ ["Which was the earliest and most common way Islam spread in the coastal ports of South Asia?",
+  ["Muslim merchants settled in ports, married local women, and raised their children as Muslims",
+   "The Delhi Sultanate's armies forced the coastal peoples to convert on the threat of death or exile",
+   "Government exams required officials in the ports to prove their knowledge of the Quran",
+   "Mongol missionaries sent from Karakorum persuaded the rulers of coastal ports to convert"],
+  "Islam first came through merchants and marriage, not conquest, and forced conversion mostly failed.", "Culture", 2],
+ ["Why did the jizya create tension in the Delhi Sultanate?",
+  ["Non-Muslims, who were most of the population, had to pay it in order to practice their own religion",
+   "It was charged only to Muslims who refused to serve in the sultan's armies against the Mongols on the frontier",
+   "It was collected to pay yearly tribute to the Mongol khans who threatened the sultanate",
+   "It required Hindus to convert to Islam within a year or lose their land and families"],
+  "Hindus were the majority of the sultanate's population and resented paying it.", "State-Building", 2],
+ ["The Bhakti Movement and Sufism were similar in that both",
+  ["emphasized a personal, loving connection to God over strict ritual and hierarchy",
+   "were founded by Delhi sultans in order to unify their Hindu and Muslim subjects",
+   "merged Hinduism and Islam into one new religion with a single shared sacred text",
+   "required their followers to live as celibate monks apart from ordinary society"],
+  "They did not merge the faiths but did help connect them. Mira Bai and Guru Kabir are famous Bhakti figures.", "Culture", 2],
+ ["How were Muslim merchants able to find a place in India's caste system?",
+  ["They joined jatis, occupational subcastes that worked something like guilds",
+   "They were ranked as the highest caste because of their wealth and learning",
+   "They were classified as outcastes because they were outsiders to Hindu society",
+   "They remained entirely outside the caste system and lived in separate districts"],
+  "Jatis were sorted by job, so merchants could fit in by what they did.", "Social Structure", 2],
+ ["Why was Melaka's location valuable to its rulers?",
+  ["It controlled the strait linking the Indian Ocean and South China Sea, so it could charge ships fees",
+   "It sat on the richest gold mines in Southeast Asia, which paid for its large navy",
+   "It was the only port that monsoon winds could reach from both India and China",
+   "It was ringed by irrigated rice fields that produced food for the whole of maritime Asia"],
+  "Melaka's wealth came from trade and a strong navy, not farming or mining.", "Economics", 2],
+ ["Which statement best describes the political structure of the Delhi Sultanate?",
+  ["Muslim rulers governed from Delhi for about 300 years but never built a strong bureaucracy",
+   "A highly centralized bureaucracy replaced local rulers with governors appointed from Delhi",
+   "A federation of Hindu city-states governed by a council of Brahmin advisers and kings",
+   "A theocracy ruled directly by the caliph in Baghdad through his appointed judges"],
+  "Its weak bureaucracy is one reason regional rulers stayed powerful.", "State-Building", 2],
+ ["Which statement best explains why northern India was less politically stable than southern India between 550 and 1450?",
+  ["The north was invaded repeatedly through northwestern mountain passes, while the south had lasting kingdoms",
+   "The south was never touched by Islam, while the north was ruled by Muslim dynasties from the start",
+   "The north lacked the rivers needed to support large states, while the south had broad, irrigated plains and rich soil",
+   "The Himalayas opened the north to repeated Chinese invasions, while the south was shielded by deserts"],
+  "The Himalayas blocked the north and east, but invaders came through the northwest. Umayyads, Mahmud of Ghazni, the Delhi Sultanate, and later the Mughals all entered that way.", "State-Building", 3],
+ ["The founding of Vijayanagar by Harihara and Bukka is best seen as an example of",
+  ["regional leaders using a sultanate's weak control to found an independent Hindu state",
+   "a Mongol conquest of southern India that replaced the Chola kingdom with Mongol governors",
+   "a Chola attempt to reconquer Ceylon and rebuild its navy after being driven out by the Sinhalese",
+   "Mughal expansion into the south under Babur after his victory at Panipat in 1526"],
+  "The brothers were Hindu, converted to serve the Delhi Sultanate, then returned to Hinduism and broke away in the mid-1300s.", "State-Building", 3],
+ ["Which statement best explains why Sufi missionaries won more converts than armies in much of South Asia?",
+  ["They stressed personal spiritual experience and let converts keep local rituals, so Islam felt familiar",
+   "They had the legal authority to collect the jizya from non-Muslims in the sultan's name",
+   "They enforced strict doctrinal uniformity and punished converts who kept older customs",
+   "They offered new converts jobs in the sultan's bureaucracy and land grants in return"],
+  "Forced conversion largely failed. Sufis were sincere, open to others, and flexible about old customs.", "Culture", 3],
+ ["Which statement identifies a difference between the spread of Islam in South Asia and the spread of Buddhism in China?",
+  ["Islam spread through merchants and missionaries but also arrived with invading armies",
+   "Islam blended with local beliefs, while Buddhism stayed completely unchanged in China",
+   "Only Buddhism spread along trade routes, while Islam spread only through conquest",
+   "Islam attracted only the wealthy, while Buddhism spread mostly among the poor"],
+  "Both spread through traders and missionaries and mixed with local beliefs, but Islam also showed up with armies.", "Culture", 3],
+ ["Which factor best explains why Indian culture influenced Southeast Asia more than Chinese culture did in this period?",
+  ["Monsoon sea routes made India an easy trip, and Indian merchants had traded there since about 500 B.C.E.",
+   "China forbade its merchants from traveling overseas, which left India as the only partner",
+   "India conquered Southeast Asia militarily by 600 C.E. and ruled it through viceroys",
+   "Southeast Asian rulers refused to trade with China because of its tributary system"],
+  "Rulers in Funan used Sanskrit and the title raja, and they took on Hinduism and Buddhism.", "Economics", 3],
+ ["Which statement identifies a similarity between Funan and Angkor?",
+  ["Both depended on large irrigation systems that supported farming surpluses and royal power",
+   "Both became Muslim sultanates after local merchants converted to Islam in the 700s",
+   "Both were conquered by the Portuguese, who wanted to control the spice trade",
+   "Both grew rich by controlling the strait that links the Indian Ocean and China seas and taxing ships"],
+  "Chams and Khmers wrecked Funan's irrigation, and Angkor used irrigation and drainage to handle the monsoon and grow several rice harvests a year.", "Environment", 3],
+ ["Angkor Wat, where Hindu and Buddhist art appear side by side, is best understood as evidence of",
+  ["religious blending, as Khmer rulers shifted from Hindu to Buddhist traditions but kept the older art",
+   "a Chinese occupation of the Khmer kingdom that imposed Buddhist styles on Hindu temples",
+   "the arrival of Muslim influence from Melaka, which reshaped Khmer art and architecture",
+   "the collapse of all Indian influence in Southeast Asia after the fall of Funan to the Chams"],
+  "Angkor started out Hindu, then Buddhist rulers built Angkor Wat while keeping the Hindu art.", "Culture", 3],
+ ["Which statement identifies a similarity between Melaka and Constantinople?",
+  ["Each controlled a narrow strait linking major bodies of water and gained wealth from passing trade",
+   "Both were captured by the Portuguese in 1511 as part of their drive for spice routes",
+   "Both were Hindu cities in 600 C.E. before becoming centers of Islamic learning",
+   "Both were founded around 667 B.C.E. as trading colonies along the Indian Ocean"],
+  "Melaka controlled the Strait of Melaka. Constantinople held the Bosporus and Dardanelles.", "Economics", 3],
+ ["The development of Urdu and the construction of the Qutab Minar both illustrate",
+  ["the blending of Islamic and South Asian cultural traditions through long contact",
+   "the replacement of Hindu traditions by Persian ones after the Delhi Sultanate was founded",
+   "the continuation of Gupta cultural traditions with almost no outside influence",
+   "the imposition of Central Asian culture on South Asia by Mongol conquerors"],
+  "Urdu mixes Hindi grammar with Arabic and Farsi words, and the Qutab Minar mixes Hindu detail with Islamic geometric patterns.", "Culture", 3],
+ ["Why did conversion to Islam not greatly improve the social position of many low-caste Hindus?",
+  ["Changing religion did not give them access to education or better jobs, so old economic barriers stayed",
+   "Muslim rulers enforced the caste system through law and punished those who left it",
+   "Islam teaches that social rank is assigned by God and cannot be changed by conversion",
+   "Converted families were required to give up their land when they joined the Muslim community"],
+  "Caste was India's strongest continuity, and it absorbed newcomers.", "Social Structure", 3],
+ ["Which statement best describes the effect of Islam's arrival on gender relations in South Asia?",
+  ["Both Hindu and Muslim traditions kept women in a separate social sphere, so little changed",
+   "Islam gave Hindu women full political equality with men in the sultanate's cities",
+   "Hindu traditions improved women's legal position at the same time that Islam arrived",
+   "Women gained freedom of movement and public roles in Muslim-ruled cities across India from the start"],
+  "The chapter notes that Southeast Asian women had more independence than women in South Asia.", "Social Structure", 3]
+],
+tf: [
+ ["Mahmud of Ghazni's raids on the Punjab led to the conversion of most of the population to Islam.", false, "He took the Punjab and looted temples but converted almost nobody.", "State-Building"],
+ ["Because the Mongols never conquered India, the Delhi Sultanate faced no Mongol threat.", false, "Alauddin Khilji turned back Mongol invasions in 1297, 1299, and 1303, so the Mongols kept the sultans on defense.", "State-Building"],
+ ["Islam first reached Southeast Asia mainly through conquest by Indian sultans.", false, "Local merchants converted in the 700s for better trade deals, and Sufis spread Islam later.", "Culture"],
+ ["Bhakti and Sufism show that devotional movements emerged in both Hinduism and Islam, though they did not merge the two religions.", true, "Both focused on personal devotion, but the Bhakti Movement stayed Hindu.", "Culture"],
+ ["The caste system largely disappeared wherever many people converted to Islam.", false, "Caste absorbed newcomers, and low-caste converts mostly stayed low.", "Social Structure"],
+ ["Srivijaya and Melaka both gained wealth by controlling sea trade rather than by farming or mining.", true, "Srivijaya controlled sea trade around Sumatra, and Melaka charged fees on ships using the strait.", "Economics"]
+]
+},
+
+/* ---- Chapter 13 ---- */
+"13": {
+mc: [
+ ["Which statement best explains why the period is called the Pax Mongolica?",
+  ["Mongol protection of overland routes let trade flourish across Eurasia, though the conquests were violent",
+   "The Mongols stopped all warfare after the death of Genghis Khan and ruled without any use of force or threats",
+   "A single religion was imposed on the whole empire, which ended conflict among its peoples",
+   "Mongol rulers eliminated every tax and toll on trade, so merchants moved freely everywhere"],
+  "The Mongols protected the Silk Road and tolerated religions, so trade boomed. But the conquests that created the peace killed huge numbers.", "Economy", 2],
+ ["What advantage did the Mongol system of units of ten, up to tumens, give their army?",
+  ["A clear chain of command that let huge armies coordinate over vast distances",
+   "A way to rotate soldiers between farm work and military service with each season",
+   "Cheaper armor and weapons for the foot soldiers who fought in the front lines",
+   "A system of promotion by noble birth that rewarded relatives of the great khan"],
+  "It was one reason a nomadic force could fight so effectively across Eurasia.", "State-Building", 2],
+ ["Which description best fits Mongol women compared with women in many other 1200s societies?",
+  ["They rode and dressed like men, could start a divorce and remarry, and some held political power",
+   "They lived in separate quarters and were expected to be veiled whenever they appeared in public by Mongol custom",
+   "They were forbidden to remarry once a husband died and had no right to own any property",
+   "They served as the empire's chief generals and led most of its armies in the field"],
+  "Nomadic life made women's work and independence more equal than in many settled societies.", "Culture", 2],
+ ["How did religious tolerance help the Mongols govern?",
+  ["It reduced resistance from conquered peoples of many faiths, so a diverse empire was easier to hold",
+   "It persuaded conquered peoples to give up their faiths and accept the Mongols' own religion within a generation",
+   "It allowed the Mongols to avoid using military force whenever they entered a new territory",
+   "It let religious leaders replace Mongol officials as governors of the conquered provinces"],
+  "Kublai Khan, for example, won loyalty from Buddhists, Daoists, Muslims, and Christians.", "State-Building", 2],
+ ["Which Yuan policy most directly angered the Confucian scholar-gentry?",
+  ["Ending the civil service examinations and hiring foreigners in place of scholars",
+   "Banning paper money, which scholar families had used to pay their yearly taxes",
+   "Requiring every official to convert to Islam before being allowed to hold office",
+   "Moving the capital to Hangzhou, far from the northern homes of most scholar families"],
+  "It cut off the traditional route to government jobs and, with other policies, helped fuel resentment that led to the Ming in 1368.", "State-Building", 2],
+ ["How did the Pax Mongolica help spread the Black Death?",
+  ["Mongol-protected routes and armies carried plague-infected fleas and hosts across Eurasia",
+   "Mongol conquests moved large populations out of cities and onto the steppe, where plague spread",
+   "The Mongols closed the major trade routes, which crowded people into a few large cities",
+   "Plague spread only by sea, and only after the Mongol empire had already collapsed"],
+  "The same routes that carried goods carried disease, and the plague killed about a third of Europe.", "Environment", 2],
+ ["How did Mongol rule help Moscow gain power?",
+  ["Its princes collected tribute for the Mongols and used the wealth they gained to lead resistance",
+   "Mongol khans moved their capital to Moscow and made it the center of their whole empire",
+   "Moscow won its independence early by converting to Islam and allying with the Mamluks",
+   "Moscow was spared Mongol rule because its forests and distance protected it from the steppe raiders and armies"],
+  "Moscow eventually beat the Golden Horde at Kulikovo in 1380.", "State-Building", 2],
+ ["Why did the Mongol invasions of Japan fail even though Mongol armies were so successful on land?",
+  ["Crossing the sea was difficult, and powerful storms wrecked the Mongol invasion fleets",
+   "Japan's feudal armies overwhelmed the Mongol cavalry in open battle on the beaches",
+   "The Mongols lacked skilled archers who could match the samurai in battles near the coast",
+   "A great defensive wall built along the Japanese coast stopped the Mongol soldiers from landing"],
+  "The Yuan started attacks on Japan in 1274, but the Mongols' main strength was cavalry on land.", "Environment", 2],
+ ["Which statement identifies a similarity between Mongol rule in Yuan China and in the Il-khanate?",
+  ["A small Mongol elite governed a much larger conquered population using local officials and methods",
+   "Both ruling families converted to Buddhism and made it the official religion of their state within a generation",
+   "Both ruled indirectly through local princes who regularly sent tribute to a distant capital",
+   "Both ended the use of written government records and ruled through oral commands"],
+  "The Yuan used Chinese traditions and the Il-khanate relied on Persian officials, but in both cases the Mongols were a small elite.", "State-Building", 3],
+ ["Which statement best contrasts Yuan China with the Golden Horde in Russia?",
+  ["The Yuan ruled China directly from Dadu, while the Golden Horde ruled Russia through tribute-paying princes",
+   "The Yuan ruled China indirectly through local princes, while the Golden Horde ruled Russia directly from Sarai",
+   "Both ruled directly through Mongol governors, but the Yuan taxed its subjects far more heavily",
+   "The Yuan was a Muslim state governed from Karakorum, while the Golden Horde was a Buddhist one"],
+  "The Golden Horde set up its capital at Sarai on the Volga and collected tribute through Russian princes.", "State-Building", 3],
+ ["The Il-khanate's conversion to Islam complicates which generalization about Mongol rule?",
+  ["That Mongol rulers consistently practiced religious tolerance toward every faith in the empire",
+   "That the Mongols conquered Baghdad in 1258 and brought an end to the Abbasid caliphate",
+   "That Mongol rulers relied on local officials to help them collect taxes in conquered lands and keep order",
+   "That the Mongols protected trade routes and encouraged merchants to cross Eurasia"],
+  "After converting, the Il-khanate backed massacres of Jews and Christians.", "Culture", 3],
+ ["Which evidence would best support the view that Genghis Khan was primarily an 'empire builder' rather than a 'destroyer'?",
+  ["The revival of Silk Road trade, promotion by merit, and a shared law code and writing system",
+   "Estimates that most of the people of the Iranian Plateau died during the Mongol conquests of Persia",
+   "The destruction of Baghdad and the killing of the caliph and perhaps 200,000 people",
+   "The destruction of Kiev and the defeat of the European knights who fought Batu's armies"],
+  "The other options are real evidence for the 'destroyer' view. A third view, 'a man of energy,' holds that he was both.", "State-Building", 3],
+ ["Matthew Paris wrote about Mongol destruction from England without seeing the conquests. How should a historian best use his account?",
+  ["As evidence of the fears and rumors in Europe, compared with other sources about what happened",
+   "As the single most reliable account, because it was written by a literate European monk",
+   "As useless evidence, because European writers of the period never wrote about the Mongols in any language",
+   "As proof that Mongol armies never actually reached the eastern borders of Europe at all"],
+  "A secondhand source shows how rumors spread, but it needs to be checked against other evidence.", "Culture", 3],
+ ["Which statement best describes a long-term effect of Mongol rule on Russia?",
+  ["Russia was cut off from the West and built a strong, centralized state around Moscow",
+   "Russia embraced Renaissance humanism and Western learning earlier than most of Europe",
+   "Russia became a Muslim state governed by Mongol khans well into the nineteenth century",
+   "Russia split permanently into four rival khanates that never again came together"],
+  "Mongol domination cut many ties to the West, and Russia's politics and culture developed in their own direction.", "State-Building", 3],
+ ["How did Mongol warfare most directly affect European military practice?",
+  ["Fast cavalry and siege methods outmaneuvered armored knights and threatened walled cities",
+   "Europeans responded by adopting the Mongols' civil service system to choose commanders",
+   "Europeans abandoned heavy cavalry entirely and rebuilt their armies around foot archers and crossbowmen",
+   "Mongol raids convinced the kings of Europe to merge their kingdoms into a single empire"],
+  "The long-term effects included the end of knights and walled cities as dominant military forms.", "Technology", 3],
+ ["Which statement best contrasts the exchange of ideas through the Mongol conquests with the exchange through the Crusades?",
+  ["Mongol contact reached East Asia and spread printing and gunpowder, while the Crusades linked only Europe and the Middle East",
+   "Mongol contact reached only Europe and the Middle East, while the Crusades spread printing and gunpowder from East Asia to the West",
+   "The Crusades spread gunpowder and astronomy across Eurasia, while the Mongols spread only chess and romantic poetry",
+   "Neither exchange spread new ideas or technology, since both were fought mainly over religion and trade"],
+  "The Crusaders brought back chemistry, algebra, and Arabic numerals. The Mongol exchange reached all the way to East Asia.", "Technology", 3],
+ ["Which factor best explains why the Mongol Empire fragmented into four khanates?",
+  ["Genghis Khan's descendants ruled different regions whose local conditions and interests drifted apart",
+   "Genghis Khan divided the empire among four neighboring kingdoms that later rebelled against his heirs",
+   "Plague wiped out most of the Mongol armies and officials within a single generation of his death",
+   "The empire ran out of silver to pay its soldiers and the officials who governed the provinces"],
+  "The four were the Golden Horde, the Il-khanate, the Chaghatai Khanate, and the Yuan.", "State-Building", 3],
+ ["Why did Mongol conquerors often spare skilled workers such as engineers, craftsmen, and literate people?",
+  ["Their skills strengthened Mongol siege warfare and helped them run conquered lands",
+   "Mongol law forbade killing anyone who spoke more than one language or could read",
+   "They were kept as hostages to guarantee the loyalty of the surrendered cities",
+   "They were the only people in the empire who knew how to handle horses and train archers"],
+  "The Mongols learned siege warfare from prisoners, and captured engineers built siege weapons.", "Technology", 3],
+ ["The Mongols' destruction of Baghdad in 1258 and their defeat by the Mamluks in 1260 together show that",
+  ["Mongol expansion was extremely powerful but did have limits in the Middle East",
+   "the Mamluks had become part of the Mongol empire after their defeat in Palestine",
+   "Mongol armies could not take walled cities in the Middle East without Chinese engineers",
+   "the Abbasid caliphs were restored to power in Baghdad under Mamluk protection"],
+  "Hulegu killed the caliph and perhaps 200,000 people, but the Mamluks under Baibars stopped him.", "State-Building", 3],
+ ["How could paper money support commerce under Mongol rule in China?",
+  ["It gave merchants an easy way to pay for goods across a huge territory",
+   "It replaced taxes, so merchants no longer owed anything to the khan",
+   "It let the Mongols pay their soldiers without needing silver from conquered lands",
+   "It was banned along the Silk Road, so merchants relied on barter"],
+  "Paper money (and flying cash before it) made trade across the huge Mongol territory easier.", "Economy", 2]
+],
+tf: [
+ ["The term Pax Mongolica means the Mongol conquests themselves were achieved without large-scale violence.", false, "The 'peace' refers to safe trade after the conquests. The conquests themselves killed a huge number of people.", "State-Building"],
+ ["Under the Yuan Dynasty, China experienced decline in trade and the arts throughout the period.", false, "Mongol rule caused political tension, but trade grew and art and literature thrived.", "Economy"],
+ ["Mongol armies depended on engineers and techniques taken from conquered peoples to attack walled cities.", true, "They learned siege warfare from prisoners.", "Technology"],
+ ["The Mongol Empire stayed under one Great Khan until it collapsed.", false, "It split into four khanates ruled by Genghis Khan's descendants.", "State-Building"],
+ ["Mongol women's greater independence helped make it acceptable for Toregene Khatun to run the empire until a new khan was chosen.", true, "Mongol women rode, could start a divorce, and had more independence than women in most societies at the time.", "Culture"],
+ ["Moscow's rise began with collecting tribute for the Golden Horde.", true, "That wealth and influence helped it organize the resistance that won at Kulikovo in 1380.", "State-Building"],
+ ["Marco Polo's account proves that Yuan China was prosperous and politically stable.", false, "A single outsider's account has to be checked against other evidence.", "Culture"]
+]
+},
+
+/* ---- Chapter 14 ---- */
+"14": {
+mc: [
+ ["How did chinampas help Tenochtitlan feed a large population?",
+  ["They created fertile raised garden plots in the shallow lake, adding farmland right next to the city",
+   "They were stone terraces cut into the mountain slopes around the lake to catch rainfall",
+   "They were irrigation ditches that carried lake water to distant fields of maize and beans",
+   "They were storehouses that held maize and beans between harvests to feed the city"],
+  "Chinampas were floating gardens made of mud and weeds on Lake Texcoco, which gave the Aztecs far more land to grow food.", "Environment", 2],
+ ["Why did the Aztecs let many conquered local rulers keep their positions?",
+  ["They collected tribute and kept order while answering to the Aztecs, so control stayed indirect",
+   "Keeping local rulers meant the Aztecs did not have to demand any tribute from provinces or send officials",
+   "They were Aztec nobles who had been sent out from Tenochtitlan to govern each province",
+   "They were required to teach Aztec religion and language to the people they governed"],
+  "The Aztecs also placed warriors and an official in provincial capitals to make sure the tribute arrived.", "State-Building", 2],
+ ["What was the main purpose of the Inca quipu?",
+  ["It let officials record numbers, like labor owed and goods stored, without an alphabetic script",
+   "It was a religious calendar that Inca priests used to track their sacrifices to Inti",
+   "It was a detailed map of the Qhapaq Ñan road system that messengers carried with them",
+   "It marked the exact boundaries of the four provinces that the Inca governors ruled"],
+  "A quipu is a set of knotted strings used for numbers and messages.", "State-Building", 2],
+ ["What does Cahokia suggest about North America before 1492?",
+  ["Large urban populations, specialized crafts, and long-distance trade already existed there",
+   "Most people lived in small hunting bands and had no permanent settlements or farming",
+   "Cities appeared only after Europeans introduced iron tools and new crops to the region in the 1500s",
+   "Trade was limited to a few neighboring villages that exchanged only food and clothing"],
+  "Cahokia had about 40,000 people around 1250, more than London, and shells, copper, bear teeth, and turtle shells show wide trade.", "Economy", 2],
+ ["Why was it politically important that the Great Speaker was both the head of state and the gods' representative?",
+  ["His sacred role helped justify his power by linking political authority to religion",
+   "It meant that priests rather than nobles handled all tribute collection in provinces",
+   "It exempted him from any need to maintain a large army of professional warriors",
+   "It let him govern the conquered provinces directly without relying on any local rulers"],
+  "The Aztec government is sometimes called a theocracy.", "State-Building", 2],
+ ["Why could a Mississippian Great Sun's title pass to his sister's son rather than to his own son?",
+  ["Descent was traced through the mother's family, so the sister's son was the heir",
+   "Women held the title of Great Sun in each generation of the ruling family line and passed it to daughters",
+   "Priests chose heirs from among the commoners to prevent rivalries among nobles",
+   "The Great Sun's own sons were required to serve as warriors and could not rule"],
+  "Mississippian society was matrilineal. Women farmed and men hunted, and a Great Sun ruled at the top.", "Social Structure", 2],
+ ["Why were agricultural terraces useful to Inca farmers in the Andes?",
+  ["They created flat farmland on steep slopes and helped manage water and soil",
+   "They allowed fields to be flooded year-round for growing rice and other water crops",
+   "They removed any need for irrigation by trapping rainfall on the upper slopes",
+   "They protected the crops from the llamas and alpacas that grazed the highlands"],
+  "The Inca also used waru waru raised beds with channels to control water.", "Environment", 2],
+ ["Why would Aztec rulers claim a connection to the earlier Toltecs?",
+  ["Linking themselves to an admired older civilization made their rule look more legitimate",
+   "The Toltecs had given them the land for Tenochtitlan as a reward for their service",
+   "Toltec law required every ruler of central Mexico to be a descendant of Toltec kings or priests",
+   "The Toltecs were still the Aztecs' strongest rivals and needed to be appeased"],
+  "The Aztecs, or Mexica, were migrants from the north who claimed the Toltec legacy.", "State-Building", 2],
+ ["Which statement best contrasts how the Aztec and Inca empires took resources from conquered peoples?",
+  ["The Aztecs mainly demanded tribute in goods, while the Inca required labor service through the mit'a",
+   "The Aztecs required labor service through the mit'a, while the Inca demanded tribute in goods and gold",
+   "Both demanded tribute in goods, but only the Inca maintained a large permanent army",
+   "Both required labor service, but the Aztecs used it only to build temples and pyramids"],
+  "Aztec subjects paid goods, gave land, and served in the army. Inca men aged 15 to 50 owed labor instead of tribute.", "Economy", 3],
+ ["Which statement best explains why the Inca Empire was more culturally unified than the Aztec Empire?",
+  ["The Inca required conquered peoples to learn Quechua and Inca religion, while the Aztecs mostly left cultures alone",
+   "The Aztecs forced conquered peoples to adopt Nahuatl, while the Inca let local languages be used in government and the courts",
+   "The Inca ruled through local kings who paid tribute, while the Aztecs appointed governors over four provinces",
+   "Both left conquered cultures alone, but the Inca ruled a smaller and more compact territory"],
+  "Inca schools taught Quechua, religion, and history. The Aztecs left local rulers in place and cared mostly about tribute.", "State-Building", 3],
+ ["Which evidence best challenges the claim that Spanish weapons alone explain Cortés's victory over the Aztecs?",
+  ["Disease devastated Tenochtitlan, and many native groups that resented Aztec rule joined the Spanish",
+   "Cortés brought far more soldiers than the Aztecs had warriors to defend Tenochtitlan",
+   "The Aztecs had no gold or silver for the Spanish to seize, so the conquest took many years",
+   "Tenochtitlan was too far from the coast for the Spanish to resupply their army with guns"],
+  "Smallpox, Spanish troops, and rebels together caused a fast collapse. Native allies such as the Tlaxcalans mattered.", "State-Building", 3],
+ ["Why was the Inca Empire vulnerable when Pizarro arrived in 1532?",
+  ["A succession struggle after Huayna Capac's death had divided its leaders, and disease had spread",
+   "The empire had lost control of the Qhapaq Ñan roads to rebelling provincial governors",
+   "Its armies had been destroyed in a long war with the Chanca just before the Spanish arrived on the coast",
+   "Spanish ships had cut off the empire's food supply from the coastal valleys for months"],
+  "Pizarro arrived during a civil war, and the Spanish finished off the empire by 1572.", "State-Building", 3],
+ ["Which statement describes a risk of rapid expansion shared by the Aztec and Inca empires?",
+  ["Conquest added distant subjects whose loyalty rested on coercion, creating a danger of rebellion",
+   "Expansion drained their gold reserves, forcing them to give up their tribute systems",
+   "Expansion brought the two empires into constant conflict along their shared frontier",
+   "Expansion made their rulers dependent on foreign merchants for basic food supplies"],
+  "Aztec subjects resented tribute and sacrifices, and Inca expansion helped set up a succession civil war. The two empires never came into contact.", "State-Building", 3],
+ ["The great houses of Chaco Canyon and the cliff dwellings of Mesa Verde are best interpreted as evidence that",
+  ["large-scale organized construction also took place in the Southwest, adapted to a desert environment",
+   "the Ancestral Pueblo were a southern offshoot of the Inca civilization of the Andes",
+   "Mississippian peoples had migrated westward and built these great houses and dwellings",
+   "North American societies were entirely nomadic and never built permanent structures"],
+  "Both are Ancestral Pueblo sites, and your teacher's notes rate both 8 out of 10 for AP value.", "Environment", 3],
+ ["What is the most important limitation of Spanish accounts of Aztec human sacrifice as evidence?",
+  ["Spanish writers who were justifying conquest may have exaggerated what they described",
+   "The accounts were written decades later by people who had never visited the Americas",
+   "The Spanish crown forbade writers from mentioning human sacrifice in any official account",
+   "The accounts contradict all of the archaeological evidence found at Aztec sites"],
+  "Sahagún arrived in 1529 and studied the Aztecs for about 30 years. His work is valuable, but it still has to be read critically.", "Culture", 3],
+ ["Which statement best explains why estimates of the Americas' population before Columbus vary so widely?",
+  ["Disease changed populations before many counts were made, so scholars use incomplete evidence",
+   "Native peoples kept no records of any kind, so no reasonable estimates are possible",
+   "Scholars agree on the size of the population but disagree about what caused its decline after 1492",
+   "Population counts were taken before 1491, but most were lost in the Spanish conquest"],
+  "Estimates range from about 8.4 million (Kroeber) to 90–112 million (Dobyns) and even about 200 million (Mann).", "Environment", 3],
+ ["Which statement identifies a political difference between the Maya and the Aztecs?",
+  ["The Maya were independent city-states with their own rulers, while the Aztecs built one expanding empire",
+   "The Maya were ruled by one emperor, while the Aztecs were split into separate city-states",
+   "The Maya demanded labor service through mit'a, while the Aztecs demanded tribute in goods",
+   "Both were small kin-based networks governed by chiefs, without large cities or armies"],
+  "The Maya fought wars for tribute but never united, while the Aztecs put many conquered communities under one empire.", "State-Building", 3],
+ ["Which statement best contrasts the Inca and Aztec economies?",
+  ["The Inca state ran most production and distribution, while the Aztecs had many merchants like the pochteca",
+   "The Aztec state ran most production and distribution, while the Inca relied on many merchants",
+   "Both depended mainly on private merchants, and neither one used state storehouses at all",
+   "Both depended on extensive trade with each other along the Pacific coast of South America"],
+  "The table lists Aztec trade as extensive and Inca trade as limited. The two empires never traded with each other.", "Economy", 3],
+ ["How could Inca royal ancestor veneration encourage continued expansion?",
+  ["Dead rulers kept their property, so each new ruler had to conquer new land to support himself",
+   "Dead rulers' tombs received tribute from every province, which the living ruler then lost to the priests",
+   "Dead rulers' lands passed to the priests of Inti, who then funded the new campaigns",
+   "Only rulers who had conquered new territory could be mummified and honored after death"],
+  "Royal ancestors were mummified and kept their land, so a new ruler had to win his own.", "Culture", 3],
+ ["Why do maize and potatoes from the Americas matter to world history beyond the Americas?",
+  ["After contact they spread across Afro-Eurasia and helped support population growth",
+   "They were the first crops that Europeans ever domesticated from native species",
+   "They were the main exports that Europeans used to pay for Asian silk and spices",
+   "They carried new diseases that spread into Afro-Eurasia along with the harvested crops"],
+  "This is part of the Columbian Exchange.", "Environment", 3],
+ ["Which statement best describes how women's work connected to the Aztec Empire's demands?",
+  ["Women wove cloth at home, and woven cloth was valuable and could be demanded as tribute",
+   "Women were barred from every economic role, so tribute came only from men's labor",
+   "Women served as pochteca who carried tribute goods across long distances to the capital",
+   "Women governed conquered provinces and collected the tribute in place of local rulers"],
+  "Women wove the cloth used for tribute. Some were also priestesses, midwives, healers, or merchants.", "Social Structure", 3]
+],
+tf: [
+ ["The Aztecs controlled subject peoples mainly through direct administration by Aztec officials in every town.", false, "Local rulers kept their jobs as tribute collectors, with warriors and an official in provincial capitals.", "State-Building"],
+ ["Both the Aztecs and the Inca used the labor or goods of conquered peoples to support their rulers.", true, "Aztecs took tribute goods, and the Inca used the mit'a labor system.", "Economy"],
+ ["Cahokia's size around 1250 suggests that precontact North America was entirely rural.", false, "Cahokia had about 40,000 people, more than London at the time.", "Social Structure"],
+ ["Large Mississippian settlements depended on agricultural surpluses of crops such as maize, beans, and squash.", true, "Crops fed enough people to support towns, specialized workers, and leaders.", "Environment"],
+ ["The Inca road network, built to run the empire, later helped the Spanish invaders.", true, "The roads let officials, messengers, supplies, and armies move, and invaders could use them too.", "State-Building"],
+ ["Historians agree on a single figure for the population of the Americas in 1491.", false, "Estimates range from about 8 million to as much as 200 million.", "Environment"],
+ ["Human sacrifice was practiced by the Aztecs but never by the Inca.", false, "The Inca used it only in big crises like famine or war defeat, and far less than the Aztecs.", "Culture"]
+]
+},
+
+/* ---- Chapter 16 ---- */
+"16": {
+mc: [
+ ["How did the Columbian Exchange affect Europe's population in the 1500s and 1600s?",
+  ["American crops such as potatoes and maize increased food supplies and contributed to population growth",
+   "Large numbers of colonists returning from the Americas added to the European population",
+   "American livestock such as llamas and alpacas became a major source of food in Europe",
+   "The end of Italian control over trade with Asia lowered food prices across the continent"],
+  "Maize, potatoes, tomatoes, and beans all moved to Europe.", "Environment", 2],
+ ["How did the Spanish turn the Inca mit'a into a system of coerced labor?",
+  ["They required villages to send a share of their men to work in dangerous silver mines for little pay",
+   "They replaced the labor obligation with a heavy tax that each village paid in silver coins",
+   "They paid mit'a workers fair wages and let villages choose which projects to work on",
+   "They sent mit'a workers to the sugar plantations of Brazil, where labor was scarce"],
+  "This was one of the brutal and coercive systems of the period, along with the encomienda.", "Economics", 2],
+ ["Under mercantilism, what was the main purpose of colonies?",
+  ["To enrich the home country by sending home gold, silver, and goods while exporting more than importing",
+   "To give colonists experience in self-government so that they could eventually trade freely",
+   "To provide land for the home country's surplus population, with trade as a secondary goal",
+   "To spread Christianity to native peoples, with profit as only a secondary goal of colonies"],
+  "A cut of the silver went to the Spanish crown, which paid for its military and trade.", "Economics", 2],
+ ["Why did Portugal turn to enslaved Africans to work Brazil's sugar plantations?",
+  ["Disease had killed most native workers and the rest kept escaping, so there were too few laborers",
+   "Native Brazilians could not be converted to Christianity and refused to work for the Portuguese settlers",
+   "African slaves were cheaper than native workers, who had to be paid regular wages in coin",
+   "The Treaty of Tordesillas required Portugal to bring in workers from Africa to farm Brazil"],
+  "Brazil's climate was perfect for sugarcane, and plantations lost 5 to 10 percent of their workers every year.", "Economics", 2],
+ ["Why did slow communication between Spain and its colonies matter?",
+  ["It made close control difficult, so local elites like creoles gained power and wanted independence",
+   "It prevented the crown from receiving any share of the silver that was mined in the colonies of Peru and Mexico",
+   "It forced Spain to give up its claims to Brazil and much of the rest of South America",
+   "It ended the viceroy system and replaced royal governors with elected colonial assemblies"],
+  "Viceroys ruled for the king and audiencias checked them, but ships were slow.", "State-Building", 2],
+ ["Why did French colonists generally have better relations with Native Americans than English colonists did?",
+  ["The French economy centered on the fur trade, so they traded with natives instead of taking farmland",
+   "The French settled in far larger numbers and agreed to share their farmland with natives",
+   "The French avoided all contact with native peoples and stayed in a few coastal forts",
+   "The French agreed to be governed by native leaders in return for protection from the English and Dutch colonies"],
+  "The English settled permanently and fought over land. New France had only about 70,000 Europeans by 1754, compared with about one million in the English colonies.", "Social Structure", 2],
+ ["Why did sugar and other cash crops eventually matter more to Europeans than silver?",
+  ["Mines eventually run out, while cash crops can be grown and sold again and again to a huge market",
+   "Silver was worth much less than sugar by weight, so it was cheaper to ship to Europe",
+   "Cash crops required no labor, so planters could make profits without large workforces",
+   "Europeans did not use silver as money, so most of it was kept for use in the colonies"],
+  "Sugar eventually beat silver as Europe's main moneymaker.", "Economics", 2],
+ ["Vodun, Santeria, and Candomblé are best understood as",
+  ["religions that blend West African traditions with Christianity, created by enslaved Africans",
+   "forms of Protestant Christianity brought to the Caribbean by Dutch and English settlers",
+   "Native American religions that survived the conquest almost entirely unchanged by Europeans or Africans",
+   "Spanish missionary orders that worked to convert enslaved Africans in the colonies"],
+  "Vodun is in Haiti, Santeria in Cuba, and Candomblé in Brazil.", "Culture", 2],
+ ["Which statement best describes how American silver helped create a global economy by the early 1600s?",
+  ["Silver mined in Mexico and Peru moved to Europe and, by Manila galleons, to China, linking three continents",
+   "Most silver stayed in the Americas, where it replaced barter as money among the colonists and natives of the Andes",
+   "Silver traveled only across the Atlantic, where Europeans used it to buy African gold and slaves",
+   "Silver flowed from China to Europe along the Silk Roads in exchange for American sugar and tobacco"],
+  "Potosí and Zacatecas were the main sources, and silver bought silk, spices, and even gold.", "Economics", 3],
+ ["Which statement is the most accurate evaluation of the role of disease in the Spanish conquest?",
+  ["Disease killed huge numbers of people with no immunity, which weakened resistance and made conquest possible",
+   "Disease played a minor role, since Spanish weapons and horses were far superior in nearly every battle they fought",
+   "Disease killed mostly Spanish soldiers, who had no immunity to American illnesses such as syphilis",
+   "Disease spread only after the conquest was complete, so it affected labor but not the conquest"],
+  "Populations dropped over 50 percent in under a century, and up to 90 percent in some places.", "Environment", 3],
+ ["Which statement identifies a difference between the Spanish conquest of the Aztecs and of the Inca?",
+  ["Cortés won by allying with the Aztecs' enemies, while Pizarro captured the Inca ruler Atahualpa for ransom",
+   "Cortés won mainly through a siege by sea, while Pizarro won through a long land war of attrition",
+   "Only the Aztec conquest relied on smallpox, while only the Inca conquest relied on native allies",
+   "Only the Aztec conquest produced a new Spanish capital, while the Inca capital stayed at Cuzco"],
+  "Both conquests brought gold, smallpox helped both, and both created a Spanish capital: Mexico City and Lima.", "State-Building", 3],
+ ["Which statement best explains how the Spanish and Portuguese maritime empires differed from earlier land empires such as the Mongols or Muslims?",
+  ["The Iberian powers erased most native social structures within a century, unlike earlier land empires",
+   "The Iberian powers let native social structures survive, while earlier land empires erased them completely",
+   "The Iberian powers ruled only through local elites who were allowed to keep their religions",
+   "There was no real difference, since all of these empires blended cultures to the same degree"],
+  "Disease nearly emptied the Americas, which made this much more thorough change possible.", "Culture", 3],
+ ["Which statement best contrasts how Spain and Portugal made money from their American colonies?",
+  ["Spain relied heavily on silver from conquered empires, while Portugal built its wealth on Brazilian sugar",
+   "Spain relied mainly on sugar plantations, while Portugal relied mainly on silver mining in Peru",
+   "Both relied mainly on the fur trade with natives in the northern parts of their empires",
+   "Both relied mainly on selling land to settlers who migrated from Spain and Portugal"],
+  "Spanish colonies later added sugar and tobacco too.", "Economics", 3],
+ ["Which statement identifies a continuity in coerced labor from the encomienda to the plantation system?",
+  ["Colonial elites used force and legal compulsion to get cheap labor for profit-oriented economies",
+   "Workers in both systems earned wages that rose gradually as the colonies grew wealthier",
+   "Workers in both systems were released from their obligations after a fixed term of years of service",
+   "Both systems ended when the colonies won their independence from Spain in the 1700s"],
+  "Encomienda, mit'a, slavery, and indentured servitude were all forms of coerced labor.", "Economics", 3],
+ ["Which factor best explains the English colonies' shift from indentured servants toward enslaved Africans?",
+  ["Servants went free after several years, while enslaved Africans could be held permanently",
+   "English law banned indentured servitude after 1619, so planters had to change their system",
+   "Enslaved Africans cost less than servants because the crown subsidized their passage",
+   "Native Americans demanded to replace the European workers on the tobacco plantations"],
+  "The first Africans arrived in Virginia in 1619 as indentured servants, and slavery laws came later.", "Economics", 3],
+ ["Which statement best describes the 'Black Legend'?",
+  ["The idea that Spain was uniquely cruel, which historians now question since brutality was widespread",
+   "The claim that Spain treated natives better than other powers, later disproved by Las Casas",
+   "A Spanish campaign to hide reports of colonial abuses from the crown and from the Church",
+   "A theory that the Columbian Exchange mostly benefited the native peoples of the Americas"],
+  "Las Casas wrote about Spanish cruelty in 1552. Juderías named the Black Legend in 1914, and Hanke pointed out that Spain also had reformers.", "Culture", 3],
+ ["Which factor best explains the development of the casta system in colonial Latin America?",
+  ["Intermarriage among Europeans, Africans, and indigenous peoples produced mixed groups ranked by skin color",
+   "Spanish law assigned each group to a separate region of the empire and forbade them to mix",
+   "Missionaries ranked converts by how quickly they learned Spanish and Catholic doctrine",
+   "The Treaty of Tordesillas set the rules for racial ranking in both Spanish and Portuguese colonies in the Americas"],
+  "Peninsulares were on top, then creoles, then castas, then indigenous people and enslaved Africans.", "Social Structure", 3],
+ ["The Treaty of Tordesillas (1494) best illustrates which broader development?",
+  ["European monarchs divided overseas territory among themselves without consulting local peoples",
+   "Spain and Portugal agreed to share the Americas equally with every other European power that wished to explore",
+   "Native leaders were invited to negotiate the boundaries of the new colonies in Brazil",
+   "The pope forbade Spain and Portugal from exploring beyond the Caribbean for a century"],
+  "Portugal got Brazil and Spain got the rest.", "State-Building", 3],
+ ["Which factor best explains why Africa's population grew even during the Atlantic slave trade?",
+  ["American crops such as maize and manioc improved food supplies for African farmers",
+   "Arab merchants brought new farming methods that raised yields across the continent",
+   "Large numbers of European settlers moved to Africa and started new farming communities",
+   "Diseases from Europe never reached Africa, so its population was unaffected by contact"],
+  "The trade still took millions of people, but new foods raised the population.", "Environment", 3]
+],
+tf: [
+ ["Many historians now argue that brutality was widespread among European colonial powers, not only Spain.", true, "The Black Legend said Spain was especially evil, but today it is hard to say Spain was worse.", "Culture"],
+ ["The Columbian Exchange moved plants, animals, and diseases only from Europe to the Americas.", false, "Maize, potatoes, tomatoes, cacao, and syphilis moved the other way.", "Environment"],
+ ["Under mercantilism, a country wanted to import more than it exported.", false, "The goal was to export more than you import.", "Economics"],
+ ["Slow ships and communication limited Spain's control over its American colonies.", true, "That helped local elites like creoles gain power.", "State-Building"],
+ ["By 1754, New France had a larger European population than the English colonies.", false, "New France had only about 70,000 Europeans, compared with about one million in the English colonies.", "Social Structure"],
+ ["Silver from the Americas ended up in China because China used it as its main currency.", true, "Manila galleons carried it across the Pacific.", "Economics"],
+ ["The Spanish conquests of the Aztecs and the Inca succeeded without help from epidemic disease.", false, "Smallpox weakened both empires.", "Environment"]
+]
+},
+
+/* ---- Chapter 17 ---- */
+"17": {
+mc: [
+ ["Why did Europeans turn to enslaved Africans for labor in the Americas?",
+  ["Native workers died of disease or escaped easily, and indentured servants went free after several years",
+   "Native workers could not legally be forced to work under the encomienda or mit'a systems",
+   "Portugal had banned the enslavement of Native Americans through a treaty with the pope",
+   "Indentured servants from Europe were far too expensive to transport across the Atlantic"],
+  "Land was plentiful in the Americas but workers were not.", "Economics", 2],
+ ["How did the Songhay Empire's government differ from those of Ghana and Mali?",
+  ["Songhay was much more centralized, while Ghana and Mali relied more on alliances",
+   "Songhay was a loose alliance of kings, while Ghana and Mali were highly centralized states",
+   "Songhay was ruled by a council of Muslim scholars rather than by a single emperor",
+   "Songhay had no real army and depended on trade and tribute to defend its cities"],
+  "Under Sunni Ali and Askia Muhammad, Songhay grew larger than Mali by the 1480s.", "State-Building", 2],
+ ["Which factor best explains the fall of the Songhay Empire in the late 1500s?",
+  ["A Moroccan army equipped with firearms conquered the empire",
+   "Portuguese ships sailed up the Niger River and captured Gao",
+   "Mali's armies retook Timbuktu and broke up the empire",
+   "A long famine ended the trade that supported its cities"],
+  "It fell after about 100 years.", "State-Building", 2],
+ ["How did the Atlantic slave trade affect gender in West Africa?",
+  ["Over two-thirds of those taken were men, so women outnumbered men, polygyny rose, and women did men's work",
+   "Over two-thirds of those taken were women, so men outnumbered women and polygyny fell sharply",
+   "The trade mainly took young children, so the numbers of adult men and women stayed about equal",
+   "The trade had no effect on gender balance because most captives came from outside West Africa"],
+  "This is one of the textbook's SAQ prompts.", "Social Structure", 2],
+ ["Why did creole languages develop among enslaved Africans in the Americas?",
+  ["Captives from many groups had no shared language, so they blended European and African words",
+   "Europeans taught captives a simplified language so that overseers could supervise them more easily",
+   "Colonial law banned every African language, so creole replaced them within a single generation",
+   "Captives all spoke the same language, so one African language spread across the colonies"],
+  "Most African languages were lost within a generation.", "Culture", 2],
+ ["How did Enlightenment ideas contribute to the end of the Atlantic slave trade?",
+  ["Ideas about natural freedom and equality made slavery harder to justify for many Europeans",
+   "Philosophes argued that slavery was necessary for trade and urged that it be expanded",
+   "Enlightenment thinkers organized and led the revolts of enslaved people in Saint Domingue",
+   "Rulers adopted Enlightenment ideas only in West Africa, where they ended raiding for slaves"],
+  "Thinkers like Rousseau said everyone deserves freedom and equality.", "Social Structure", 2],
+ ["Why is Haiti's 1804 independence significant?",
+  ["It was the first country in the Americas to end slavery, after a successful slave revolt",
+   "It was the last country in the Americas to end slavery, after a long and bloody civil war",
+   "It ended the Atlantic slave trade everywhere when French ships stopped carrying captives",
+   "It ended slavery through a civil war, as the United States would do some decades later"],
+  "Toussaint L'Ouverture led the revolts in Saint Domingue.", "State-Building", 2],
+ ["Why did many African musical traditions survive in the Americas?",
+  ["Enslaved people used music to endure long workdays and to communicate in secret",
+   "Plantation owners required enslaved workers to perform African music for entertainment",
+   "European missionaries taught African rhythms to enslaved people as part of conversion",
+   "Written musical notation preserved African songs from one generation to the next"],
+  "Gospel, blues, jazz, hip-hop, samba, and reggae all draw on African music.", "Culture", 2],
+ ["Which statement best explains why some African rulers took part in the Atlantic slave trade?",
+  ["Selling captives gave them guns and wealth that strengthened them against neighbors, despite more warfare",
+   "European armies forced the coastal kingdoms to supply captives under the threat of invasion",
+   "African rulers believed that enslaving their neighbors was required by Islamic law",
+   "Rulers hoped to use the captives they sold to found new African colonies in the Americas"],
+  "Dahomey and Oyo became rich and strong by raiding for slaves.", "State-Building", 3],
+ ["King Afonso's 1526 letter complaining about slave raiding in Kongo most directly illustrates",
+  ["how the slave trade could undermine African rulers' authority and drain their kingdoms of people",
+   "that Kongo had defeated Portuguese forces and wanted to end the trade on its own terms",
+   "that Kongo had grown stronger through the trade and wanted Portugal to expand it further into the interior",
+   "that Kongo's nobles were profiting from the trade while the king lost nothing at all"],
+  "Raids got out of control, even nobles were taken, and his subjects traded without him.", "State-Building", 3],
+ ["Which statement identifies a difference between the Atlantic and Indian Ocean slave trades?",
+  ["Atlantic captives mostly worked plantations in the Americas, while Indian Ocean captives often worked in ports and homes",
+   "Atlantic captives came mostly from East Africa, while Indian Ocean captives came mostly from West Africa",
+   "The Atlantic trade peaked in the 1700s and 1800s, while the Indian Ocean trade peaked in the 1500s and 1600s",
+   "Both trades sent most captives to the Americas, but the Atlantic trade began much earlier than the other"],
+  "The Indian Ocean trade peaked in the 1700s and 1800s and lasted longer.", "Social Structure", 3],
+ ["Which statement best describes how African slavery changed after European demand grew?",
+  ["It grew from a small system that absorbed captives into local society into a massive trade driven by raids",
+   "It shrank from a large plantation system into a small one that mainly served African households",
+   "It moved from a trade run by Europeans to one run only by African merchants and rulers",
+   "It stayed about the same size but shifted its main destination from the Americas to the Mediterranean and North Africa"],
+  "Before Europeans, slaves were prisoners of war, criminals, and debtors.", "Social Structure", 3],
+ ["Which statement best explains how the Atlantic slave trade contributed to European imperialism in Africa in the late 1800s?",
+  ["It weakened many African states and made them dependent on European goods, which made conquest easier",
+   "It made African states so strong that Europeans needed their permission to enter the interior",
+   "It convinced Europeans that Africa had little of value, so they lost interest in the continent for decades",
+   "It ended African trade with Europe, so Europeans turned to other regions to find labor"],
+  "Short-term profit led to long-term weakness.", "State-Building", 3],
+ ["Eric Williams (1944) argued that slavery helped finance capitalism and the Industrial Revolution. Which evidence most directly supports his argument?",
+  ["Profits from sugar and rum made with enslaved labor enriched Britain, France, and the Dutch",
+   "Evidence that Atlantic slavery was unprofitable for planters and European merchants alike",
+   "Evidence that African societies had practiced no slavery before Europeans arrived on the coast",
+   "Evidence that the Atlantic slave trade had ended before the 1700s, well before industrialization"],
+  "Sugar and rum made European powers rich by the 1700s.", "Economics", 3],
+ ["Which historian's view most directly supports the claim that African cultural traditions survived in the Americas?",
+  ["Joseph Holloway (1999), who argued African culture survives in places like New Orleans",
+   "Eric Williams (1944), who argued slavery helped make capitalism and industry possible",
+   "Edward Baptist (2014), who argued slavery and cotton built American industrial power",
+   "Hugh Trevor-Roper (1965), who dismissed the African past as nothing but barbarous tribes"],
+  "Genovese (1974) also wrote about the social and cultural history of slavery.", "Culture", 3],
+ ["Why do creole languages remain dominant in the Caribbean but largely disappeared in the United States, except for Gullah?",
+  ["Enslaved Africans made up a much larger share of the population in the Caribbean",
+   "Enslaved Africans in the United States kept speaking their original languages instead",
+   "European settlers in the Caribbean learned creole languages before the captives did",
+   "Creole languages were invented in the Caribbean and never reached North America"],
+  "Gullah, or Geechee, survives in South Carolina and Georgia, where slaves were about 75 percent of the population in some areas.", "Culture", 3],
+ ["Which statement best describes the economic structure of the triangular trade?",
+  ["European manufactured goods went to Africa, enslaved Africans to the Americas, and cash crops to Europe",
+   "Silver went to Africa, enslaved Africans to Asia, and silk and spices back to Europe by sea",
+   "Enslaved people went to Europe, manufactured goods to Africa, and gold to the Americas",
+   "African gold went to Europe, tobacco went to Africa, and enslaved people went to Asia"],
+  "Sugar and rum made Britain, France, and the Dutch rich.", "Economics", 3],
+ ["About 10 percent of enslaved Africans brought to the Americas were Muslim. This most directly illustrates",
+  ["how Islam's earlier spread in West Africa meant the Atlantic slave trade carried Islam to the Americas",
+   "that Muslim merchants controlled the Atlantic slave trade and decided who would be enslaved",
+   "that Islam had been banned in West Africa after 1450, so many Muslims were exiled",
+   "that Muslim captives were freed on arrival in the Americas because of religious laws"],
+  "It was the first big Islamic presence in the Americas.", "Culture", 3],
+ ["Based on the distribution of enslaved Africans (39% to Portuguese colonies, 18% to the British West Indies, 18% to Spanish colonies, 14% to French colonies, 6% to British mainland colonies), which conclusion is best supported?",
+  ["Most enslaved Africans went to Latin America and the Caribbean, not to the British mainland colonies",
+   "Most enslaved Africans went to the British mainland colonies, which received the largest share by a wide margin",
+   "The Spanish colonies received the largest single share of enslaved Africans in the Americas",
+   "The Dutch West Indian colonies took the largest share of enslaved Africans of any region"],
+  "The Portuguese colonies, mostly Brazil, received the largest share, and the British mainland colonies received only 6 percent.", "Economics", 3],
+ ["Why was the Niger River important to the Songhay Empire?",
+  ["Songhay conquered both sides of the river, controlling its trade and cities such as Timbuktu",
+   "The river separated Songhay from Morocco and protected it from outside invasion for centuries",
+   "The river carried Portuguese ships inland to Gao, where they traded guns for gold and ivory",
+   "The river irrigated the Sahara, which let Songhay farmers grow rice across the whole desert"],
+  "Gao was on the Niger, and Sunni Ali conquered both sides of the river and took Timbuktu.", "Environment", 2]
+],
+tf: [
+ ["Africans were only victims of the Atlantic slave trade and never participated in it.", false, "Coastal kingdoms raided neighbors and traded captives for guns.", "State-Building"],
+ ["The Atlantic slave trade produced a surplus of women in West Africa and a rise in polygyny.", true, "Over two-thirds of those taken were men.", "Social Structure"],
+ ["American crops such as maize and manioc had no effect on Africa's population.", false, "They became staples and helped the population grow.", "Environment"],
+ ["Haiti ended slavery through a slave rebellion, while the United States ended it through civil war.", true, "These were the only two places where war ended slavery.", "Social Structure"],
+ ["Creole languages survived best in the United States because enslaved Africans were the largest share of the population there.", false, "They survived best in the Caribbean, where a larger share of the population was enslaved.", "Culture"],
+ ["Moroccan forces with firearms ended the Songhay Empire.", true, "This happened in the late 1500s, after about 100 years.", "State-Building"]
+]
+},
+
+/* ---- Chapter 18 ---- */
+"18": {
+mc: [
+ ["Why did Ivan III call himself tsar and marry Zoe, the niece of the last Byzantine emperor?",
+  ["To link his rule to Roman and Byzantine imperial authority and claim Orthodox legitimacy",
+   "To win the support of the Mongol khans, who still respected Byzantine imperial traditions",
+   "To unite the Orthodox Church with the Catholic Church under one Christian emperor",
+   "To end the power of the boyars by allying with the royal family of a rival state"],
+  "Tsar comes from Caesar, and Moscow replaced Kiev as the center of Russia.", "State-Building", 2],
+ ["How did Russian tsars use the Orthodox Church?",
+  ["To support their claim to rule by divine right and to unify their people",
+   "To limit their own power by sharing real authority with the patriarch of Moscow",
+   "To collect taxes from the boyars through the Church's network of parishes",
+   "To form an alliance with the Pope in Rome against the expanding Ottoman Empire"],
+  "Russia copied the Byzantine model.", "Culture", 2],
+ ["Peter the Great's replacement of the patriarch with the Holy Synod shows",
+  ["his effort to bring the Church under direct control of the state",
+   "his wish to let Church leaders choose each new tsar of Russia",
+   "his conversion to Protestantism after touring Western Europe",
+   "his effort to protect Church property from seizure by the boyars"],
+  "The Holy Synod was run by an official who answered to the tsar.", "State-Building", 2],
+ ["How did Peter the Great's reforms affect most peasants?",
+  ["They became worse off, with new taxes and forced labor pushing them deeper into serfdom",
+   "They gained land when Peter broke up the large estates of the boyars and the Church",
+   "They were freed from serfdom in exchange for service in his new army and navy",
+   "They were largely unaffected because the reforms were aimed only at nobles and cities in the north"],
+  "A head tax in 1718 and work in shipyards and iron mines hurt peasants.", "Social Structure", 2],
+ ["Why did Catherine the Great give nobles more power in 1785?",
+  ["She needed their support, especially after peasant uprisings such as Pugachev's",
+   "She wanted to end serfdom and needed the nobles to help pay for the change",
+   "Prussia and Austria required it as part of the agreement to partition Poland",
+   "The Orthodox Church demanded it in return for supporting her claim to the throne"],
+  "She freed nobles from taxes and state service and let landowners control serfs even more.", "Social Structure", 2],
+ ["What motive most strongly drove Russian expansion into Siberia?",
+  ["The fur trade, which supplied valuable pelts to markets in Europe and China",
+   "Gold and silver mines, which promised to pay for the tsars' wars in Europe",
+   "Silk farming, which promised to supply textile markets in Persia and Turkey",
+   "Land for farming, which promised to feed the growing population of Moscow"],
+  "Cossacks hired by the Stroganovs conquered Siberia.", "Economics", 2],
+ ["Why did Peter the Great build St. Petersburg?",
+  ["To gain a 'window on the West' and keep the boyars under his watch",
+   "To defend the heart of Russia against another Mongol attack from the steppe",
+   "To be nearer to the fur-producing regions of Siberia and the Pacific",
+   "To escape the Ottoman raids that regularly threatened the old capital"],
+  "He took the Baltic land from Sweden.", "State-Building", 2],
+ ["Why did Alexander II free the serfs in 1861?",
+  ["Russia's loss in the Crimean War convinced reformers that serfdom kept the country poor and weak",
+   "Serfs had won a war against the landowners and forced the tsar to abolish the system",
+   "Britain and France demanded it as a condition of the peace that ended the Crimean War",
+   "The Orthodox Church demanded it after deciding that serfdom violated Christian teaching"],
+  "Russia lost badly with outdated weapons and uneducated soldiers.", "Social Structure", 2],
+ ["Which statement identifies a similarity between Russian expansion into Siberia and European expansion in the Americas?",
+  ["Both were driven by the fur trade, spread Christianity, and defeated native peoples through guns and disease",
+   "Both were led by monarchs who prohibited private merchants from taking part in the fur trade",
+   "Both were halted by native alliances that eventually drove the colonists back to the coast",
+   "Both ended coerced labor in the territories they conquered and gave natives land grants"],
+  "Russians reached the Pacific by 1639, Alaska in 1741, and California in 1814.", "State-Building", 3],
+ ["Which statement identifies a similarity between Russian serfdom and slavery in the Americas?",
+  ["Both gave elites control over a dependent labor force, with little legal protection for the workers",
+   "Both were abolished in the same year after an international agreement among the great powers of Europe",
+   "Both were abolished only after wars fought by the workers themselves against their owners",
+   "Both were defended by leading Enlightenment thinkers as a natural form of social order"],
+  "The chart compares labor types: slaves were property with few or no rights, and serfs were tied to the land.", "Social Structure", 3],
+ ["Which factor best explains why serfdom lasted in Russia long after it ended in much of Western Europe?",
+  ["It let the state and nobles control peasants and secure labor, and the tsars depended on noble support",
+   "Serfs themselves resisted freedom because they feared losing the protection of their lords",
+   "The Orthodox Church held that serfdom was required by religion and could not be abolished",
+   "Western European powers pressured Russia to keep serfdom in order to protect grain exports"],
+  "England freed its last serfs in 1574, and Russia kept serfdom until 1861.", "Social Structure", 3],
+ ["A historian argues that Peter the Great's changes were mostly technical and military rather than a social revolution. Which evidence best supports this?",
+  ["Peasants stayed bound in serfdom, and the reforms mainly improved the army, navy, and administration",
+   "Peter abolished both serfdom and the nobility, then built a state based on talent alone",
+   "Peter's reforms changed the Church but did not touch the army, navy, or administration",
+   "Peter's reforms ended the tsar's absolute power and gave nobles a share in government"],
+  "Spielvogel and Knobloch argued along these lines. Palmer called it a real social revolution.", "State-Building", 3],
+ ["Which evidence best supports the claim that Catherine the Great was an 'enlightened despot' in name only?",
+  ["She wrote to philosophes and proposed legal reforms, but she expanded the privileges of the nobles",
+   "She abolished serfdom early in her reign but restored it after Pugachev's revolt in 1774",
+   "She refused to correspond with any philosophes and rejected Western ideas about law",
+   "She freed the serfs on her own estates and encouraged nobles to follow her example"],
+  "Her reign started enlightened and ended despotic.", "State-Building", 3],
+ ["Which statement best describes the relationship between Westernization and Russia's peasants under Peter and Catherine?",
+  ["Westernization mainly benefited the elite, while peasants stayed in or sank deeper into serfdom",
+   "Westernization was rejected by most nobles but welcomed by peasants as a path to freedom from the tsars",
+   "Westernization freed most peasants from serfdom by the end of Catherine's long reign",
+   "Westernization led peasants to demand Western-style legal rights from the government"],
+  "Slavophilism was the opposing idea: Russia should build on its own culture.", "Social Structure", 3],
+ ["Which statement identifies a similarity between France and Russia in the 1700s?",
+  ["Both had absolutist monarchs, no effective legislature, and legal class divisions that limited rights",
+   "Both had strong legislatures that regularly limited the power of the monarch and the nobility in the 1700s",
+   "Both had revolutions in 1789 that overthrew their monarchs and abolished the nobility",
+   "Both had abolished legal class divisions well before the middle of the eighteenth century"],
+  "France had Louis XIV and Russia had Peter the Great. Their revolutions came in 1789 and 1917.", "State-Building", 3],
+ ["Which statement best describes a challenge shared by the Russian, Ottoman, Mughal, and Qing empires?",
+  ["Governing diverse peoples, such as Ukrainians in Russia, Hindus under the Mughals, and Chinese under the Manchus",
+   "Defending their frontiers against repeated Mongol invasions from the steppe of Central Asia",
+   "Competing with one another for control of the Atlantic trade in sugar and enslaved people",
+   "Abolishing serfdom or slavery within their own borders before the nineteenth century"],
+  "The chart lists these as the conflicts each empire faced.", "State-Building", 3],
+ ["What does the Pugachev Rebellion (1774) best reveal about Russian society?",
+  ["Deep resentment among serfs and Cossacks, which led to harsher control rather than reform",
+   "Strong popular support among serfs for Catherine's plans to reform the legal system",
+   "The independence of the nobles from the tsar, who could not control their estates",
+   "A growing demand among the peasants for Western-style education and Western clothing and manners"],
+  "Pugachev claimed to be Peter III, held land between the Volga and the Urals, and was executed.", "Social Structure", 3],
+ ["Which factor best explains why Russia did not experience the Renaissance or Reformation?",
+  ["Mongol domination isolated Russia from Western Europe while those movements developed",
+   "Orthodox leaders banned the printing press and the import of all Western books during the 1400s",
+   "Russian rulers rejected every Western idea and expelled all foreign teachers",
+   "Russia had no large cities or merchant class that could support new ideas"],
+  "Princes also got rich and powerful collecting Mongol tribute.", "Culture", 3],
+ ["The selection of Michael Romanov by the Zemsky Sobor in 1613 is best seen as",
+  ["an effort to restore stable central authority after a period of near anarchy",
+   "the start of a constitutional monarchy limited by an elected assembly",
+   "a choice imposed on Russia by the Mongol khans who still held the steppe",
+   "the end of tsarist autocracy and the beginning of rule by the boyar council of Moscow"],
+  "The Time of Troubles lasted from 1603 to 1613, and the Romanovs ruled until 1917.", "State-Building", 3],
+ ["How did Russia's position on both sides of the Ural Mountains shape its history?",
+  ["It sat between Europe and Asia, so it could trade east and west while its rulers looked west",
+   "The Urals blocked all contact with Europe, so Russia developed in isolation from the West",
+   "The Urals divided the empire into two states, one European and one Asian, for centuries",
+   "The Urals protected Russia from the Mongols, which kept its princes from paying tribute"],
+  "Its capitals were always in Europe, but its position let it trade in both directions.", "Environment", 2],
+ ["Which statement best explains why Russian rulers pushed toward the Baltic, the Black Sea, and the Caspian Sea?",
+  ["Control of seas and rivers like the Volga gave Russia trade access to Europe, Persia, and the Ottomans",
+   "These seas were the only markets where Russian furs could be sold to Chinese and Indian merchants",
+   "Orthodox leaders demanded access to the seas so that missionaries could reach Western Europe",
+   "These seas held rich silver deposits that the tsars needed to pay for their armies in Siberia"],
+  "Peter took Baltic land for St. Petersburg, Catherine won the Black Sea coast and Crimea, and the Volga flows into the Caspian.", "Environment", 3]
+],
+tf: [
+ ["Russia's expansion east shows that it was an Asian rather than a European society, since its rulers rejected Western ideas.", false, "Its capitals were always in Europe, and its rulers looked west for technology and ideas.", "Culture"],
+ ["Peter the Great's reforms improved the legal and economic position of Russian serfs.", false, "A head tax and forced work in shipyards pushed peasants deeper into serfdom.", "Social Structure"],
+ ["Catherine the Great's reign strengthened the privileges of the nobility at the expense of the serfs.", true, "She freed nobles from taxes and state service in 1785.", "Social Structure"],
+ ["Russia ended serfdom before England did.", false, "England freed its last serfs in 1574. Russia did in 1861.", "Social Structure"],
+ ["Russia's defeat in the Crimean War helped persuade reformers that serfdom had to end.", true, "Reformers blamed serfdom for poor, outdated weapons and uneducated soldiers.", "Social Structure"],
+ ["The Pugachev Rebellion led Catherine to loosen controls on peasants.", false, "She cracked down even harder.", "State-Building"]
+]
+}
+};
+
 (function(){
   "use strict";
 
@@ -4393,12 +5470,16 @@ CH.push((function(){
       if (v.ap != null || tset[v.term]) v.teacher = true;
     });
     c.hasTeacher = c.vocab.some(function(v){ return v.teacher; });
+    // AP-style bank: level 2 = medium, level 3 = hard
+    var hb = AP_BANK[c.id] || {mc:[], tf:[]};
+    c.apMC = hb.mc.map(function(m){ return {q:m[0], a:m[1], why:m[2], cat:m[3], lvl:m[4]}; });
+    c.apTF = hb.tf;
     BY_ID[c.id] = c;
   });
   var ORDER = CH.slice().sort(function(a,b){ return a.num - b.num; }).map(function(c){ return c.id; });
 
   var cur = null;                 // current chapter object
-  var CATS = [], VOCAB = [], CONTENT_Q = [], TF_Q = [];
+  var CATS = [], VOCAB = [], CONTENT_Q = [], TF_Q = [], AP_MC = [], AP_TF = [];
 
   /* =======================  UTIL  ======================= */
   function shuffle(arr){
@@ -4647,6 +5728,7 @@ CH.push((function(){
   function loadChapter(id){
     cur = BY_ID[id];
     CATS = cur.cats; VOCAB = cur.vocab; CONTENT_Q = cur.contentQ; TF_Q = cur.tfQ;
+    AP_MC = cur.apMC; AP_TF = cur.apTF;
 
     document.title = "Chapter " + cur.num + " · AP World Study Hub";
     $("chipText").textContent = "Chapter " + cur.num;
@@ -4879,7 +5961,7 @@ CH.push((function(){
   });
 
   /* =======================  QUIZ  ======================= */
-  var qMode = "mixed", qCount = 15, qCat = "all";
+  var qMode = "mixed", qCount = 15, qCat = "all", qDiff = "mixed";
   var qItems = [], qIndex = 0, qScore = 0, qAnswered = false, qMissed = [];
   var matchState = null;
   var quizSetup = $("quizSetup"), quizActive = $("quizActive"), quizDone = $("quizDone");
@@ -4887,15 +5969,63 @@ CH.push((function(){
   var quizScoreEl = $("quizScore"), quizBarFill = $("quizBarFill"), quizFeedback = $("quizFeedback"), quizNextBtn = $("quizNextBtn");
   var LETTERS = ["A","B","C","D"];
 
-  segInit($("qCatSeg"), function(v){ qCat = v; });
-  segInit($("qModeSeg"), function(v){ qMode = v; });
+  segInit($("qCatSeg"), function(v){ qCat = v; updateDiffHint(); });
+  segInit($("qModeSeg"), function(v){ qMode = v; updateDiffHint(); });
   segInit($("qCountSeg"), function(v){ qCount = parseInt(v,10); });
+  segInit($("qDiffSeg"), function(v){ qDiff = v; updateDiffHint(); });
+
+  /* ---- difficulty: level 1 = recall, 2 = medium, 3 = hard (AP style) ---- */
+  var DIFF_MIX = {easy:[0.6,0.4,0], mixed:[0.3,0.3,0.4], hard:[0,0.3,0.7]};
+  var DIFF_FILL = {easy:[1,2], mixed:[2,3,1], hard:[3,2]};
+  function lvlOf(it){ return it.lvl || 1; }
+  function diffApplies(){ return qMode === "mc" || qMode === "tf" || qMode === "mixed"; }
+  // Pick n items from a pool at the chosen difficulty; each level fills its share, leftovers spill to nearby levels.
+  function pickByDiff(pool, n){
+    if (n <= 0) return [];
+    var by = {1:[], 2:[], 3:[]};
+    shuffle(pool).forEach(function(it){ by[lvlOf(it)].push(it); });
+    var mix = DIFF_MIX[qDiff], out = [], used = {1:0, 2:0, 3:0};
+    var quota = mix.map(function(w){ return Math.floor(n*w); });
+    quota[mix.indexOf(Math.max.apply(null, mix))] += n - quota[0] - quota[1] - quota[2];
+    [1,2,3].forEach(function(l){
+      var take = by[l].slice(0, quota[l-1]);
+      used[l] = take.length; out = out.concat(take);
+    });
+    DIFF_FILL[qDiff].forEach(function(l){
+      if (out.length >= n) return;
+      var take = by[l].slice(used[l], used[l] + (n - out.length));
+      used[l] += take.length; out = out.concat(take);
+    });
+    out.forEach(function(it){ it._used = true; });
+    return rampSort(out);   // easiest first so the quiz ramps up
+  }
+  function rampSort(items){
+    return items.map(function(it){ return {it:it, k:lvlOf(it) + Math.random() * 0.9}; })
+      .sort(function(a,b){ return a.k - b.k; }).map(function(o){ return o.it; });
+  }
+  function updateDiffHint(){
+    var el = $("diffHint"); if (!el) return;
+    var on = diffApplies();
+    $("qDiffWrap").classList.toggle("off", !on);
+    $("qDiffSeg").setAttribute("aria-disabled", String(!on));
+    if (!on){ el.textContent = "Difficulty applies to multiple choice, true/false, and mixed quizzes."; return; }
+    var base = {easy:"Recall plus cause-and-effect questions.",
+                mixed:"Starts with recall and ramps up to AP-style questions.",
+                hard:"AP-style comparison, evidence, and “which best explains” questions."}[qDiff];
+    if (qDiff === "hard" && cur){
+      var pool = qMode === "mc" ? mcPool() : qMode === "tf" ? tfPool() : mcPool().concat(tfPool());
+      var n = pool.filter(function(it){ return lvlOf(it) >= 2; }).length;
+      base += " About " + n + " available" + (qCat === "all" ? " in this chapter." : " for this theme.");
+    }
+    el.textContent = base;
+  }
 
   function resetQuiz(){
     qCat = "all";
     fillCatSeg($("qCatSeg"), [["content","Big-picture questions"]].concat(cur.hasTeacher ? [["teacher","Teacher\u2019s terms"]] : [], cur.hasAP ? [["hi","AP 8+ only"]] : []));
     quizSetup.hidden = false; quizActive.hidden = true; quizDone.hidden = true; $("mtest").hidden = true;
     showBest();
+    updateDiffHint();
   }
   function showBest(){
     var best = store("best");
@@ -4922,31 +6052,43 @@ CH.push((function(){
       out = out.concat(CONTENT_Q.filter(function(q){ return !pf || mentions(q[0] + " " + q[1][q[2]], pf); }).map(function(q){
         var answer = q[1][q[2]];
         var choices = shuffle(q[1]);
-        return {kind:"mc", q:q[0], choices:choices, correct:choices.indexOf(answer), answerText:answer};
+        return {kind:"mc", q:q[0], choices:choices, correct:choices.indexOf(answer), answerText:answer, lvl:1};
       }));
     }
+    // AP-style questions (level 2 medium, level 3 hard); a correct answer is always first in the bank
+    AP_MC.forEach(function(m){
+      var ok = (qCat === "all" || qCat === "content") ? true : pf ? mentions(m.q + " " + m.a[0], pf) : m.cat === qCat;
+      if (!ok) return;
+      var choices = shuffle(m.a);
+      out.push({kind:"mc", q:m.q, choices:choices, correct:choices.indexOf(m.a[0]), answerText:m.a[0], note:m.why, lvl:m.lvl});
+    });
     if (qCat !== "content"){
       vocabPool().forEach(function(v){
         var c1 = shuffle([v.term].concat(pickDistractors(v, "term")));
-        out.push({kind:"mc", q:"Which term matches this definition? “"+v.def+"”", choices:c1, correct:c1.indexOf(v.term), answerText:v.term});
+        out.push({kind:"mc", q:"Which term matches this definition? “"+v.def+"”", choices:c1, correct:c1.indexOf(v.term), answerText:v.term, lvl:1});
         var c2 = shuffle([v.def].concat(pickDistractors(v, "def")));
-        out.push({kind:"mc", q:"What does “"+v.term+"” mean?", choices:c2, correct:c2.indexOf(v.def), answerText:v.def});
+        out.push({kind:"mc", q:"What does “"+v.term+"” mean?", choices:c2, correct:c2.indexOf(v.def), answerText:v.def, lvl:1});
       });
     }
     return out;
   }
   function tfPool(){
-    return TF_Q.filter(function(t){ return qCat === "all" || qCat === "content" || (filterFor(qCat) ? mentions(t[0], filterFor(qCat)) : t[3] === qCat); })
-      .map(function(t){ return {kind:"tf", q:t[0], isTrue:t[1], note:t[2], answerText:(t[1] ? "True" : "False")}; });
+    function ok(t){ return qCat === "all" || qCat === "content" || (filterFor(qCat) ? mentions(t[0], filterFor(qCat)) : t[3] === qCat); }
+    function mk(lvl){ return function(t){ return {kind:"tf", q:t[0], isTrue:t[1], note:t[2], answerText:(t[1] ? "True" : "False"), lvl:lvl}; }; }
+    return TF_Q.filter(ok).map(mk(1)).concat(AP_TF.filter(ok).map(mk(3)));
   }
   function typePool(){ return vocabPool().map(function(v){ return {kind:"type", q:v.def, answerText:v.term}; }); }
   function buildMixed(){
-    var n = qCount, nMC = Math.round(n*0.5), nTF = Math.round(n*0.3), nType = n - nMC - nTF;
-    var mc = shuffle(mcPool()), tf = shuffle(tfPool()), ty = shuffle(typePool());
-    var picks = mc.splice(0, nMC).concat(tf.splice(0, nTF)).concat(ty.splice(0, nType));
-    var rest = shuffle(mc.concat(tf, ty));
-    while (picks.length < n && rest.length) picks.push(rest.pop());
-    return shuffle(picks).slice(0, n);
+    var n = qCount, hard = qDiff === "hard";
+    // AP-level quizzes are all multiple choice and true/false; recall-only "type the term" items would water them down
+    var nTF = Math.round(n * (hard ? 0.25 : 0.3)), nType = hard ? 0 : Math.round(n * 0.2), nMC = n - nTF - nType;
+    var mc = mcPool(), tf = tfPool(), ty = typePool();
+    var picks = pickByDiff(mc, nMC).concat(pickByDiff(tf, nTF), pickByDiff(ty, nType));
+    if (picks.length < n){
+      var rest = mc.concat(tf, hard ? [] : ty).filter(function(it){ return !it._used; });
+      picks = picks.concat(pickByDiff(rest, n - picks.length));
+    }
+    return qDiff === "hard" ? shuffle(picks).slice(0, n) : rampSort(picks).slice(0, n);
   }
   function buildMatch(){
     var picks = shuffle(vocabPool()).slice(0, qCount), rounds = [];
@@ -4965,12 +6107,12 @@ CH.push((function(){
   }
   $("quizStart").addEventListener("click", function(){
     if (qMode === "test"){ startMatchTest(); return; }
-    if (qMode === "mc") qItems = shuffle(mcPool()).slice(0, qCount);
-    else if (qMode === "tf") qItems = shuffle(tfPool()).slice(0, qCount);
+    if (qMode === "mc") qItems = pickByDiff(mcPool(), qCount);
+    else if (qMode === "tf") qItems = pickByDiff(tfPool(), qCount);
     else if (qMode === "type") qItems = shuffle(typePool()).slice(0, qCount);
     else if (qMode === "mixed") qItems = buildMixed();
     else qItems = buildMatch();
-    if (!qItems.length){ $("quizBest").textContent = "No questions match those settings. Try a different theme."; return; }
+    if (!qItems.length){ $("quizBest").textContent = qDiff === "hard" && diffApplies() ? "No AP-level questions match that theme. Try All, or a different difficulty." : "No questions match those settings. Try a different theme."; return; }
     qIndex = 0; qScore = 0; qMissed = [];
     quizSetup.hidden = true; quizDone.hidden = true; quizActive.hidden = false;
     replay(quizActive, "enter-q");
@@ -4993,6 +6135,12 @@ CH.push((function(){
     if (item.kind === "mc" || item.kind === "tf"){
       var isTF = item.kind === "tf";
       quizCountEl.textContent = "Question " + (qIndex+1) + " of " + qItems.length + (isTF ? " · True or False" : "");
+      if (diffApplies() && lvlOf(item) > 1){
+        var tag = document.createElement("span");
+        tag.className = "lvl-tag" + (lvlOf(item) === 3 ? " l3" : "");
+        tag.textContent = lvlOf(item) === 3 ? "AP level" : "Medium";
+        quizCountEl.appendChild(tag);
+      }
       quizQuestionEl.textContent = item.q;
       quizBody.innerHTML = '<div class="quiz-choices"></div>';
       var wrap = quizBody.firstChild;
@@ -5034,9 +6182,22 @@ CH.push((function(){
       b.disabled = true; b.style.animation = "";
       if (i === item.correct) b.classList.add("correct"); else if (i === chosen) b.classList.add("wrong");
     });
-    if (chosen === item.correct){ qScore++; quizFeedback.textContent = "Correct"; quizFeedback.className = "feedback ok"; }
-    else { quizFeedback.textContent = "Answer: " + item.answerText; quizFeedback.className = "feedback no"; qMissed.push({q:item.q, a:item.answerText}); }
+    if (chosen === item.correct){ qScore++; setFeedback("ok", "Correct", item.note); }
+    else {
+      // AP-style answers are long, so point at the highlighted choice instead of repeating it
+      setFeedback("no", item.note ? "Not quite. The right answer is highlighted." : "Answer: " + item.answerText, item.note);
+      qMissed.push({q:item.q, a:item.answerText, note:item.note});
+    }
     finishAnswer();
+  }
+  function setFeedback(cls, head, note){
+    quizFeedback.className = "feedback " + cls;
+    quizFeedback.textContent = head + (note ? " " : "");
+    if (note){
+      var s = document.createElement("span");
+      s.className = "fb-note"; s.textContent = note;
+      quizFeedback.appendChild(s);
+    }
   }
   function answerTF(said, item, wrap){
     if (qAnswered) return; qAnswered = true;
@@ -5045,10 +6206,9 @@ CH.push((function(){
       b.disabled = true; b.style.animation = "";
       if (i === correctIdx) b.classList.add("correct"); else if (i === chosenIdx) b.classList.add("wrong");
     });
-    if (said === item.isTrue){ qScore++; quizFeedback.textContent = item.note ? "Correct. " + item.note : "Correct"; quizFeedback.className = "feedback ok"; }
+    if (said === item.isTrue){ qScore++; setFeedback("ok", "Correct", item.note); }
     else {
-      quizFeedback.textContent = (item.isTrue ? "Actually true. " : "Actually false. ") + (item.note || "");
-      quizFeedback.className = "feedback no";
+      setFeedback("no", item.isTrue ? "Actually true." : "Actually false.", item.note);
       qMissed.push({q:item.q, a:(item.isTrue ? "True" : "False"), note:item.note});
     }
     finishAnswer();
@@ -5135,7 +6295,8 @@ CH.push((function(){
     var best = store("best");
     if (!best || (qScore/total) > (best.score/best.total)){
       var MODE_NAMES = {mc:"multiple choice", tf:"true/false", type:"type the term", match:"matching", mixed:"mixed"};
-      store("best", {score:qScore, total:total, mode:MODE_NAMES[qMode] || qMode});
+      var DIFF_NAMES = {easy:"easy–medium", mixed:"easy to AP ramp", hard:"AP level"};
+      store("best", {score:qScore, total:total, mode:(MODE_NAMES[qMode] || qMode) + (diffApplies() ? ", " + DIFF_NAMES[qDiff] : "")});
     }
     showBest();
     var wrap = $("missedWrap"), list = $("missedList");
