@@ -337,6 +337,8 @@
   .mt-def.wrong{ border-color:var(--danger); background:var(--danger-bg); }
   .mt-def .fix{ display:block; font-size:0.82rem; font-weight:600; color:var(--danger); margin-top:4px; }
   .mt-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .mt-inline-check{ margin-top:16px; }
+  #quizBody .mt-hint{ margin:-6px 0 14px; }
   @media (max-width:700px){
     .mt-grid{ grid-template-columns:1fr; }
     .mt-bank-wrap{ position:static; }
@@ -643,6 +645,7 @@
                 <button data-val="match" aria-pressed="false">Tap to match</button>
                 <button data-val="type" aria-pressed="false">Type the term</button>
               </div>
+              <p class="setting-hint" id="modeHint">Mixed stands alone. Or pick any combination of the others.</p>
             </div>
             <div class="setting" id="qDiffWrap">
               <span class="label">Difficulty</span>
@@ -6724,7 +6727,7 @@ tf: [
   });
 
   /* =======================  QUIZ  ======================= */
-  var qMode = "mixed", qCount = 15, qCat = "all", qDiff = "mixed";
+  var qModes = {mixed:true}, qCount = 15, qCat = "all", qDiff = "mixed";
   var qItems = [], qIndex = 0, qScore = 0, qAnswered = false, qMissed = [];
   var matchState = null;
   var quizSetup = $("quizSetup"), quizActive = $("quizActive"), quizDone = $("quizDone");
@@ -6733,7 +6736,24 @@ tf: [
   var LETTERS = ["A","B","C","D"];
 
   segInit($("qCatSeg"), function(v){ qCat = v; updateDiffHint(); });
-  segInit($("qModeSeg"), function(v){ qMode = v; updateDiffHint(); });
+  // Question types: "Mixed" stands alone; the others can be combined into one quiz.
+  function modeList(){ return ["mixed","mc","tf","test","match","type"].filter(function(m){ return qModes[m]; }); }
+  function hasMode(m){ return !!qModes[m]; }
+  function onlyMode(m){ var l = modeList(); return l.length === 1 && l[0] === m; }
+  $("qModeSeg").addEventListener("click", function(e){
+    var btn = e.target.closest("button"); if (!btn) return;
+    var v = btn.getAttribute("data-val");
+    if (v === "mixed") qModes = {mixed:true};
+    else {
+      delete qModes.mixed;
+      if (qModes[v]) delete qModes[v]; else qModes[v] = true;
+      if (!modeList().length) qModes = {mixed:true};
+    }
+    Array.prototype.forEach.call($("qModeSeg").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(!!qModes[b.getAttribute("data-val")])); });
+    var l = modeList();
+    $("modeHint").textContent = l.length > 1 ? "Your quiz will include all " + l.length + " types." : "Mixed stands alone. Or pick any combination of the others.";
+    updateDiffHint();
+  });
   segInit($("qCountSeg"), function(v){ qCount = parseInt(v,10); });
   segInit($("qDiffSeg"), function(v){ qDiff = v; updateDiffHint(); });
 
@@ -6741,7 +6761,7 @@ tf: [
   var DIFF_MIX = {easy:[0.6,0.4,0], mixed:[0.3,0.3,0.4], hard:[0,0.3,0.7]};
   var DIFF_FILL = {easy:[1,2], mixed:[2,3,1], hard:[3,2]};
   function lvlOf(it){ return it.lvl || 1; }
-  function diffApplies(){ return qMode === "mc" || qMode === "tf" || qMode === "mixed"; }
+  function diffApplies(){ return hasMode("mc") || hasMode("tf") || hasMode("mixed"); }
   // Pick n items from a pool at the chosen difficulty; each level fills its share, leftovers spill to nearby levels.
   function pickByDiff(pool, n){
     if (n <= 0) return [];
@@ -6776,7 +6796,7 @@ tf: [
                 mixed:"Starts with recall and ramps up to AP-style questions.",
                 hard:"AP-style comparison, evidence, and “which best explains” questions."}[qDiff];
     if (qDiff === "hard" && cur){
-      var pool = qMode === "mc" ? mcPool() : qMode === "tf" ? tfPool() : mcPool().concat(tfPool());
+      var pool = (hasMode("mc") || hasMode("mixed") ? mcPool() : []).concat(hasMode("tf") || hasMode("mixed") ? tfPool() : []);
       var n = pool.filter(function(it){ return lvlOf(it) >= 2; }).length;
       base += " About " + n + " available" + (qCat === "all" ? " in this chapter." : " for this theme.");
     }
@@ -6853,8 +6873,8 @@ tf: [
     }
     return qDiff === "hard" ? shuffle(picks).slice(0, n) : rampSort(picks).slice(0, n);
   }
-  function buildMatch(){
-    var picks = shuffle(vocabPool()).slice(0, qCount), rounds = [];
+  function buildMatch(n){
+    var picks = shuffle(vocabPool()).slice(0, n), rounds = [];
     for (var i=0;i<picks.length;i+=4){ rounds.push(picks.slice(i, i+4)); }
     if (rounds.length > 1 && rounds[rounds.length-1].length === 1) rounds[rounds.length-2] = rounds[rounds.length-2].concat(rounds.pop());
     return rounds.map(function(r){ return {kind:"match", pairs:r}; });
@@ -6869,12 +6889,14 @@ tf: [
     return forms.map(normalize);
   }
   $("quizStart").addEventListener("click", function(){
-    if (qMode === "test"){ startMatchTest(); return; }
-    if (qMode === "mc") qItems = pickByDiff(mcPool(), qCount);
-    else if (qMode === "tf") qItems = pickByDiff(tfPool(), qCount);
-    else if (qMode === "type") qItems = shuffle(typePool()).slice(0, qCount);
-    else if (qMode === "mixed") qItems = buildMixed();
-    else qItems = buildMatch();
+    var modes = modeList();
+    if (modes.length > 1) qItems = buildCombo(modes);
+    else if (modes[0] === "test"){ startMatchTest(); return; }
+    else if (modes[0] === "mc") qItems = pickByDiff(mcPool(), qCount);
+    else if (modes[0] === "tf") qItems = pickByDiff(tfPool(), qCount);
+    else if (modes[0] === "type") qItems = shuffle(typePool()).slice(0, qCount);
+    else if (modes[0] === "mixed") qItems = buildMixed();
+    else qItems = buildMatch(qCount);
     if (!qItems.length){ $("quizBest").textContent = qDiff === "hard" && diffApplies() ? "No AP-level questions match that theme. Try All, or a different difficulty." : "No questions match those settings. Try a different theme."; return; }
     qIndex = 0; qScore = 0; qMissed = [];
     quizSetup.hidden = true; quizDone.hidden = true; quizActive.hidden = false;
@@ -6882,8 +6904,19 @@ tf: [
     renderQuizItem();
   });
   function totalPoints(){
-    if (qMode === "match") return qItems.reduce(function(n,r){ return n + r.pairs.length; }, 0);
-    return qItems.length;
+    return qItems.reduce(function(n, it){ return n + (it.kind === "match" ? it.pairs.length : it.kind === "mtest" ? it.asked.length : 1); }, 0);
+  }
+  // Several question types picked: split the count among them. Matching comes first, like the unit tests.
+  function buildCombo(modes){
+    var n = qCount, share = {}, base = Math.floor(n / modes.length);
+    modes.forEach(function(m, i){ share[m] = base + (i < n - base * modes.length ? 1 : 0); });
+    var lead = [], rest = [];
+    if (share.test){ var set = makeMatchSet(Math.max(4, Math.min(10, share.test))); if (set) lead.push({kind:"mtest", asked:set.asked, bank:set.bank}); }
+    if (share.match) lead = lead.concat(buildMatch(Math.max(2, share.match)));
+    if (share.mc) rest = rest.concat(pickByDiff(mcPool(), share.mc));
+    if (share.tf) rest = rest.concat(pickByDiff(tfPool(), share.tf));
+    if (share.type) rest = rest.concat(shuffle(typePool()).slice(0, share.type));
+    return lead.concat(qDiff === "hard" ? shuffle(rest) : rampSort(rest));
   }
   function renderQuizItem(){
     qAnswered = false;
@@ -6928,8 +6961,13 @@ tf: [
       $("typeSubmit").addEventListener("click", submit);
       input.addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); if (qAnswered) nextItem(); else submit(); } });
     }
+    else if (item.kind === "mtest"){
+      quizCountEl.textContent = "Question " + (qIndex+1) + " of " + qItems.length + " · Test matching";
+      quizQuestionEl.textContent = "Match each term with its description.";
+      renderInlineMatch(item);
+    }
     else {
-      quizCountEl.textContent = "Round " + (qIndex+1) + " of " + qItems.length;
+      quizCountEl.textContent = onlyMode("match") ? "Round " + (qIndex+1) + " of " + qItems.length : "Question " + (qIndex+1) + " of " + qItems.length + " · Tap to match";
       quizQuestionEl.textContent = "Match each term to its definition.";
       renderMatch(item);
     }
@@ -7031,6 +7069,37 @@ tf: [
       });
     });
   }
+  // Test-style matching as one question inside a combined quiz; each definition is worth a point.
+  function renderInlineMatch(item){
+    var opts = '<option value="">\u2014</option>' + item.bank.map(function(v, i){ return '<option value="'+MT_LETTERS[i]+'">'+MT_LETTERS[i]+'</option>'; }).join("");
+    quizBody.innerHTML =
+      '<p class="mt-hint">Pick the letter of the term for each description. Each letter is used once, and some terms won\u2019t be used.</p>'+
+      '<div class="mt-grid"><div class="mt-bank-wrap"><p class="label">Word bank</p><ol class="mt-bank">'+
+        item.bank.map(function(v, i){ return '<li data-l="'+MT_LETTERS[i]+'"><span class="lt">'+MT_LETTERS[i]+'.</span><span>'+esc(v.term)+'</span></li>'; }).join("")+
+      '</ol></div><ol class="mt-defs">'+
+        item.asked.map(function(v, i){ return '<li class="mt-def" data-i="'+i+'"><span class="num">'+(i+1)+'.</span><span class="txt">'+esc(blankOwn(v))+'</span><select aria-label="Letter for description '+(i+1)+'">'+opts+'</select></li>'; }).join("")+
+      '</ol></div><button class="btn primary mt-inline-check">Check answers</button>';
+    var bankEl = quizBody.querySelector(".mt-bank"), defsEl = quizBody.querySelector(".mt-defs"), checkBtn = quizBody.querySelector(".mt-inline-check");
+    defsEl.addEventListener("change", function(){
+      var used = {};
+      Array.prototype.forEach.call(defsEl.querySelectorAll("select"), function(sel){ if (sel.value) used[sel.value] = 1; });
+      Array.prototype.forEach.call(bankEl.children, function(li){ li.classList.toggle("used", !!used[li.getAttribute("data-l")]); });
+    });
+    checkBtn.addEventListener("click", function(){
+      if (qAnswered) return; qAnswered = true;
+      var right = 0;
+      Array.prototype.forEach.call(defsEl.children, function(li){
+        var v = item.asked[+li.getAttribute("data-i")], correct = MT_LETTERS[item.bank.indexOf(v)], sel = li.querySelector("select");
+        var ok = sel.value === correct; if (ok) right++;
+        li.classList.add(ok ? "right" : "wrong"); sel.disabled = true;
+        if (!ok){ li.querySelector(".txt").insertAdjacentHTML("beforeend", '<span class="fix">Answer: '+correct+'. '+esc(v.term)+'</span>'); qMissed.push({q:v.def, a:v.term}); }
+      });
+      qScore += right;
+      checkBtn.hidden = true;
+      setFeedback(right === item.asked.length ? "ok" : "no", right + " of " + item.asked.length + " matched correctly");
+      finishAnswer();
+    });
+  }
   function nextItem(){ qIndex++; if (qIndex >= qItems.length) finishQuiz(); else renderQuizItem(); }
   quizNextBtn.addEventListener("click", nextItem);
 
@@ -7057,9 +7126,9 @@ tf: [
     $("quizFinalLabel").textContent = pct + "% · " + msg;
     var best = store("best");
     if (!best || (qScore/total) > (best.score/best.total)){
-      var MODE_NAMES = {mc:"multiple choice", tf:"true/false", type:"type the term", match:"matching", mixed:"mixed"};
+      var MODE_NAMES = {mc:"multiple choice", tf:"true/false", type:"type the term", match:"tap to match", test:"test matching", mixed:"mixed"};
       var DIFF_NAMES = {easy:"easy–medium", mixed:"easy to AP ramp", hard:"AP level"};
-      store("best", {score:qScore, total:total, mode:(MODE_NAMES[qMode] || qMode) + (diffApplies() ? ", " + DIFF_NAMES[qDiff] : "")});
+      store("best", {score:qScore, total:total, mode:modeList().map(function(m){ return MODE_NAMES[m]; }).join(" + ") + (diffApplies() ? ", " + DIFF_NAMES[qDiff] : "")});
     }
     showBest();
     var wrap = $("missedWrap"), list = $("missedList");
@@ -7075,7 +7144,8 @@ tf: [
   /* ---------- Test-style matching: word bank with letters, numbered definitions ---------- */
   var MT_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   var mt = null;
-  function startMatchTest(){
+  // Build a word bank (with a few extra terms) and a set of definitions for test-style matching.
+  function makeMatchSet(limit){
     var pool = vocabPool().filter(function(v, i, a){
       return a.findIndex(function(o){ return o.def === v.def || o.term === v.term; }) === i;
     });
@@ -7085,16 +7155,20 @@ tf: [
       var vd = v.def.toLowerCase(), vk = key(v.term);
       return chosen.some(function(o){ return vd.indexOf(key(o.term)) !== -1 || o.def.toLowerCase().indexOf(vk) !== -1; });
     }
-    var want = Math.min(qCount, 15, pool.length);
+    var want = Math.min(limit, pool.length);
     var nExtra = Math.min(3, Math.max(1, Math.round(want / 5)));
     var chosen = [];
     shuffle(pool).forEach(function(v){ if (chosen.length < want + nExtra && !clashes(v, chosen)) chosen.push(v); });
     var n = Math.min(want, Math.max(0, chosen.length - 1));
-    if (n < 2){ $("quizBest").textContent = "Not enough terms for matching with those settings. Try a different theme."; return; }
+    if (n < 2) return null;
     var asked = chosen.slice(0, n);
-    var extras = chosen.slice(n, n + nExtra);
-    var bank = shuffle(asked.concat(extras));
-    mt = {asked: shuffle(asked), bank: bank, checked: false};
+    return {asked: shuffle(asked), bank: shuffle(asked.concat(chosen.slice(n, n + nExtra)))};
+  }
+  function startMatchTest(){
+    var set = makeMatchSet(Math.min(qCount, 15));
+    if (!set){ $("quizBest").textContent = "Not enough terms for matching with those settings. Try a different theme."; return; }
+    var n = set.asked.length, bank = set.bank;
+    mt = {asked: set.asked, bank: bank, checked: false};
     $("mtCount").textContent = n + " definitions \u00b7 " + bank.length + " terms";
     $("mtScore").textContent = "";
     $("mtBank").innerHTML = bank.map(function(v, i){
