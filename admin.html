@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Site Admin · AP World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">
+<style>
+  :root{
+    --bg:#ebe6da; --surface:#fffdf8; --surface-2:#f3eee3;
+    --ink:#211d18; --ink-soft:#5c5648; --ink-faint:#8a8373;
+    --accent:#ab2436; --accent-ink:#fff6ee; --accent-soft:rgba(171,36,54,0.10);
+    --accent-2:#2c5d4e; --accent-2-ink:#fff6ee; --accent-2-soft:rgba(44,93,78,0.12);
+    --border:#d8cfbb; --border-strong:#c5baa2;
+    --success:#2c7a4d; --success-bg:#e2efe4; --danger:#ab2436; --danger-bg:#f7e3e1;
+    --warn:#a66c00; --warn-bg:#f6ead0; --info:#2c5d4e; --info-bg:#e1ebe6;
+    --shadow:rgba(33,29,24,0.10);
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141617; --surface:#1f2224; --surface-2:#272a2c;
+      --ink:#eee8db; --ink-soft:#b3ac9d; --ink-faint:#80796c;
+      --accent:#e2687a; --accent-ink:#241317; --accent-soft:rgba(226,104,122,0.13);
+      --accent-2:#6bb79b; --accent-2-ink:#0f2019; --accent-2-soft:rgba(107,183,155,0.14);
+      --border:#34383a; --border-strong:#454a4c;
+      --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+      --warn:#e0b45a; --warn-bg:#33291a; --info:#6bb79b; --info-bg:#1b2925;
+      --shadow:rgba(0,0,0,0.40);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141617; --surface:#1f2224; --surface-2:#272a2c;
+    --ink:#eee8db; --ink-soft:#b3ac9d; --ink-faint:#80796c;
+    --accent:#e2687a; --accent-ink:#241317; --accent-soft:rgba(226,104,122,0.13);
+    --accent-2:#6bb79b; --accent-2-ink:#0f2019; --accent-2-soft:rgba(107,183,155,0.14);
+    --border:#34383a; --border-strong:#454a4c;
+    --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+    --warn:#e0b45a; --warn-bg:#33291a; --info:#6bb79b; --info-bg:#1b2925;
+    --shadow:rgba(0,0,0,0.40);
+    color-scheme:dark;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.5; min-height:100vh; }
+  [hidden]{ display:none !important; }
+  .wrap{ max-width:900px; margin:0 auto; padding:28px 16px 120px; }
+  h1,h2{ font-family:var(--font-display); font-weight:620; letter-spacing:-0.015em; margin:0; }
+  h1{ font-size:clamp(1.7rem,4.5vw,2.2rem); line-height:1.1; }
+  h2{ font-size:1.25rem; }
+  .eyebrow{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 6px; }
+  .muted{ color:var(--ink-soft); }
+  .small{ font-size:0.85rem; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; margin-top:18px; box-shadow:0 1px 0 var(--shadow); }
+  .card-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .btn{ font:inherit; font-weight:600; font-size:0.9rem; border-radius:10px; padding:8px 14px; border:1px solid var(--border-strong); background:var(--surface); color:var(--ink); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+  .btn:hover{ border-color:var(--ink-soft); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .btn.green{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-2-ink); }
+  .btn.small{ padding:5px 10px; font-size:0.8rem; border-radius:8px; }
+  .btn.danger{ color:var(--danger); }
+  .btn:disabled{ opacity:0.5; cursor:default; }
+  .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  label.f{ display:flex; flex-direction:column; gap:5px; font-size:0.82rem; font-weight:600; color:var(--ink-soft); }
+  input[type=text], input[type=password], input[type=url], input[type=date], input[type=datetime-local], select, textarea{
+    font:inherit; font-size:0.95rem; color:var(--ink); background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:9px 11px; width:100%; min-width:0; }
+  textarea{ resize:vertical; min-height:70px; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:640px){ .grid2{ grid-template-columns:1fr; } }
+  .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .seg{ display:flex; gap:4px; flex-wrap:wrap; }
+  .seg button{ font:inherit; font-size:0.82rem; font-weight:500; padding:6px 11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; }
+  .seg button[aria-pressed="true"]{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-2-ink); font-weight:600; }
+  .check{ display:flex; gap:8px; align-items:center; font-size:0.9rem; }
+  .check input{ width:18px; height:18px; accent-color:var(--accent-2); }
+
+  /* login */
+  .login{ max-width:380px; margin:12vh auto 0; }
+  .login .card{ padding:26px; }
+  .err{ color:var(--danger); font-weight:600; font-size:0.88rem; min-height:1.3em; margin:10px 0 0; }
+
+  /* top bar */
+  .top{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:18px; }
+  .stat{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:12px 14px; }
+  .stat b{ display:block; font-family:var(--font-display); font-size:1.5rem; line-height:1.1; }
+  .stat span{ font-size:0.8rem; color:var(--ink-soft); }
+  @media (max-width:520px){ .stats{ grid-template-columns:1fr 1fr; } }
+
+  /* banner list */
+  .blist{ display:flex; flex-direction:column; gap:8px; }
+  .bitem{ display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:var(--surface-2); }
+  .bitem .msg{ font-size:0.92rem; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .bitem .meta{ font-size:0.76rem; color:var(--ink-faint); font-family:var(--font-mono); margin-top:2px; }
+  .bitem .acts{ display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end; }
+  @media (max-width:640px){ .bitem{ grid-template-columns:auto 1fr; } .bitem .acts{ grid-column:1 / -1; justify-content:flex-start; } }
+  .status{ font-family:var(--font-mono); font-size:0.68rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:3px 7px; border-radius:6px; white-space:nowrap; }
+  .st-live{ background:var(--success-bg); color:var(--success); }
+  .st-scheduled{ background:var(--warn-bg); color:var(--warn); }
+  .st-ended, .st-off{ background:var(--surface); color:var(--ink-faint); border:1px solid var(--border); }
+  .empty{ color:var(--ink-soft); font-size:0.92rem; padding:14px; border:1px dashed var(--border-strong); border-radius:12px; text-align:center; }
+
+  /* editor */
+  .editor{ border:1px solid var(--accent-2); border-radius:14px; padding:16px; margin-top:12px; background:var(--accent-2-soft); display:flex; flex-direction:column; gap:12px; }
+  .templates{ display:flex; gap:6px; flex-wrap:wrap; }
+  .preview-label{ font-size:0.78rem; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+
+  /* chapters */
+  .chtable{ width:100%; border-collapse:collapse; font-size:0.92rem; }
+  .chtable th{ text-align:left; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--border); }
+  .chtable td{ padding:8px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .chtable td.c{ text-align:center; width:110px; }
+  .chtable input{ width:18px; height:18px; accent-color:var(--accent-2); }
+  .chtable tr.is-hidden td:first-child{ opacity:0.5; text-decoration:line-through; }
+
+  /* publish bar */
+  .savebar{ position:fixed; left:0; right:0; bottom:0; z-index:20; padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px)); background:var(--surface); border-top:1px solid var(--border); box-shadow:0 -10px 30px var(--shadow); }
+  .savebar .inner{ max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  .savebar .msgtxt{ font-weight:600; font-size:0.9rem; }
+  .savebar.ok .msgtxt{ color:var(--success); }
+  .savebar.bad .msgtxt{ color:var(--danger); }
+
+  /* ---- site banner (same look as on the study site) ---- */
+  .site-banners{ display:flex; flex-direction:column; gap:8px; }
+  .site-banner{ --c:var(--info); --cb:var(--info-bg); display:flex; align-items:center; gap:10px; padding:10px 12px 10px 14px; border-radius:12px;
+    background:var(--cb); border:1px solid color-mix(in srgb, var(--c) 35%, transparent); color:var(--ink); font-size:0.92rem; line-height:1.4; }
+  .site-banner.b-success{ --c:var(--success); --cb:var(--success-bg); }
+  .site-banner.b-warning{ --c:var(--warn); --cb:var(--warn-bg); }
+  .site-banner.b-urgent{ --c:var(--danger); --cb:var(--danger-bg); }
+  .site-banner .sb-icon{ flex:none; width:18px; height:18px; color:var(--c); }
+  .site-banner .sb-text{ flex:1; margin:0; min-width:0; overflow-wrap:anywhere; }
+  .site-banner .sb-link{ color:var(--c); font-weight:700; text-decoration:underline; text-underline-offset:2px; margin-left:4px; white-space:nowrap; }
+  .site-banner .sb-count{ flex:none; font-family:var(--font-mono); font-size:0.72rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--c);
+    border:1px solid color-mix(in srgb, var(--c) 45%, transparent); border-radius:6px; padding:2px 7px; white-space:nowrap; }
+  .site-banner .sb-x{ flex:none; border:0; background:transparent; color:var(--ink-soft); font-size:1.15rem; line-height:1; width:28px; height:28px; border-radius:8px; cursor:pointer; }
+  .site-banner .sb-x:hover{ background:color-mix(in srgb, var(--c) 15%, transparent); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- =================== LOGIN =================== -->
+<div class="wrap login" id="loginView" hidden>
+  <p class="eyebrow">AP World Study Hub</p>
+  <h1>Site admin</h1>
+  <form class="card" id="loginForm" autocomplete="on">
+    <label class="f">Password
+      <input type="password" id="pw" autocomplete="current-password" required autofocus>
+    </label>
+    <button class="btn primary" type="submit" style="margin-top:14px; width:100%; justify-content:center" id="loginBtn">Log in</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+  <p class="muted small" style="margin-top:14px">The password is checked on the server, and nothing here can be changed without it.</p>
+</div>
+
+<!-- =================== DASHBOARD =================== -->
+<div class="wrap" id="appView" hidden>
+  <div class="top">
+    <div>
+      <p class="eyebrow">AP World Study Hub</p>
+      <h1>Site admin</h1>
+      <p class="muted small" id="lastSaved" style="margin:6px 0 0"></p>
+    </div>
+    <div class="row">
+      <a class="btn" href="/" target="_blank" rel="noopener">Open site ↗</a>
+      <button class="btn" id="themeBtn" title="Switch light / dark">Theme</button>
+      <button class="btn" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="statLive">0</b><span>Banners live now</span></div>
+    <div class="stat"><b id="statSched">0</b><span>Scheduled</span></div>
+    <div class="stat"><b id="statCurrent">—</b><span>Current unit</span></div>
+  </div>
+
+  <!-- Banners -->
+  <section class="card" aria-labelledby="bTitle">
+    <div class="card-head">
+      <div>
+        <h2 id="bTitle">Banners</h2>
+        <p class="muted small" style="margin:4px 0 0">Shown at the top of the site. Banners for "All pages" also show on the chapter picker. Top of the list shows first.</p>
+      </div>
+      <button class="btn green" id="newBanner">+ New banner</button>
+    </div>
+    <div class="blist" id="bannerList"></div>
+
+    <div class="editor" id="editor" hidden>
+      <div class="row" style="justify-content:space-between">
+        <strong id="editorTitle">New banner</strong>
+        <div class="templates" id="templates">
+          <span class="muted small">Start from:</span>
+          <button class="btn small" data-tpl="test">Test reminder</button>
+          <button class="btn small" data-tpl="chapter">New chapter</button>
+          <button class="btn small" data-tpl="review">Review tip</button>
+          <button class="btn small" data-tpl="urgent">Urgent</button>
+        </div>
+      </div>
+      <label class="f">Message <span class="muted" style="font-weight:400" id="msgCount">0 / 280</span>
+        <textarea id="fMessage" maxlength="280" placeholder="Chapter 18 test is Friday. Do a Hard quiz and the Teacher Q&amp;A."></textarea>
+      </label>
+      <div>
+        <div class="preview-label">Style</div>
+        <div class="seg" id="fStyle">
+          <button data-val="info" aria-pressed="true">Info</button>
+          <button data-val="success" aria-pressed="false">Good news</button>
+          <button data-val="warning" aria-pressed="false">Heads up</button>
+          <button data-val="urgent" aria-pressed="false">Urgent</button>
+        </div>
+      </div>
+      <div class="grid2">
+        <label class="f">Show on
+          <select id="fTarget"></select>
+        </label>
+        <label class="f">Countdown to (optional)
+          <input type="date" id="fCountdown">
+        </label>
+        <label class="f">Link text (optional)
+          <input type="text" id="fLinkText" maxlength="40" placeholder="Open Chapter 18">
+        </label>
+        <label class="f">Link (optional)
+          <select id="fLinkPick"></select>
+        </label>
+        <label class="f" id="fLinkUrlWrap" hidden>Web address
+          <input type="url" id="fLinkUrl" maxlength="300" placeholder="https://…">
+        </label>
+      </div>
+      <div class="grid2">
+        <label class="f">Start showing (optional)
+          <input type="datetime-local" id="fStart">
+        </label>
+        <label class="f">Stop showing (optional)
+          <input type="datetime-local" id="fEnd">
+        </label>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="fActive" checked> On</label>
+        <label class="check"><input type="checkbox" id="fDismiss" checked> Students can close it</label>
+      </div>
+      <div>
+        <div class="preview-label">Preview</div>
+        <div class="site-banners" id="preview"></div>
+      </div>
+      <p class="err" id="editorErr" role="alert" style="margin:0"></p>
+      <div class="row">
+        <button class="btn green" id="applyBanner">Done</button>
+        <button class="btn" id="cancelBanner">Cancel</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chapters -->
+  <section class="card" aria-labelledby="cTitle">
+    <div class="card-head">
+      <div>
+        <h2 id="cTitle">Chapters</h2>
+        <p class="muted small" style="margin:4px 0 0">The current unit gets a "Current unit" tag and is picked by default for new visitors. Hidden chapters leave the chapter list, but direct links like <code>#ch18</code> still work.</p>
+      </div>
+    </div>
+    <table class="chtable">
+      <thead><tr><th>Chapter</th><th class="c">Current unit</th><th class="c">Shown</th></tr></thead>
+      <tbody id="chRows"></tbody>
+    </table>
+    <label class="check" style="margin-top:10px"><input type="radio" name="current" value="" id="noCurrent"> No current unit</label>
+  </section>
+</div>
+
+<div class="savebar" id="saveBar" hidden>
+  <div class="inner">
+    <span class="msgtxt" id="saveMsg">You have unpublished changes.</span>
+    <div class="row">
+      <button class="btn" id="discardBtn">Discard</button>
+      <button class="btn primary" id="publishBtn">Publish changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var TOKEN_KEY = "apw.admin.token";
+  var token = lsGet(TOKEN_KEY), cfg = null, savedJSON = "", chapters = [], editing = null, draft = null;
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k, v){ try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
+
+  /* ---------- theme (shares the study site's preference) ---------- */
+  var savedTheme = null; try{ savedTheme = JSON.parse(lsGet("apw.theme")); }catch(e){}
+  if (savedTheme === "dark" || savedTheme === "light") document.documentElement.setAttribute("data-theme", savedTheme);
+  $("themeBtn").addEventListener("click", function(){
+    var t = document.documentElement.getAttribute("data-theme");
+    var dark = t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = dark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    lsSet("apw.theme", JSON.stringify(next));
+  });
+
+  /* ---------- API ---------- */
+  function api(action, extra){
+    var headers = {"Content-Type":"application/json"};
+    if (token) headers.Authorization = "Bearer " + token;
+    return fetch("/api/admin", {method:"POST", headers:headers, body:JSON.stringify(Object.assign({action:action}, extra || {}))})
+      .then(function(r){
+        return r.json().catch(function(){ return {}; }).then(function(d){
+          if (r.status === 401 && action !== "login"){ logout("Your session ended. Log in again."); }
+          if (!r.ok) throw new Error(d.error || ("Request failed (" + r.status + ")"));
+          return d;
+        });
+      });
+  }
+
+  /* ---------- login / logout ---------- */
+  function showLogin(msg){
+    $("appView").hidden = true; $("saveBar").hidden = true; $("loginView").hidden = false;
+    $("loginErr").textContent = msg || ""; $("pw").value = ""; $("pw").focus();
+  }
+  function logout(msg){ token = null; lsSet(TOKEN_KEY, null); showLogin(msg); }
+  $("logoutBtn").addEventListener("click", function(){ logout(""); });
+  $("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    $("loginBtn").disabled = true; $("loginErr").textContent = "";
+    api("login", {password:$("pw").value}).then(function(d){
+      token = d.token; lsSet(TOKEN_KEY, token); boot();
+    }).catch(function(err){ $("loginErr").textContent = err.message; })
+      .then(function(){ $("loginBtn").disabled = false; });
+  });
+
+  /* ---------- load everything ---------- */
+  function boot(){
+    if (!token){ showLogin(); return; }
+    Promise.all([api("load"), loadChapters()]).then(function(r){
+      cfg = r[0].config; savedJSON = JSON.stringify(cfg);
+      $("loginView").hidden = true; $("appView").hidden = false;
+      renderAll();
+    }).catch(function(err){ if (token) showLogin(err.message); });
+  }
+  // Chapter list comes straight from the live site, so new chapters show up here automatically.
+  function loadChapters(){
+    return fetch("/", {cache:"no-store"}).then(function(r){ return r.text(); }).then(function(html){
+      var re = /id:"(\d+)", num:(\d+), short:"[^"]*",\s*title:"([^"]*)"/g, m, out = [];
+      while ((m = re.exec(html))) out.push({id:m[1], num:+m[2], title:m[3]});
+      chapters = out.sort(function(a,b){ return a.num - b.num; });
+    }).catch(function(){ chapters = []; });
+  }
+  function chapterName(id){
+    var c = chapters.filter(function(x){ return x.id === id; })[0];
+    return c ? "Chapter " + c.num + ": " + c.title : "Chapter " + id;
+  }
+
+  /* ---------- banner helpers (same rendering as the study site) ---------- */
+  var ICONS = {
+    info:'<svg class="sb-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 9v5M10 6.2v.1"/></svg>',
+    success:'<svg class="sb-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.5l2.3 2.3 4.7-5"/></svg>',
+    warning:'<svg class="sb-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.8l7.6 13.4H2.4z"/><path d="M10 8v4M10 14.4v.1"/></svg>',
+    urgent:'<svg class="sb-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5v1.5M4 15.5h12l-1.3-2V9a4.7 4.7 0 0 0-9.4 0v4.5z"/><path d="M8.3 17.5a1.8 1.8 0 0 0 3.4 0"/></svg>'
+  };
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function countdownText(dateStr){
+    if (!dateStr) return "";
+    var p = dateStr.split("-"), target = new Date(+p[0], +p[1]-1, +p[2]);
+    var today = new Date(); today.setHours(0,0,0,0);
+    var days = Math.round((target - today) / 864e5);
+    return days < 0 ? "" : days === 0 ? "Today" : days === 1 ? "Tomorrow" : "In " + days + " days";
+  }
+  function bannerHTML(b){
+    var cd = countdownText(b.countdownTo);
+    var link = b.linkUrl ? ' <a class="sb-link" href="' + esc(b.linkUrl) + '"' + (/^https?:/i.test(b.linkUrl) ? ' target="_blank" rel="noopener"' : '') + '>' + esc(b.linkText || "Open") + ' →</a>' : "";
+    return '<div class="site-banner b-' + esc(b.style) + '" role="status">' + (ICONS[b.style] || ICONS.info) +
+      '<p class="sb-text">' + esc(b.message) + link + '</p>' +
+      (cd ? '<span class="sb-count">' + cd + '</span>' : '') +
+      (b.dismissible ? '<button class="sb-x" type="button" aria-label="Dismiss">×</button>' : '') + '</div>';
+  }
+  function statusOf(b){
+    var now = Date.now();
+    if (!b.active) return "off";
+    if (b.start && Date.parse(b.start) > now) return "scheduled";
+    if (b.end && Date.parse(b.end) <= now) return "ended";
+    return "live";
+  }
+  function fmtDate(iso){ return iso ? new Date(iso).toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) : ""; }
+
+  /* ---------- render ---------- */
+  function renderAll(){ renderStats(); renderBanners(); renderChapters(); syncSaveBar(); }
+  function renderStats(){
+    var st = cfg.banners.map(statusOf);
+    $("statLive").textContent = st.filter(function(s){ return s === "live"; }).length;
+    $("statSched").textContent = st.filter(function(s){ return s === "scheduled"; }).length;
+    var cur = chapters.filter(function(c){ return c.id === cfg.featuredChapter; })[0];
+    $("statCurrent").textContent = cfg.featuredChapter ? "Ch " + (cur ? cur.num : cfg.featuredChapter) : "None";
+    $("lastSaved").textContent = cfg.updatedAt ? "Last published " + fmtDate(cfg.updatedAt) : "Nothing published yet.";
+  }
+  function renderBanners(){
+    var list = $("bannerList");
+    if (!cfg.banners.length){ list.innerHTML = '<div class="empty">No banners yet. Make one to show students a message at the top of the site.</div>'; return; }
+    var LABEL = {live:"Live", scheduled:"Scheduled", ended:"Ended", off:"Off"};
+    list.innerHTML = cfg.banners.map(function(b, i){
+      var s = statusOf(b), where = b.target === "all" ? "All pages" : "Ch " + b.target + " only";
+      var when = [b.start ? "from " + fmtDate(b.start) : "", b.end ? "until " + fmtDate(b.end) : "", b.countdownTo ? "countdown to " + b.countdownTo : ""].filter(Boolean).join(" · ");
+      return '<div class="bitem" data-i="' + i + '"><span class="status st-' + s + '">' + LABEL[s] + '</span>' +
+        '<div><div class="msg">' + esc(b.message) + '</div><div class="meta">' + esc(b.style) + ' · ' + esc(where) + (when ? ' · ' + esc(when) : '') + '</div></div>' +
+        '<div class="acts">' +
+          '<button class="btn small" data-act="up" ' + (i === 0 ? 'disabled' : '') + ' aria-label="Move up">↑</button>' +
+          '<button class="btn small" data-act="down" ' + (i === cfg.banners.length - 1 ? 'disabled' : '') + ' aria-label="Move down">↓</button>' +
+          '<button class="btn small" data-act="toggle">' + (b.active ? 'Turn off' : 'Turn on') + '</button>' +
+          '<button class="btn small" data-act="edit">Edit</button>' +
+          '<button class="btn small" data-act="copy">Copy</button>' +
+          '<button class="btn small danger" data-act="delete">Delete</button>' +
+        '</div></div>';
+    }).join("");
+  }
+  $("bannerList").addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-act]"); if (!btn) return;
+    var i = +btn.closest(".bitem").getAttribute("data-i"), b = cfg.banners, act = btn.getAttribute("data-act");
+    if (act === "up" && i > 0){ var t = b[i-1]; b[i-1] = b[i]; b[i] = t; }
+    else if (act === "down" && i < b.length - 1){ var u = b[i+1]; b[i+1] = b[i]; b[i] = u; }
+    else if (act === "toggle") b[i].active = !b[i].active;
+    else if (act === "edit"){ openEditor(i); return; }
+    else if (act === "copy"){ var c = JSON.parse(JSON.stringify(b[i])); c.id = newId(); c.active = false; b.splice(i + 1, 0, c); }
+    else if (act === "delete"){ if (!confirm("Delete this banner?\n\n" + b[i].message)) return; b.splice(i, 1); if (editing === i) closeEditor(); }
+    renderStats(); renderBanners(); syncSaveBar();
+  });
+
+  function renderChapters(){
+    var rows = chapters.length ? chapters : [];
+    $("chRows").innerHTML = rows.map(function(c){
+      var hidden = cfg.hiddenChapters.indexOf(c.id) !== -1;
+      return '<tr class="' + (hidden ? 'is-hidden' : '') + '"><td>Chapter ' + c.num + ' <span class="muted">· ' + esc(c.title) + '</span></td>' +
+        '<td class="c"><input type="radio" name="current" value="' + c.id + '" ' + (cfg.featuredChapter === c.id ? 'checked' : '') + ' aria-label="Make Chapter ' + c.num + ' the current unit"></td>' +
+        '<td class="c"><input type="checkbox" data-show="' + c.id + '" ' + (hidden ? '' : 'checked') + ' aria-label="Show Chapter ' + c.num + ' in the chapter list"></td></tr>';
+    }).join("") || '<tr><td colspan="3" class="muted">Couldn’t read the chapter list from the site.</td></tr>';
+    $("noCurrent").checked = !cfg.featuredChapter;
+  }
+  document.addEventListener("change", function(e){
+    if (e.target.name === "current"){ cfg.featuredChapter = e.target.value || null; renderStats(); syncSaveBar(); }
+    if (e.target.hasAttribute && e.target.hasAttribute("data-show")){
+      var id = e.target.getAttribute("data-show"), h = cfg.hiddenChapters;
+      if (e.target.checked) cfg.hiddenChapters = h.filter(function(x){ return x !== id; });
+      else if (h.indexOf(id) === -1) h.push(id);
+      e.target.closest("tr").classList.toggle("is-hidden", !e.target.checked);
+      syncSaveBar();
+    }
+  });
+
+  /* ---------- banner editor ---------- */
+  function newId(){ return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+  function blank(){ return {id:newId(), message:"", linkText:"", linkUrl:"", style:"info", target:"all", start:null, end:null, countdownTo:null, dismissible:true, active:true}; }
+  function toLocalInput(iso){
+    if (!iso) return "";
+    var d = new Date(iso), p = function(n){ return String(n).padStart(2, "0"); };
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()) + "T" + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+  function fillSelects(){
+    var opts = '<option value="all">All pages (and the chapter picker)</option>' + chapters.map(function(c){ return '<option value="' + c.id + '">Only Chapter ' + c.num + '</option>'; }).join("");
+    $("fTarget").innerHTML = opts;
+    $("fLinkPick").innerHTML = '<option value="">No link</option>' + chapters.map(function(c){ return '<option value="#ch' + c.id + '">Open Chapter ' + c.num + '</option>'; }).join("") + '<option value="url">Another web address…</option>';
+  }
+  function openEditor(i){
+    fillSelects();
+    editing = i; draft = i == null ? blank() : JSON.parse(JSON.stringify(cfg.banners[i]));
+    $("editorTitle").textContent = i == null ? "New banner" : "Edit banner";
+    $("templates").hidden = i != null;
+    writeForm(); $("editor").hidden = false; $("editorErr").textContent = "";
+    $("fMessage").focus();
+    $("editor").scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+  function closeEditor(){ editing = null; draft = null; $("editor").hidden = true; }
+  function writeForm(){
+    $("fMessage").value = draft.message;
+    setStyle(draft.style);
+    $("fTarget").value = draft.target;
+    $("fCountdown").value = draft.countdownTo || "";
+    $("fLinkText").value = draft.linkText;
+    var internal = /^#ch\d+$/.test(draft.linkUrl);
+    $("fLinkPick").value = !draft.linkUrl ? "" : internal ? draft.linkUrl : "url";
+    $("fLinkUrlWrap").hidden = $("fLinkPick").value !== "url";
+    $("fLinkUrl").value = internal ? "" : draft.linkUrl;
+    $("fStart").value = toLocalInput(draft.start); $("fEnd").value = toLocalInput(draft.end);
+    $("fActive").checked = draft.active; $("fDismiss").checked = draft.dismissible;
+    preview();
+  }
+  function readForm(){
+    draft.message = $("fMessage").value.trim();
+    draft.target = $("fTarget").value;
+    draft.countdownTo = $("fCountdown").value || null;
+    draft.linkText = $("fLinkText").value.trim();
+    var pick = $("fLinkPick").value;
+    draft.linkUrl = pick === "url" ? $("fLinkUrl").value.trim() : pick;
+    draft.start = $("fStart").value ? new Date($("fStart").value).toISOString() : null;
+    draft.end = $("fEnd").value ? new Date($("fEnd").value).toISOString() : null;
+    draft.active = $("fActive").checked; draft.dismissible = $("fDismiss").checked;
+  }
+  function setStyle(v){
+    draft.style = v;
+    Array.prototype.forEach.call($("fStyle").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-val") === v)); });
+  }
+  function preview(){
+    $("msgCount").textContent = $("fMessage").value.length + " / 280";
+    var shown = JSON.parse(JSON.stringify(draft));
+    if (!shown.message) shown.message = "Your message will appear here.";
+    if (shown.linkUrl && !shown.linkText) shown.linkText = "Open";
+    $("preview").innerHTML = bannerHTML(shown);
+  }
+  $("fStyle").addEventListener("click", function(e){ var b = e.target.closest("button"); if (b){ setStyle(b.getAttribute("data-val")); preview(); } });
+  ["fMessage","fTarget","fCountdown","fLinkText","fLinkPick","fLinkUrl","fStart","fEnd","fActive","fDismiss"].forEach(function(id){
+    $(id).addEventListener("input", function(){
+      if (id === "fLinkPick") $("fLinkUrlWrap").hidden = $("fLinkPick").value !== "url";
+      if (id === "fLinkPick" && /^#ch/.test($("fLinkPick").value) && !$("fLinkText").value) $("fLinkText").value = $("fLinkPick").selectedOptions[0].textContent;
+      readForm(); preview();
+    });
+  });
+  $("newBanner").addEventListener("click", function(){ openEditor(null); });
+  $("cancelBanner").addEventListener("click", closeEditor);
+  $("applyBanner").addEventListener("click", function(){
+    readForm();
+    var err = !draft.message ? "Write a message first."
+      : draft.linkUrl && !/^(https?:\/\/|#ch\d+$)/i.test(draft.linkUrl) ? "Links must start with https://"
+      : draft.start && draft.end && Date.parse(draft.end) <= Date.parse(draft.start) ? "The stop time has to be after the start time."
+      : "";
+    if (err){ $("editorErr").textContent = err; return; }
+    if (editing == null) cfg.banners.unshift(draft); else cfg.banners[editing] = draft;
+    closeEditor(); renderStats(); renderBanners(); syncSaveBar();
+  });
+
+  // Templates fill the form; nothing is published until you press Publish.
+  $("templates").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-tpl]"); if (!b) return;
+    var latest = chapters.length ? chapters[chapters.length - 1] : null;
+    var cur = chapters.filter(function(c){ return c.id === cfg.featuredChapter; })[0] || latest;
+    var n = cur ? cur.num : "";
+    var inDays = function(d){ var t = new Date(); t.setDate(t.getDate() + d); return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" + String(t.getDate()).padStart(2,"0"); };
+    var t = b.getAttribute("data-tpl");
+    if (t === "test") Object.assign(draft, {style:"warning", message:"The Chapter " + n + " test is coming up. Take a Hard quiz and go through the Teacher Q&A.", countdownTo:inDays(3), linkUrl:cur ? "#ch" + cur.id : "", linkText:cur ? "Study Chapter " + n : "", target:"all"});
+    if (t === "chapter") Object.assign(draft, {style:"success", message:"Chapter " + (latest ? latest.num : "") + " is up, with vocab, the cheat sheet, and AP-level quiz questions.", linkUrl:latest ? "#ch" + latest.id : "", linkText:"Open it", countdownTo:null, target:"all"});
+    if (t === "review") Object.assign(draft, {style:"info", message:"Tip: pick Multiple choice + True / False + Test matching on the Quiz tab to practice like the real test.", linkUrl:"", linkText:"", countdownTo:null});
+    if (t === "urgent") Object.assign(draft, {style:"urgent", message:"", dismissible:false, countdownTo:null});
+    writeForm();
+  });
+
+  /* ---------- publish ---------- */
+  function dirty(){ return cfg && JSON.stringify(cfg) !== savedJSON; }
+  function syncSaveBar(msg, cls){
+    var bar = $("saveBar");
+    if (msg){ bar.hidden = false; bar.className = "savebar " + (cls || ""); $("saveMsg").textContent = msg; $("discardBtn").hidden = $("publishBtn").hidden = cls === "ok"; return; }
+    bar.className = "savebar"; $("discardBtn").hidden = $("publishBtn").hidden = false;
+    $("saveMsg").textContent = "You have unpublished changes.";
+    bar.hidden = !dirty();
+  }
+  $("publishBtn").addEventListener("click", publish);
+  function publish(){
+    if (!dirty()) return;
+    if (!$("editor").hidden && !confirm("You have a banner open in the editor that isn't added yet. Publish the other changes anyway?")) return;
+    $("publishBtn").disabled = true;
+    api("save", {config:cfg}).then(function(d){
+      cfg = d.config; savedJSON = JSON.stringify(cfg);
+      renderAll();
+      syncSaveBar("Published. Students see it within about a minute.", "ok");
+      setTimeout(function(){ syncSaveBar(); }, 4000);
+    }).catch(function(err){ syncSaveBar("Couldn't publish: " + err.message, "bad"); })
+      .then(function(){ $("publishBtn").disabled = false; });
+  }
+  $("discardBtn").addEventListener("click", function(){
+    if (!confirm("Throw away your unpublished changes?")) return;
+    cfg = JSON.parse(savedJSON); closeEditor(); renderAll();
+  });
+  document.addEventListener("keydown", function(e){
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && cfg){ e.preventDefault(); publish(); }
+  });
+  window.addEventListener("beforeunload", function(e){ if (dirty()){ e.preventDefault(); e.returnValue = ""; } });
+
+  boot();
+})();
+</script>
+</body>
+</html>
