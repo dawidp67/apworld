@@ -1,0 +1,9 @@
+{
+  "name": "apworld",
+  "private": true,
+  "type": "module",
+  "description": "AP World Study Hub: static site plus two small Vercel functions for the admin panel and banners.",
+  "dependencies": {
+    "@vercel/blob": "^2.8.2"
+  }
+}

@@ -47,3 +47,10 @@ Explanations are one or two short sentences saying why the answer is right, or w
 - **Answer length:** the correct answer must not usually be the longest choice. Across the bank it should be the longest in no more than about 40% of questions. The real tests are near 25%. Lengthen a wrong answer with plausible detail to fix this.
 - **Themes:** every theme value is in the chapter's `CATS`, and every question has four distinct choices.
 - **Browser test:** load `index.html#chNN`, run a quiz at each difficulty, and confirm there are no console errors.
+
+## Admin panel and banners
+
+- `/admin` (served from `admin.html` through `vercel.json`) is the owner's control panel: banners, the current unit, and hiding chapters.
+- Server code lives in `api/`: `api/site.js` (public, read-only settings) and `api/admin.js` (password-protected). Shared code is in `api/_lib/site-config.js`, which validates everything before saving.
+- Settings are one JSON file in a private Vercel Blob store (`BLOB_READ_WRITE_TOKEN`). The password is the `ADMIN_PASSWORD` environment variable in Vercel. Never put either in the repo.
+- `index.html` loads `/api/site` on start and shows banners in `#pickerBanners` and `#pageBanners`. It must keep working when the API is missing (for example, when opened as a file).
