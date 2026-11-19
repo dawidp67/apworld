@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Practice Tests · AP World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">
+<style>
+  :root{
+    --bg:#ebe6da; --surface:#fffdf8; --surface-2:#f3eee3;
+    --ink:#211d18; --ink-soft:#5c5648; --ink-faint:#8a8373;
+    --accent:#ab2436; --accent-ink:#fff6ee; --accent-soft:rgba(171,36,54,0.10);
+    --accent-2:#2c5d4e; --accent-2-ink:#fff6ee; --accent-2-soft:rgba(44,93,78,0.12);
+    --border:#d8cfbb; --border-strong:#c5baa2;
+    --success:#2c7a4d; --success-bg:#e2efe4; --danger:#ab2436; --danger-bg:#f7e3e1;
+    --warn:#a66c00; --warn-bg:#f6ead0; --info:#2c5d4e; --info-bg:#e1ebe6;
+    --shadow:rgba(33,29,24,0.10);
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    --font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141617; --surface:#1f2224; --surface-2:#272a2c;
+      --ink:#eee8db; --ink-soft:#b3ac9d; --ink-faint:#80796c;
+      --accent:#e2687a; --accent-ink:#241317; --accent-soft:rgba(226,104,122,0.13);
+      --accent-2:#6bb79b; --accent-2-ink:#0f2019; --accent-2-soft:rgba(107,183,155,0.14);
+      --border:#34383a; --border-strong:#454a4c;
+      --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+      --warn:#e0b45a; --warn-bg:#33291a; --info:#6bb79b; --info-bg:#1b2925;
+      --shadow:rgba(0,0,0,0.40);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141617; --surface:#1f2224; --surface-2:#272a2c;
+    --ink:#eee8db; --ink-soft:#b3ac9d; --ink-faint:#80796c;
+    --accent:#e2687a; --accent-ink:#241317; --accent-soft:rgba(226,104,122,0.13);
+    --accent-2:#6bb79b; --accent-2-ink:#0f2019; --accent-2-soft:rgba(107,183,155,0.14);
+    --border:#34383a; --border-strong:#454a4c;
+    --success:#5cba8c; --success-bg:#1c2b23; --danger:#e2687a; --danger-bg:#331c1f;
+    --warn:#e0b45a; --warn-bg:#33291a; --info:#6bb79b; --info-bg:#1b2925;
+    --shadow:rgba(0,0,0,0.40);
+    color-scheme:dark;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.5; min-height:100vh; }
+  [hidden]{ display:none !important; }
+  .wrap{ max-width:760px; margin:0 auto; padding:28px 16px 80px; }
+  h1,h2{ font-family:var(--font-display); font-weight:620; letter-spacing:-0.015em; margin:0; }
+  h1{ font-size:clamp(1.7rem,4.5vw,2.2rem); line-height:1.1; }
+  .eyebrow{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 6px; }
+  .muted{ color:var(--ink-soft); }
+  .small{ font-size:0.85rem; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; margin-top:18px; box-shadow:0 1px 0 var(--shadow); }
+  .btn{ font:inherit; font-weight:600; font-size:0.9rem; border-radius:10px; padding:8px 14px; border:1px solid var(--border-strong); background:var(--surface); color:var(--ink); cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+  .btn:hover{ border-color:var(--ink-soft); }
+  .btn.primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .btn.green{ background:var(--accent-2); border-color:var(--accent-2); color:var(--accent-2-ink); }
+  .btn.small{ padding:5px 10px; font-size:0.8rem; border-radius:8px; }
+  .btn:disabled{ opacity:0.5; cursor:default; }
+  .btn:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  label.f{ display:flex; flex-direction:column; gap:5px; font-size:0.82rem; font-weight:600; color:var(--ink-soft); }
+  input[type=password]{ font:inherit; font-size:0.95rem; color:var(--ink); background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:9px 11px; width:100%; min-width:0; }
+  .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .top{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+  .login{ max-width:380px; margin:12vh auto 0; }
+  .login .card{ padding:26px; }
+  .err{ color:var(--danger); font-weight:600; font-size:0.88rem; min-height:1.3em; margin:10px 0 0; }
+  .note{ margin-top:18px; padding:12px 14px; border-radius:12px; background:var(--info-bg); border:1px solid color-mix(in srgb, var(--info) 35%, transparent); white-space:pre-line; overflow-wrap:anywhere; }
+  .tlist{ display:flex; flex-direction:column; gap:8px; }
+  .titem{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--surface-2); }
+  .titem b{ font-family:var(--font-display); font-size:1.05rem; }
+  .empty{ color:var(--ink-soft); font-size:0.92rem; padding:14px; border:1px dashed var(--border-strong); border-radius:12px; text-align:center; }
+  .runner{ margin-top:18px; border:1px solid var(--accent-2); border-radius:14px; padding:16px; background:var(--accent-2-soft); }
+  .rmeta{ font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); }
+  .rbar{ height:4px; background:var(--border); border-radius:4px; margin:10px 0 14px; overflow:hidden; }
+  .rbar div{ height:100%; background:var(--accent-2); width:0; transition:width .3s; }
+  .rq{ font-family:var(--font-display); font-weight:560; font-size:1.15rem; line-height:1.4; margin:0 0 14px; }
+  .rchoices{ display:flex; flex-direction:column; gap:8px; }
+  .rchoice{ font:inherit; text-align:left; display:flex; gap:10px; padding:11px 14px; border-radius:11px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
+  .rchoice:hover:not(:disabled){ border-color:var(--accent-2); }
+  .rchoice .l{ font-family:var(--font-mono); font-weight:700; color:var(--accent-2); flex:none; }
+  .rchoice.ok{ background:var(--success-bg); border-color:var(--success); }
+  .rchoice.no{ background:var(--danger-bg); border-color:var(--danger); }
+  .rchoice:disabled{ cursor:default; }
+  .rfoot{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+  .rfb{ flex:1 1 260px; font-weight:600; font-size:0.9rem; }
+  .rfb.ok{ color:var(--success); } .rfb.no{ color:var(--danger); }
+  .rfb span{ display:block; margin-top:4px; font-weight:400; color:var(--ink-soft); line-height:1.45; }
+  .rmiss{ border-left:3px solid var(--danger); background:var(--surface); border-radius:8px; padding:8px 12px; margin-top:8px; font-size:0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="wrap login" id="loginView" hidden>
+  <p class="eyebrow">AP World Study Hub</p>
+  <h1>Practice tests</h1>
+  <form class="card" id="loginForm" autocomplete="on">
+    <label class="f">Password
+      <input type="password" id="pw" autocomplete="current-password" required autofocus>
+    </label>
+    <button class="btn primary" type="submit" style="margin-top:14px; width:100%; justify-content:center" id="loginBtn">Log in</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+</div>
+
+<div class="wrap" id="appView" hidden>
+  <div class="top">
+    <div>
+      <p class="eyebrow">AP World Study Hub</p>
+      <h1>Practice tests</h1>
+    </div>
+    <div class="row">
+      <button class="btn" id="themeBtn" title="Switch light / dark">Theme</button>
+      <button class="btn" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+  <div class="note" id="note" hidden></div>
+  <section class="card">
+    <div class="tlist" id="testList"><div class="empty">Loading…</div></div>
+    <div id="runner" class="runner" hidden>
+      <div class="row" style="justify-content:space-between">
+        <span class="rmeta" id="rCount"></span>
+        <span class="row"><span class="rmeta" id="rScore"></span><button class="btn small" id="rQuit">Quit</button></span>
+      </div>
+      <div class="rbar"><div id="rBar"></div></div>
+      <div id="rBody"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var TOKEN_KEY = "apw.tests.token";
+  var token = lsGet(TOKEN_KEY), tests = [], openTests = {}, run = null;
+
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k, v){ try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+  /* theme: shares the study site's preference */
+  var savedTheme = null; try{ savedTheme = JSON.parse(lsGet("apw.theme")); }catch(e){}
+  if (savedTheme === "dark" || savedTheme === "light") document.documentElement.setAttribute("data-theme", savedTheme);
+  $("themeBtn").addEventListener("click", function(){
+    var t = document.documentElement.getAttribute("data-theme");
+    var dark = t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = dark ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    lsSet("apw.theme", JSON.stringify(next));
+  });
+
+  function api(action, extra){
+    var headers = {"Content-Type":"application/json"};
+    if (token) headers.Authorization = "Bearer " + token;
+    return fetch("/api/tests", {method:"POST", headers:headers, body:JSON.stringify(Object.assign({action:action}, extra || {}))})
+      .then(function(r){
+        return r.json().catch(function(){ return {}; }).then(function(d){
+          if (r.status === 401 && action !== "login") logout("Your session ended. Log in again.");
+          if (!r.ok) throw new Error(d.error || ("Request failed (" + r.status + ")"));
+          return d;
+        });
+      });
+  }
+
+  function showLogin(msg){
+    $("appView").hidden = true; $("loginView").hidden = false;
+    $("loginErr").textContent = msg || ""; $("pw").value = ""; $("pw").focus();
+  }
+  function logout(msg){ token = null; lsSet(TOKEN_KEY, null); openTests = {}; showLogin(msg); }
+  $("logoutBtn").addEventListener("click", function(){ logout(""); });
+  $("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    $("loginBtn").disabled = true; $("loginErr").textContent = "";
+    api("login", {password:$("pw").value}).then(function(d){ token = d.token; lsSet(TOKEN_KEY, token); boot(); })
+      .catch(function(err){ $("loginErr").textContent = err.message; })
+      .then(function(){ $("loginBtn").disabled = false; });
+  });
+
+  function boot(){
+    if (!token){ showLogin(); return; }
+    api("list").then(function(d){
+      tests = d.tests || [];
+      $("loginView").hidden = true; $("appView").hidden = false;
+      $("note").hidden = !d.note; $("note").textContent = d.note || "";
+      $("testList").innerHTML = tests.length ? tests.map(function(t){
+        return '<div class="titem"><div><b>' + esc(t.title) + '</b><div class="muted small">' + t.count + ' questions</div></div>' +
+          '<button class="btn green" data-test="' + esc(t.id) + '">Start</button></div>';
+      }).join("") : '<div class="empty">No tests are shared right now. Check back later.</div>';
+    }).catch(function(err){ if (token) showLogin(err.message); else $("loginErr").textContent = err.message; });
+  }
+
+  $("testList").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-test]"); if (!b) return;
+    var id = b.getAttribute("data-test");
+    b.disabled = true;
+    (openTests[id] ? Promise.resolve(openTests[id]) : api("test", {id:id}).then(function(d){ return (openTests[id] = d.test); }))
+      .then(startRun)
+      .catch(function(err){ alert("Couldn't open the test: " + err.message); })
+      .then(function(){ b.disabled = false; });
+  });
+
+  function startRun(t){
+    var items = t.mc.map(function(m){ return {kind:"mc", q:m[0], choices:shuffle(m[1]), answer:m[1][0], why:m[2]}; })
+      .concat(t.tf.map(function(x){ return {kind:"tf", q:x[0], isTrue:x[1], why:x[2]}; }));
+    run = {test:t, items:shuffle(items), i:0, score:0, wrong:[]};
+    $("runner").hidden = false; renderQ();
+    $("runner").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  function renderQ(){
+    var it = run.items[run.i], n = run.items.length;
+    $("rCount").textContent = run.test.title + " · Question " + (run.i + 1) + " of " + n;
+    $("rScore").textContent = "Score " + run.score + " / " + n;
+    $("rBar").style.width = (run.i / n * 100) + "%";
+    var opts = it.kind === "tf" ? ["True", "False"] : it.choices;
+    $("rBody").innerHTML = '<p class="rq">' + esc(it.q) + '</p>' +
+      '<div class="rchoices">' + opts.map(function(o, i){ return '<button class="rchoice" data-i="' + i + '"><span class="l">' + (it.kind === "tf" ? (i ? "F" : "T") : "ABCD"[i]) + '</span><span>' + esc(o) + '</span></button>'; }).join("") + '</div>' +
+      '<div class="rfoot"><div class="rfb" id="rFb"></div><button class="btn primary" id="rNext" hidden>' + (run.i === n - 1 ? "See results →" : "Next →") + '</button></div>';
+  }
+  $("rBody").addEventListener("click", function(e){
+    if (e.target.closest("#rNext")){ run.i++; if (run.i >= run.items.length) finishRun(); else renderQ(); return; }
+    if (e.target.closest("#rRetry")){ var w = run.wrong; run = {test:run.test, items:shuffle(w), i:0, score:0, wrong:[]}; renderQ(); return; }
+    if (e.target.closest("#rClose")){ $("runner").hidden = true; run = null; return; }
+    var c = e.target.closest(".rchoice"); if (!c || c.disabled) return;
+    var it = run.items[run.i], pick = +c.getAttribute("data-i");
+    var right = it.kind === "tf" ? (pick === 0) === it.isTrue : it.choices[pick] === it.answer;
+    var correctIdx = it.kind === "tf" ? (it.isTrue ? 0 : 1) : it.choices.indexOf(it.answer);
+    Array.prototype.forEach.call($("rBody").querySelectorAll(".rchoice"), function(b, i){
+      b.disabled = true;
+      if (i === correctIdx) b.classList.add("ok"); else if (i === pick) b.classList.add("no");
+    });
+    if (right) run.score++; else run.wrong.push(it);
+    $("rFb").className = "rfb " + (right ? "ok" : "no");
+    $("rFb").innerHTML = (right ? "Correct" : "Not quite. The right answer is highlighted.") + (it.why ? '<span>' + esc(it.why) + '</span>' : '');
+    $("rScore").textContent = "Score " + run.score + " / " + run.items.length;
+    $("rNext").hidden = false; $("rNext").focus();
+  });
+  function finishRun(){
+    var n = run.items.length;
+    $("rBar").style.width = "100%";
+    $("rCount").textContent = run.test.title + " · Done";
+    $("rScore").textContent = "";
+    $("rBody").innerHTML = '<p class="rq">' + run.score + ' / ' + n + ' (' + Math.round(run.score / n * 100) + '%)</p>' +
+      (run.wrong.length ? '<p class="muted small" style="margin:0 0 6px">Review these:</p>' + run.wrong.map(function(it){
+        return '<div class="rmiss"><div>' + esc(it.q) + '</div><b>' + esc(it.kind === "tf" ? (it.isTrue ? "True" : "False") : it.answer) + '</b>' + (it.why ? '<div class="muted small">' + esc(it.why) + '</div>' : '') + '</div>';
+      }).join("") : '<p class="muted">Perfect score.</p>') +
+      '<div class="rfoot"><span></span><div class="row">' + (run.wrong.length ? '<button class="btn green" id="rRetry">Retry the ones I got wrong</button>' : '') + '<button class="btn" id="rClose">Close</button></div></div>';
+  }
+  $("rQuit").addEventListener("click", function(){ $("runner").hidden = true; run = null; });
+
+  boot();
+})();
+</script>
+</body>
+</html>

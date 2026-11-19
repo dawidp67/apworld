@@ -1,9 +1,12 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/tests", "destination": "/tests.html" }
   ],
   "headers": [
     { "source": "/admin", "headers": [ { "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "X-Frame-Options", "value": "DENY" } ] },
-    { "source": "/admin.html", "headers": [ { "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "X-Frame-Options", "value": "DENY" } ] }
+    { "source": "/admin.html", "headers": [ { "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "X-Frame-Options", "value": "DENY" } ] },
+    { "source": "/tests", "headers": [ { "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "X-Frame-Options", "value": "DENY" } ] },
+    { "source": "/tests.html", "headers": [ { "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Cache-Control", "value": "no-store" }, { "key": "X-Frame-Options", "value": "DENY" } ] }
   ]
 }

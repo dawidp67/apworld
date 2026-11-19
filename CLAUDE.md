@@ -12,7 +12,7 @@ Single-file study site (`index.html`). Each chapter is a `CH.push((function(){ .
    - Teacher Q&A cards go in `var TEACHER_QA = [{q, a}, ...]` and `teacherQA:TEACHER_QA` (this shows the Teacher Q&A tab).
    - Matching definitions from a real test should replace the vocab definitions for those terms, word for word.
 3. **Question bank**: add an entry for the chapter id in `AP_BANK` (just above the engine). Aim for about 20 medium/hard multiple-choice questions and 12 true/false statements.
-4. **Real tests are private.** The repo is public, so never put a real test's questions in `index.html` or commit them in plain text. Put them in a JSON file outside the repo and run `TEST_KEY=... node scripts/encrypt-tests.mjs <file>`; this writes the encrypted `api/_lib/private-tests.js`, and they show up under Private tests on `/admin`. (Chapter 17's test is the one exception: it's public on the site by earlier choice.)
+4. **Real tests are private.** The repo is public, so never put a real test's questions in `index.html` or commit them in plain text. Put them in a JSON file outside the repo and run `TEST_KEY=... node scripts/encrypt-tests.mjs <file>`; this writes the encrypted `api/_lib/private-tests.js`, and they show up under Private tests on `/admin`, where they can be switched on for `/tests`. (Chapter 17's test is the one exception: it's public on the site by earlier choice.)
 
 ## Question bank format
 
@@ -55,4 +55,6 @@ Explanations are one or two short sentences saying why the answer is right, or w
 - Server code lives in `api/`: `api/site.js` (public, read-only settings) and `api/admin.js` (password-protected). Shared code is in `api/_lib/site-config.js`, which validates everything before saving.
 - Settings are one JSON file in a private Vercel Blob store (`BLOB_READ_WRITE_TOKEN`). The password is the `ADMIN_PASSWORD` environment variable in Vercel. Never put either in the repo.
 - `index.html` loads `/api/site` on start and shows banners in `#pickerBanners` and `#pageBanners`. It must keep working when the API is missing (for example, when opened as a file).
-- Private tests: `api/admin.js` actions `tests` and `test` decrypt `api/_lib/private-tests.js` with the `TEST_KEY` environment variable, only for a logged-in admin.
+- Private tests: `api/admin.js` actions `tests` and `test` decrypt `api/_lib/private-tests.js` with the `TEST_KEY` environment variable, only for a logged-in admin. Decrypting and question ids live in `api/_lib/private-tests-access.js`.
+- `/tests` (served from `tests.html`, API `api/tests.js`) is the second panel: practice tests for everyone else, behind one shared password. The owner sets that password in `/admin` (stored only as a salted scrypt hash, `testsPass`, never sent to the browser; changing it signs everyone out). The owner picks which tests show and hides single questions in `/admin`; that is `testsPanel: {note, tests: {id: {on, hidden: [question ids]}}}` in the settings file. A /tests login can't use the admin API. Removing a question from a test for good means re-encrypting the test without it.
+- Neither `/admin` nor `/tests` is linked from the study site. Keep it that way: they are reached by typing the URL only.

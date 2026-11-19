@@ -148,6 +148,12 @@
   .rfb.ok{ color:var(--success); } .rfb.no{ color:var(--danger); }
   .rfb span{ display:block; margin-top:4px; font-weight:400; color:var(--ink-soft); line-height:1.45; }
   .rmiss{ border-left:3px solid var(--danger); background:var(--surface); border-radius:8px; padding:8px 12px; margin-top:8px; font-size:0.9rem; }
+  .tpanel{ margin-top:14px; border:1px dashed var(--border-strong); border-radius:12px; padding:14px; }
+  .qpick{ margin-top:10px; max-height:360px; overflow:auto; border:1px solid var(--border); border-radius:10px; background:var(--surface); padding:6px 10px; width:100%; }
+  .qpick label{ display:flex; gap:8px; align-items:flex-start; padding:6px 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .qpick label:last-child{ border-bottom:0; }
+  .qpick input{ margin-top:3px; width:16px; height:16px; accent-color:var(--accent-2); flex:none; }
+  .qpick .k{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-faint); flex:none; width:2.4em; }
 
   /* ---- site banner (same look as on the study site) ---- */
   .site-banners{ display:flex; flex-direction:column; gap:8px; }
@@ -297,10 +303,27 @@
     <div class="card-head">
       <div>
         <h2 id="tTitle">Private tests</h2>
-        <p class="muted small" style="margin:4px 0 0">Real unit tests, only available here. The public site doesn't have them.</p>
+        <p class="muted small" style="margin:4px 0 0">Real unit tests. The public site doesn't have them. You choose which ones (and which questions) appear on the separate <b>/tests</b> page.</p>
       </div>
     </div>
     <div id="testList" class="blist"><div class="empty">Loading…</div></div>
+
+    <div class="tpanel">
+      <div class="row" style="justify-content:space-between">
+        <strong>The /tests page</strong>
+        <span class="row"><span class="status" id="tpStatus"></span><a class="btn small" href="/tests" target="_blank" rel="noopener">Open /tests ↗</a></span>
+      </div>
+      <p class="muted small" style="margin:6px 0 10px">Everyone else logs in there with one shared password. It only shows tests you switch on above, and they can't reach this admin page with it. Nothing on the study site links to it. The password saves right away; the switches, chosen questions and note go live when you press Publish.</p>
+      <div class="row">
+        <input type="password" id="tpPw" placeholder="New password for /tests (at least 6 characters)" autocomplete="new-password" style="flex:1 1 240px">
+        <button class="btn green" id="tpSet">Set password</button>
+        <button class="btn danger" id="tpOff">Turn /tests off</button>
+      </div>
+      <p class="err" id="tpErr" role="alert"></p>
+      <label class="f" style="margin-top:4px">Note shown at the top of /tests (optional)
+        <textarea id="tpNote" maxlength="400" placeholder="Practice for the retake. Don't share the password."></textarea>
+      </label>
+    </div>
 
     <div id="runner" class="runner" hidden>
       <div class="row" style="justify-content:space-between">
@@ -430,7 +453,7 @@
   function fmtDate(iso){ return iso ? new Date(iso).toLocaleString([], {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}) : ""; }
 
   /* ---------- render ---------- */
-  function renderAll(){ renderStats(); renderBanners(); renderChapters(); syncSaveBar(); }
+  function renderAll(){ renderStats(); renderBanners(); renderChapters(); renderTestsPanel(); if (tests.length) renderTests(); syncSaveBar(); }
   function renderStats(){
     var st = cfg.banners.map(statusOf);
     $("statLive").textContent = st.filter(function(s){ return s === "live"; }).length;
@@ -624,21 +647,110 @@
     api("tests").then(function(d){ tests = d.tests || []; renderTests(); })
       .catch(function(err){ $("testList").innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
   }
+  function tpanel(){ if (!cfg.testsPanel) cfg.testsPanel = {note:"", tests:{}}; return cfg.testsPanel; }
+  function tget(id){ return (cfg.testsPanel && cfg.testsPanel.tests[id]) || {on:false, hidden:[]}; }
+  function tset(id){
+    tpanel();
+    if (!cfg.testsPanel.tests[id]) cfg.testsPanel.tests[id] = {on:false, hidden:[]};
+    return cfg.testsPanel.tests[id];
+  }
+  function getTest(id){
+    return openTests[id] ? Promise.resolve(openTests[id]) : api("test", {id:id}).then(function(d){ return (openTests[id] = {test:d.test, ids:d.ids}); });
+  }
   function renderTests(){
     $("testList").innerHTML = tests.length ? tests.map(function(t){
-      return '<div class="titem"><div><b>' + esc(t.title) + '</b><div class="muted small">' + t.count + ' questions · ' + t.missed + ' you missed</div></div>' +
-        '<div class="row"><button class="btn small" data-test="' + esc(t.id) + '" data-only="0">All questions</button>' +
-        (t.missed ? '<button class="btn small green" data-test="' + esc(t.id) + '" data-only="1">Only the ones I missed</button>' : '') + '</div></div>';
+      var s = tget(t.id);
+      var shown = t.count - s.hidden.length;
+      return '<div class="titem" data-id="' + esc(t.id) + '"><div><b>' + esc(t.title) + '</b><div class="muted small">' + t.count + ' questions' +
+        (t.missed ? ' · ' + t.missed + ' you missed' : '') + ' · on /tests: ' + (s.on ? shown + ' shown' : 'off') + '</div></div>' +
+        '<div class="row"><button class="btn small" data-test="' + esc(t.id) + '" data-only="0">Take it</button>' +
+        (t.missed ? '<button class="btn small green" data-test="' + esc(t.id) + '" data-only="1">Only the ones I missed</button>' : '') +
+        '<label class="check small"><input type="checkbox" data-share="' + esc(t.id) + '"' + (s.on ? ' checked' : '') + '> Show on /tests</label>' +
+        '<button class="btn small" data-pick="' + esc(t.id) + '">Choose questions</button></div>' +
+        '<div class="qpick" data-picker="' + esc(t.id) + '" hidden></div></div>';
     }).join("") : '<div class="empty">No private tests yet.</div>';
   }
   $("testList").addEventListener("click", function(e){
-    var b = e.target.closest("button[data-test]"); if (!b) return;
-    var id = b.getAttribute("data-test"), only = b.getAttribute("data-only") === "1";
-    b.disabled = true;
-    (openTests[id] ? Promise.resolve(openTests[id]) : api("test", {id:id}).then(function(d){ return (openTests[id] = d.test); }))
-      .then(function(t){ startRun(t, only); })
-      .catch(function(err){ alert("Couldn't open the test: " + err.message); })
-      .then(function(){ b.disabled = false; });
+    var b = e.target.closest("button[data-test]");
+    if (b){
+      var id = b.getAttribute("data-test"), only = b.getAttribute("data-only") === "1";
+      b.disabled = true;
+      getTest(id).then(function(o){ startRun(o.test, only); })
+        .catch(function(err){ alert("Couldn't open the test: " + err.message); })
+        .then(function(){ b.disabled = false; });
+      return;
+    }
+    var p = e.target.closest("button[data-pick]");
+    if (p){
+      var pid = p.getAttribute("data-pick"), box = $("testList").querySelector('[data-picker="' + pid + '"]');
+      if (!box.hidden){ box.hidden = true; return; }
+      getTest(pid).then(function(o){
+        var hidden = tget(pid).hidden, rows = [];
+        o.test.mc.forEach(function(q, i){ rows.push({k:"MC", q:q[0], id:o.ids.mc[i]}); });
+        o.test.tf.forEach(function(q, i){ rows.push({k:"T/F", q:q[0], id:o.ids.tf[i]}); });
+        box.innerHTML = '<div class="row" style="padding:6px 0"><span class="muted small">Checked questions appear on /tests.</span>' +
+          '<button class="btn small" data-all="1">Check all</button><button class="btn small" data-all="0">Uncheck all</button></div>' +
+          rows.map(function(r){ return '<label><input type="checkbox" data-q="' + r.id + '"' + (hidden.indexOf(r.id) === -1 ? ' checked' : '') + '><span class="k">' + r.k + '</span><span>' + esc(r.q) + '</span></label>'; }).join("");
+        box.hidden = false;
+      }).catch(function(err){ alert("Couldn't open the test: " + err.message); });
+      return;
+    }
+    var all = e.target.closest("button[data-all]");
+    if (all){
+      var picker = all.closest("[data-picker]"), on = all.getAttribute("data-all") === "1";
+      Array.prototype.forEach.call(picker.querySelectorAll("input[data-q]"), function(c){ c.checked = on; });
+      syncHidden(picker);
+    }
+  });
+  $("testList").addEventListener("change", function(e){
+    if (e.target.hasAttribute("data-share")){
+      tset(e.target.getAttribute("data-share")).on = e.target.checked;
+      refreshTestRow(e.target.getAttribute("data-share")); syncSaveBar();
+    }
+    if (e.target.hasAttribute("data-q")) syncHidden(e.target.closest("[data-picker]"));
+  });
+  function syncHidden(picker){
+    var id = picker.getAttribute("data-picker");
+    tset(id).hidden = Array.prototype.filter.call(picker.querySelectorAll("input[data-q]"), function(c){ return !c.checked; })
+      .map(function(c){ return c.getAttribute("data-q"); });
+    refreshTestRow(id); syncSaveBar();
+  }
+  function refreshTestRow(id){
+    var t = tests.filter(function(x){ return x.id === id; })[0], row = $("testList").querySelector('.titem[data-id="' + id + '"] .muted');
+    if (!t || !row) return;
+    var s = tget(id);
+    row.textContent = t.count + " questions" + (t.missed ? " · " + t.missed + " you missed" : "") + " · on /tests: " + (s.on ? (t.count - s.hidden.length) + " shown" : "off");
+  }
+
+  /* ---------- /tests page settings ---------- */
+  function renderTestsPanel(){
+    var set = !!cfg.testsPassSet;
+    $("tpStatus").textContent = set ? "Password set" : "Off (no password)";
+    $("tpStatus").className = "status " + (set ? "st-live" : "st-off");
+    $("tpOff").hidden = !set;
+    $("tpSet").textContent = set ? "Change password" : "Set password";
+    $("tpNote").value = (cfg.testsPanel && cfg.testsPanel.note) || "";
+  }
+  $("tpNote").addEventListener("input", function(){ tpanel().note = $("tpNote").value; syncSaveBar(); });
+  function setTestsPass(extra, btn){
+    var wasSet = !!cfg.testsPassSet;
+    $("tpErr").textContent = ""; btn.disabled = true;
+    api("setTestsPassword", extra).then(function(d){
+      cfg.testsPassSet = d.config.testsPassSet;
+      var saved = JSON.parse(savedJSON); saved.testsPassSet = d.config.testsPassSet; savedJSON = JSON.stringify(saved);
+      $("tpPw").value = ""; renderTestsPanel(); syncSaveBar();
+      $("tpErr").style.color = "var(--success)";
+      $("tpErr").textContent = extra.clear ? "/tests is off. Nobody can log in there now." : wasSet ? "Saved. Everyone logged in to /tests with the old password was signed out." : "Saved. /tests is on. Switch on a test above and Publish.";
+    }).catch(function(err){ $("tpErr").style.color = ""; $("tpErr").textContent = err.message; })
+      .then(function(){ btn.disabled = false; });
+  }
+  $("tpSet").addEventListener("click", function(){
+    var pw = $("tpPw").value;
+    if (pw.length < 6){ $("tpErr").style.color = ""; $("tpErr").textContent = "Use at least 6 characters."; return; }
+    setTestsPass({password:pw}, $("tpSet"));
+  });
+  $("tpOff").addEventListener("click", function(){
+    if (confirm("Turn off the /tests page? Nobody will be able to log in there until you set a new password.")) setTestsPass({clear:true}, $("tpOff"));
   });
   function startRun(t, only){
     var items = t.mc.map(function(m){ return {kind:"mc", q:m[0], choices:shuffle(m[1]), answer:m[1][0], why:m[2], missed:m[5] === "test-missed"}; })
