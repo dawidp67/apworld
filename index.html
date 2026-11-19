@@ -4592,7 +4592,7 @@ CH.push((function(){
        level 2 = medium (cause and effect, "why"); level 3 = hard (AP style: compare, continuity and change, evidence, sourcing)
    tf: [statement, isTrue, explanation, theme]   (all level 3)
    An extra "test" at the end marks a question copied from a real unit test (shown as "From your test");
-   "test-missed" marks one the student got wrong, which the "Missed on my test" filter drills.
+   (The engine still understands "test-missed", but questions aren't marked that way anymore.)
    The correct answer is always listed first here; the quiz shuffles the choices.
    Chapter ids match the "id" of each chapter above.                                  */
 var AP_BANK = {
@@ -5888,13 +5888,13 @@ mc: [
    "Coastal agreements gave merchants routine control of neighboring inland kingdoms.",
    "African rulers withdrew from expanding overseas commerce.",
    "Trading posts generally marked the immediate replacement of African governments."],
-  "You missed this one on the test. African rulers controlled access to ports, markets, and trading connections, so Europeans had to negotiate with them. Agreements did not hand Europeans control of inland kingdoms.", "State-Building", 3, "test-missed"],
+  "African rulers controlled access to ports, markets, and trading connections, so Europeans had to negotiate with them. Agreements did not hand Europeans control of inland kingdoms.", "State-Building", 3, "test"],
  ["Portuguese intervention in Swahili commercial cities is best understood as which development?",
   ["A maritime power sought control within an existing Indian Ocean trading network.",
    "European navigators introduced commerce to isolated Swahili ports.",
    "Atlantic demand redirected East African trade away from Asia.",
    "Muslim merchants transferred trading rights to Portuguese rulers."],
-  "You missed this one on the test. Swahili cities were already rich parts of Indian Ocean trade. The Portuguese used force to take over existing ports and shipping. Nobody handed them trading rights.", "Economics", 3, "test-missed"],
+  "Swahili cities were already rich parts of Indian Ocean trade. The Portuguese used force to take over existing ports and shipping. Nobody handed them trading rights.", "Economics", 3, "test"],
  ["Why did European plantation expansion increase demand for enslaved African workers?",
   ["Export production required labor amid Indigenous population losses and resistance.",
    "Plantation owners sought African workers chiefly to establish new export markets.",
@@ -5912,7 +5912,7 @@ mc: [
    "Plantation owners purchased workers through competing European commercial networks.",
    "European merchants later exchanged manufactured goods for African captives.",
    "Coastal holding facilities confined captives awaiting shipment across the Atlantic."],
-  "You missed this one on the test. To challenge a claim, pick evidence from before Europeans arrived. Slavery and older export routes toward the Middle East and India already existed. The other choices all describe the Atlantic trade itself.", "Social Structure", 3, "test-missed"],
+  "To challenge a claim, pick evidence from before Europeans arrived. Slavery and older export routes toward the Middle East and India already existed. The other choices all describe the Atlantic trade itself.", "Social Structure", 3, "test"],
  ["Which comparison best identifies a major change associated with the expansion of Atlantic slavery?",
   ["Existing practices of enslavement became connected to expanding American plantation demand.",
    "Captives previously exported overseas became concentrated in African domestic households.",
@@ -6002,7 +6002,7 @@ mc: [
    "Coastal communities depended on European contract workers.",
    "Population concentration eliminated contact with European language speakers.",
    "Plantation settlement required residents to use the same language as European officials."],
-  "You missed this one on the test. Concentrated communities passed language and culture between generations. They did not cut off contact with English speakers entirely, which is why \"eliminated contact\" goes too far.", "Culture", 3, "test-missed"],
+  "Concentrated communities passed language and culture between generations. They did not cut off contact with English speakers entirely, which is why \"eliminated contact\" goes too far.", "Culture", 3, "test"],
  ["What does the presence of Muslim captives reveal about religion in the African diaspora?",
   ["Africans carried diverse existing beliefs into the societies where they were enslaved.",
    "Islam generally reached African communities through American plantation missionaries.",
@@ -6014,7 +6014,7 @@ mc: [
    "They show colonial religious institutions protecting African beliefs from outside influence.",
    "They show religious practices spreading independently of forced migration and colonial rule.",
    "They show European missionaries adopting African religions as official colonial faiths."],
-  "You missed this one on the test. Each one drew on African traditions while developing inside societies shaped by forced migration, colonization, and Christianity. They did not spread independently of those forces.", "Culture", 3, "test-missed"],
+  "Each one drew on African traditions while developing inside societies shaped by forced migration, colonization, and Christianity. They did not spread independently of those forces.", "Culture", 3, "test"],
  ["Enslaved people used music during work, worship, and communication. Which interpretation best explains the historical significance of these activities?",
   ["Cultural practices helped people endure oppression and maintain social connections.",
    "Plantation owners preserved African music chiefly to prepare captives for free employment.",
@@ -6044,13 +6044,13 @@ mc: [
    "Inland agricultural populations received the principal military benefits of coastal trade.",
    "Slave-raiding states became prosperous by withdrawing from foreign commercial networks.",
    "Participation in Atlantic commerce generally reduced differences in regional political power."],
-  "You missed this one on the test. Dahomey and Oyo got rich by joining Atlantic trade, not by withdrawing from it. The same trade hurt the communities they raided, so the effects were unequal.", "Social Structure", 3, "test-missed"],
+  "Dahomey and Oyo got rich by joining Atlantic trade, not by withdrawing from it. The same trade hurt the communities they raided, so the effects were unequal.", "Social Structure", 3, "test"],
  ["Which evidence most strongly qualifies a claim that American crops made Atlantic exchange broadly beneficial to Africa?",
   ["Improved food supplies coexisted with population losses, raiding, and family disruption.",
    "New staple crops helped households increase the range of foods available for consumption.",
    "Maize and manioc became important additions to agricultural production in some regions.",
    "Some African populations could grow crops that had originated across the Atlantic."],
-  "You missed this one on the test. To qualify a claim means to limit it. Only the first choice shows a downside. The other three all support the claim instead.", "Environment", 3, "test-missed"],
+  "To qualify a claim means to limit it. Only the first choice shows a downside. The other three all support the claim instead.", "Environment", 3, "test"],
  ["African words and musical practices appeared in both American societies and Indian Ocean communities. Which interpretation best connects these developments?",
   ["African cultural influence spread through several networks of population movement.",
    "African culture spread mainly through colonial education.",
@@ -6068,7 +6068,7 @@ mc: [
    "Differences in occupation made household service a form of voluntary migration.",
    "Employment in cities generally gave captives the same legal status as free workers.",
    "The existence of maritime work made the use of coercion commercially unnecessary."],
-  "You missed this one on the test. Different jobs and some legal protections did not make captives free. Working in a city did not give them the same status as free workers.", "Social Structure", 3, "test-missed"],
+  "Different jobs and some legal protections did not make captives free. Working in a city did not give them the same status as free workers.", "Social Structure", 3, "test"],
  ["Why could Enlightenment arguments about natural freedom strengthen abolitionist criticism?",
   ["Ownership of people conflicted with claims that human beings possessed basic rights.",
    "Enlightenment writers established that plantation labor had become economically unprofitable.",
@@ -6092,7 +6092,7 @@ mc: [
    "The expansion of slave raiding established that every participating state lost power immediately.",
    "Imported goods demonstrate that African societies had lacked established economies before contact.",
    "Participation in Atlantic commerce gave European states direct rule over African interiors."],
-  "You missed this one on the test. \"Most carefully\" means the answer with no overstatement. Nineteenth-century conquest had other causes too, so \"could contribute\" is the careful wording.", "State-Building", 3, "test-missed"]
+  "\"Most carefully\" means the answer with no overstatement. Nineteenth-century conquest had other causes too, so \"could contribute\" is the careful wording.", "State-Building", 3, "test"]
 ],
 tf: [
  ["Islam and long-distance trade influenced African societies before Europeans established Atlantic trading posts.", true, "Trans-Saharan and Indian Ocean trade connected Africa to the wider world long before Portuguese posts.", "Culture", "test"],

@@ -135,7 +135,6 @@
   .rbar{ height:4px; background:var(--border); border-radius:4px; margin:10px 0 14px; overflow:hidden; }
   .rbar div{ height:100%; background:var(--accent-2); width:0; transition:width .3s; }
   .rq{ font-family:var(--font-display); font-weight:560; font-size:1.15rem; line-height:1.4; margin:0 0 14px; }
-  .rtag{ font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; border-radius:6px; padding:2px 7px; margin-left:8px; background:var(--danger-bg); color:var(--danger); }
   .rchoices{ display:flex; flex-direction:column; gap:8px; }
   .rchoice{ font:inherit; text-align:left; display:flex; gap:10px; padding:11px 14px; border-radius:11px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
   .rchoice:hover:not(:disabled){ border-color:var(--accent-2); }
@@ -662,9 +661,8 @@
       var s = tget(t.id);
       var shown = t.count - s.hidden.length;
       return '<div class="titem" data-id="' + esc(t.id) + '"><div><b>' + esc(t.title) + '</b><div class="muted small">' + t.count + ' questions' +
-        (t.missed ? ' · ' + t.missed + ' you missed' : '') + ' · on /tests: ' + (s.on ? shown + ' shown' : 'off') + '</div></div>' +
-        '<div class="row"><button class="btn small" data-test="' + esc(t.id) + '" data-only="0">Take it</button>' +
-        (t.missed ? '<button class="btn small green" data-test="' + esc(t.id) + '" data-only="1">Only the ones I missed</button>' : '') +
+        ' · on /tests: ' + (s.on ? shown + ' shown' : 'off') + '</div></div>' +
+        '<div class="row"><button class="btn small" data-test="' + esc(t.id) + '">Take it</button>' +
         '<label class="check small"><input type="checkbox" data-share="' + esc(t.id) + '"' + (s.on ? ' checked' : '') + '> Show on /tests</label>' +
         '<button class="btn small" data-pick="' + esc(t.id) + '">Choose questions</button></div>' +
         '<div class="qpick" data-picker="' + esc(t.id) + '" hidden></div></div>';
@@ -673,9 +671,9 @@
   $("testList").addEventListener("click", function(e){
     var b = e.target.closest("button[data-test]");
     if (b){
-      var id = b.getAttribute("data-test"), only = b.getAttribute("data-only") === "1";
+      var id = b.getAttribute("data-test");
       b.disabled = true;
-      getTest(id).then(function(o){ startRun(o.test, only); })
+      getTest(id).then(function(o){ startRun(o.test); })
         .catch(function(err){ alert("Couldn't open the test: " + err.message); })
         .then(function(){ b.disabled = false; });
       return;
@@ -719,7 +717,7 @@
     var t = tests.filter(function(x){ return x.id === id; })[0], row = $("testList").querySelector('.titem[data-id="' + id + '"] .muted');
     if (!t || !row) return;
     var s = tget(id);
-    row.textContent = t.count + " questions" + (t.missed ? " · " + t.missed + " you missed" : "") + " · on /tests: " + (s.on ? (t.count - s.hidden.length) + " shown" : "off");
+    row.textContent = t.count + " questions · on /tests: " + (s.on ? (t.count - s.hidden.length) + " shown" : "off");
   }
 
   /* ---------- /tests page settings ---------- */
@@ -752,10 +750,9 @@
   $("tpOff").addEventListener("click", function(){
     if (confirm("Turn off the /tests page? Nobody will be able to log in there until you set a new password.")) setTestsPass({clear:true}, $("tpOff"));
   });
-  function startRun(t, only){
-    var items = t.mc.map(function(m){ return {kind:"mc", q:m[0], choices:shuffle(m[1]), answer:m[1][0], why:m[2], missed:m[5] === "test-missed"}; })
-      .concat(t.tf.map(function(x){ return {kind:"tf", q:x[0], isTrue:x[1], why:x[2], missed:x[4] === "test-missed"}; }));
-    if (only) items = items.filter(function(it){ return it.missed; });
+  function startRun(t){
+    var items = t.mc.map(function(m){ return {kind:"mc", q:m[0], choices:shuffle(m[1]), answer:m[1][0], why:m[2]}; })
+      .concat(t.tf.map(function(x){ return {kind:"tf", q:x[0], isTrue:x[1], why:x[2]}; }));
     run = {test:t, items:shuffle(items), i:0, score:0, wrong:[]};
     $("runner").hidden = false; renderQ();
     $("runner").scrollIntoView({behavior:"smooth", block:"start"});
@@ -766,7 +763,7 @@
     $("rScore").textContent = "Score " + run.score + " / " + n;
     $("rBar").style.width = (run.i / n * 100) + "%";
     var opts = it.kind === "tf" ? ["True", "False"] : it.choices;
-    $("rBody").innerHTML = '<p class="rq">' + esc(it.q) + (it.missed ? '<span class="rtag">Missed on your test</span>' : '') + '</p>' +
+    $("rBody").innerHTML = '<p class="rq">' + esc(it.q) + '</p>' +
       '<div class="rchoices">' + opts.map(function(o, i){ return '<button class="rchoice" data-i="' + i + '"><span class="l">' + (it.kind === "tf" ? (i ? "F" : "T") : "ABCD"[i]) + '</span><span>' + esc(o) + '</span></button>'; }).join("") + '</div>' +
       '<div class="rfoot"><div class="rfb" id="rFb"></div><button class="btn primary" id="rNext" hidden>' + (run.i === n - 1 ? "See results →" : "Next →") + '</button></div>';
   }
@@ -794,7 +791,7 @@
     $("rBody").innerHTML = '<p class="rq">' + run.score + ' / ' + n + ' (' + Math.round(run.score / n * 100) + '%)</p>' +
       (run.wrong.length ? '<p class="muted small" style="margin:0 0 6px">Review these:</p>' + run.wrong.map(function(it){
         return '<div class="rmiss"><div>' + esc(it.q) + '</div><b>' + esc(it.kind === "tf" ? (it.isTrue ? "True" : "False") : it.answer) + '</b>' + (it.why ? '<div class="muted small">' + esc(it.why) + '</div>' : '') + '</div>';
-      }).join("") : '<p class="muted">Perfect. You’re ready for the retake.</p>') +
+      }).join("") : '<p class="muted">Perfect score.</p>') +
       '<div class="rfoot"><span></span><div class="row">' + (run.wrong.length ? '<button class="btn green" id="rRetry">Retry the ones I got wrong</button>' : '') + '<button class="btn" id="rClose">Close</button></div></div>';
   }
   $("rBody").addEventListener("click", function(e){
