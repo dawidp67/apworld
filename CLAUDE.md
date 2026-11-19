@@ -23,7 +23,7 @@ tf: [statement, isTrue, explanation, theme, "test"?]
 - The correct answer is always listed first; the quiz shuffles choices.
 - `level` 2 = medium (cause/effect, "why"), 3 = hard (AP / unit-test style). TF bank items count as level 3.
 - `theme` must be one of the chapter's `CATS`.
-- Optional `"test"` marks a question copied from a real unit test (tagged "From your test" in the quiz). Use `"test-missed"` for one the student got wrong: it feeds the "Missed on my test" filter, and its explanation should start "You missed this one on the test." and name the trap. If a test's answer key looks wrong, keep the historically correct answer first and say so in the explanation.
+- Optional `"test"` marks a question copied from a real unit test (tagged "From your test" in the quiz). Don't mark which questions the student got wrong: no `"test-missed"` tags and no "You missed this one" explanations (the student asked to remove these everywhere). If a test's answer key looks wrong, keep the historically correct answer first and say so in the explanation.
 
 ## The teacher's test style (match this for level-3 questions)
 
