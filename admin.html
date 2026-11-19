@@ -127,6 +127,28 @@
   .savebar.ok .msgtxt{ color:var(--success); }
   .savebar.bad .msgtxt{ color:var(--danger); }
 
+  /* private test runner */
+  .titem{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; border:1px solid var(--border); border-radius:12px; padding:12px 14px; background:var(--surface-2); }
+  .titem b{ font-family:var(--font-display); font-size:1.05rem; }
+  .runner{ margin-top:14px; border:1px solid var(--accent-2); border-radius:14px; padding:16px; background:var(--accent-2-soft); }
+  .rmeta{ font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-soft); }
+  .rbar{ height:4px; background:var(--border); border-radius:4px; margin:10px 0 14px; overflow:hidden; }
+  .rbar div{ height:100%; background:var(--accent-2); width:0; transition:width .3s; }
+  .rq{ font-family:var(--font-display); font-weight:560; font-size:1.15rem; line-height:1.4; margin:0 0 14px; }
+  .rtag{ font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; border-radius:6px; padding:2px 7px; margin-left:8px; background:var(--danger-bg); color:var(--danger); }
+  .rchoices{ display:flex; flex-direction:column; gap:8px; }
+  .rchoice{ font:inherit; text-align:left; display:flex; gap:10px; padding:11px 14px; border-radius:11px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
+  .rchoice:hover:not(:disabled){ border-color:var(--accent-2); }
+  .rchoice .l{ font-family:var(--font-mono); font-weight:700; color:var(--accent-2); flex:none; }
+  .rchoice.ok{ background:var(--success-bg); border-color:var(--success); }
+  .rchoice.no{ background:var(--danger-bg); border-color:var(--danger); }
+  .rchoice:disabled{ cursor:default; }
+  .rfoot{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+  .rfb{ flex:1 1 260px; font-weight:600; font-size:0.9rem; }
+  .rfb.ok{ color:var(--success); } .rfb.no{ color:var(--danger); }
+  .rfb span{ display:block; margin-top:4px; font-weight:400; color:var(--ink-soft); line-height:1.45; }
+  .rmiss{ border-left:3px solid var(--danger); background:var(--surface); border-radius:8px; padding:8px 12px; margin-top:8px; font-size:0.9rem; }
+
   /* ---- site banner (same look as on the study site) ---- */
   .site-banners{ display:flex; flex-direction:column; gap:8px; }
   .site-banner{ --c:var(--info); --cb:var(--info-bg); display:flex; align-items:center; gap:10px; padding:10px 12px 10px 14px; border-radius:12px;
@@ -269,6 +291,26 @@
     </table>
     <label class="check" style="margin-top:10px"><input type="radio" name="current" value="" id="noCurrent"> No current unit</label>
   </section>
+
+  <!-- Private tests -->
+  <section class="card" aria-labelledby="tTitle">
+    <div class="card-head">
+      <div>
+        <h2 id="tTitle">Private tests</h2>
+        <p class="muted small" style="margin:4px 0 0">Real unit tests, only available here. The public site doesn't have them.</p>
+      </div>
+    </div>
+    <div id="testList" class="blist"><div class="empty">Loading…</div></div>
+
+    <div id="runner" class="runner" hidden>
+      <div class="row" style="justify-content:space-between">
+        <span class="rmeta" id="rCount"></span>
+        <span class="row"><span class="rmeta" id="rScore"></span><button class="btn small" id="rQuit">Quit</button></span>
+      </div>
+      <div class="rbar"><div id="rBar"></div></div>
+      <div id="rBody"></div>
+    </div>
+  </section>
 </div>
 
 <div class="savebar" id="saveBar" hidden>
@@ -339,6 +381,7 @@
       cfg = r[0].config; savedJSON = JSON.stringify(cfg);
       $("loginView").hidden = true; $("appView").hidden = false;
       renderAll();
+      loadTests();
     }).catch(function(err){ if (token) showLogin(err.message); });
   }
   // Chapter list comes straight from the live site, so new chapters show up here automatically.
@@ -573,6 +616,80 @@
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s" && cfg){ e.preventDefault(); publish(); }
   });
   window.addEventListener("beforeunload", function(e){ if (dirty()){ e.preventDefault(); e.returnValue = ""; } });
+
+  /* ---------- private tests (decrypted by the server only after login) ---------- */
+  var tests = [], openTests = {}, run = null;
+  function shuffle(a){ a = a.slice(); for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function loadTests(){
+    api("tests").then(function(d){ tests = d.tests || []; renderTests(); })
+      .catch(function(err){ $("testList").innerHTML = '<p class="err">' + esc(err.message) + '</p>'; });
+  }
+  function renderTests(){
+    $("testList").innerHTML = tests.length ? tests.map(function(t){
+      return '<div class="titem"><div><b>' + esc(t.title) + '</b><div class="muted small">' + t.count + ' questions · ' + t.missed + ' you missed</div></div>' +
+        '<div class="row"><button class="btn small" data-test="' + esc(t.id) + '" data-only="0">All questions</button>' +
+        (t.missed ? '<button class="btn small green" data-test="' + esc(t.id) + '" data-only="1">Only the ones I missed</button>' : '') + '</div></div>';
+    }).join("") : '<div class="empty">No private tests yet.</div>';
+  }
+  $("testList").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-test]"); if (!b) return;
+    var id = b.getAttribute("data-test"), only = b.getAttribute("data-only") === "1";
+    b.disabled = true;
+    (openTests[id] ? Promise.resolve(openTests[id]) : api("test", {id:id}).then(function(d){ return (openTests[id] = d.test); }))
+      .then(function(t){ startRun(t, only); })
+      .catch(function(err){ alert("Couldn't open the test: " + err.message); })
+      .then(function(){ b.disabled = false; });
+  });
+  function startRun(t, only){
+    var items = t.mc.map(function(m){ return {kind:"mc", q:m[0], choices:shuffle(m[1]), answer:m[1][0], why:m[2], missed:m[5] === "test-missed"}; })
+      .concat(t.tf.map(function(x){ return {kind:"tf", q:x[0], isTrue:x[1], why:x[2], missed:x[4] === "test-missed"}; }));
+    if (only) items = items.filter(function(it){ return it.missed; });
+    run = {test:t, items:shuffle(items), i:0, score:0, wrong:[]};
+    $("runner").hidden = false; renderQ();
+    $("runner").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  function renderQ(){
+    var it = run.items[run.i], n = run.items.length;
+    $("rCount").textContent = run.test.title + " · Question " + (run.i + 1) + " of " + n;
+    $("rScore").textContent = "Score " + run.score + " / " + n;
+    $("rBar").style.width = (run.i / n * 100) + "%";
+    var opts = it.kind === "tf" ? ["True", "False"] : it.choices;
+    $("rBody").innerHTML = '<p class="rq">' + esc(it.q) + (it.missed ? '<span class="rtag">Missed on your test</span>' : '') + '</p>' +
+      '<div class="rchoices">' + opts.map(function(o, i){ return '<button class="rchoice" data-i="' + i + '"><span class="l">' + (it.kind === "tf" ? (i ? "F" : "T") : "ABCD"[i]) + '</span><span>' + esc(o) + '</span></button>'; }).join("") + '</div>' +
+      '<div class="rfoot"><div class="rfb" id="rFb"></div><button class="btn primary" id="rNext" hidden>' + (run.i === n - 1 ? "See results →" : "Next →") + '</button></div>';
+  }
+  $("rBody").addEventListener("click", function(e){
+    if (e.target.closest("#rNext")){ run.i++; if (run.i >= run.items.length) finishRun(); else renderQ(); return; }
+    var c = e.target.closest(".rchoice"); if (!c || c.disabled) return;
+    var it = run.items[run.i], pick = +c.getAttribute("data-i");
+    var right = it.kind === "tf" ? (pick === 0) === it.isTrue : it.choices[pick] === it.answer;
+    var correctIdx = it.kind === "tf" ? (it.isTrue ? 0 : 1) : it.choices.indexOf(it.answer);
+    Array.prototype.forEach.call($("rBody").querySelectorAll(".rchoice"), function(b, i){
+      b.disabled = true;
+      if (i === correctIdx) b.classList.add("ok"); else if (i === pick) b.classList.add("no");
+    });
+    if (right) run.score++; else run.wrong.push(it);
+    $("rFb").className = "rfb " + (right ? "ok" : "no");
+    $("rFb").innerHTML = (right ? "Correct" : "Not quite. The right answer is highlighted.") + (it.why ? '<span>' + esc(it.why) + '</span>' : '');
+    $("rScore").textContent = "Score " + run.score + " / " + run.items.length;
+    $("rNext").hidden = false; $("rNext").focus();
+  });
+  function finishRun(){
+    var n = run.items.length;
+    $("rBar").style.width = "100%";
+    $("rCount").textContent = run.test.title + " · Done";
+    $("rScore").textContent = "";
+    $("rBody").innerHTML = '<p class="rq">' + run.score + ' / ' + n + ' (' + Math.round(run.score / n * 100) + '%)</p>' +
+      (run.wrong.length ? '<p class="muted small" style="margin:0 0 6px">Review these:</p>' + run.wrong.map(function(it){
+        return '<div class="rmiss"><div>' + esc(it.q) + '</div><b>' + esc(it.kind === "tf" ? (it.isTrue ? "True" : "False") : it.answer) + '</b>' + (it.why ? '<div class="muted small">' + esc(it.why) + '</div>' : '') + '</div>';
+      }).join("") : '<p class="muted">Perfect. You’re ready for the retake.</p>') +
+      '<div class="rfoot"><span></span><div class="row">' + (run.wrong.length ? '<button class="btn green" id="rRetry">Retry the ones I got wrong</button>' : '') + '<button class="btn" id="rClose">Close</button></div></div>';
+  }
+  $("rBody").addEventListener("click", function(e){
+    if (e.target.closest("#rRetry")){ var w = run.wrong; run = {test:run.test, items:shuffle(w), i:0, score:0, wrong:[]}; renderQ(); }
+    if (e.target.closest("#rClose")){ $("runner").hidden = true; run = null; }
+  });
+  $("rQuit").addEventListener("click", function(){ $("runner").hidden = true; run = null; });
 
   boot();
 })();

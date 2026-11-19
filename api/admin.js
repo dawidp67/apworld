@@ -1,8 +1,21 @@
 // Admin API. Every action except "login" needs a valid session token.
 // Requires ADMIN_PASSWORD (and a connected Blob store) in the Vercel project settings.
+import crypto from "node:crypto";
 import { readConfig, writeConfig, clean, checkPassword, makeToken, verifyToken, passwordConfigured } from "./_lib/site-config.js";
+import { PRIVATE_TESTS } from "./_lib/private-tests.js";
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
+
+// Real unit tests are stored encrypted in the public repo; TEST_KEY (Vercel setting) unlocks them.
+function openTest(id) {
+  const t = PRIVATE_TESTS.find(x => x.id === id);
+  if (!t) return null;
+  const key = Buffer.from(process.env.TEST_KEY || "", "base64");
+  if (key.length !== 32) throw new Error("TEST_KEY isn't set up in Vercel, so the private tests can't be opened.");
+  const d = crypto.createDecipheriv("aes-256-gcm", key, Buffer.from(t.iv, "base64"));
+  d.setAuthTag(Buffer.from(t.tag, "base64"));
+  return JSON.parse(Buffer.concat([d.update(Buffer.from(t.data, "base64")), d.final()]).toString("utf8"));
+}
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -32,6 +45,16 @@ export default async function handler(req, res) {
 
     if (body.action === "session") { res.status(200).json({ ok: true }); return; }
     if (body.action === "load") { res.status(200).json({ config: await readConfig() }); return; }
+    if (body.action === "tests") {
+      res.status(200).json({ tests: PRIVATE_TESTS.map(t => ({ id: t.id, title: t.title, count: t.count, missed: t.missed })) });
+      return;
+    }
+    if (body.action === "test") {
+      const test = openTest(String(body.id || ""));
+      if (!test) { res.status(404).json({ error: "That test doesn't exist." }); return; }
+      res.status(200).json({ test });
+      return;
+    }
     if (body.action === "save") {
       const cfg = clean(body.config);
       cfg.updatedAt = new Date().toISOString();
