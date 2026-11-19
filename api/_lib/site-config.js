@@ -8,7 +8,7 @@ const STYLES = ["info", "success", "warning", "urgent"];
 const SESSION_DAYS = 7;
 
 export function emptyConfig() {
-  return { banners: [], featuredChapter: null, hiddenChapters: [], updatedAt: null };
+  return { banners: [], featuredChapter: null, hiddenChapters: [], testsPanel: { note: "", tests: {} }, testsPass: null, updatedAt: null };
 }
 
 // ---------- storage (private Vercel Blob store; token comes from BLOB_READ_WRITE_TOKEN) ----------
@@ -16,7 +16,7 @@ export async function readConfig() {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return emptyConfig();
   const res = await get(PATH, { access: "private", useCache: false });
   if (!res || !res.stream) return emptyConfig();
-  return clean(await new Response(res.stream).json());
+  return clean(await new Response(res.stream).json(), { fromStorage: true });
 }
 
 export async function writeConfig(cfg) {
@@ -42,7 +42,8 @@ function safeLink(v) {
   return /^https?:\/\//i.test(s) || /^#ch\d{1,3}$/.test(s) || /^\/[^/]/.test(s) ? s : "";
 }
 
-export function clean(input) {
+// fromStorage: the /tests password hash is only ever kept from storage, never accepted from a browser.
+export function clean(input, opts) {
   const src = input && typeof input === "object" ? input : {};
   const banners = (Array.isArray(src.banners) ? src.banners : []).slice(0, 25).map(b => {
     b = b && typeof b === "object" ? b : {};
@@ -62,10 +63,22 @@ export function clean(input) {
     };
   }).filter(b => b.message);
   const hidden = [...new Set((Array.isArray(src.hiddenChapters) ? src.hiddenChapters : []).map(chapterId).filter(Boolean))].slice(0, 60);
+  // What the /tests page shows: which tests are on, and which single questions are hidden
+  const tp = src.testsPanel && typeof src.testsPanel === "object" ? src.testsPanel : {};
+  const tests = {};
+  Object.keys(tp.tests && typeof tp.tests === "object" ? tp.tests : {}).slice(0, 50).forEach(id => {
+    if (!/^[a-z0-9-]{1,24}$/.test(id)) return;
+    const t = tp.tests[id] || {};
+    tests[id] = { on: t.on === true, hidden: [...new Set((Array.isArray(t.hidden) ? t.hidden : []).filter(h => /^[a-f0-9]{10}$/.test(h)))].slice(0, 1000) };
+  });
+  const pass = opts && opts.fromStorage && src.testsPass && /^[a-f0-9]{32}$/.test(src.testsPass.salt || "") && /^[a-f0-9]{64}$/.test(src.testsPass.hash || "")
+    ? { salt: src.testsPass.salt, hash: src.testsPass.hash } : null;
   return {
     banners,
     featuredChapter: chapterId(src.featuredChapter),
     hiddenChapters: hidden,
+    testsPanel: { note: str(tp.note, 400), tests },
+    testsPass: pass,
     updatedAt: isoOrNull(src.updatedAt)
   };
 }
@@ -93,18 +106,25 @@ export function checkPassword(given) {
   return crypto.timingSafeEqual(sha(given), sha(process.env.ADMIN_PASSWORD));
 }
 
-export function makeToken() {
+function sign(key) {
   const exp = String(Date.now() + SESSION_DAYS * 864e5);
-  const sig = crypto.createHmac("sha256", signingKey()).update(exp).digest("base64url");
-  return exp + "." + sig;
+  return exp + "." + crypto.createHmac("sha256", key).update(exp).digest("base64url");
 }
-
-export function verifyToken(token) {
-  if (!passwordConfigured() || typeof token !== "string") return false;
+function check(token, key) {
+  if (typeof token !== "string") return false;
   const [exp, sig] = token.split(".");
   if (!exp || !sig || !/^\d+$/.test(exp) || Number(exp) < Date.now()) return false;
-  const want = crypto.createHmac("sha256", signingKey()).update(exp).digest();
+  const want = crypto.createHmac("sha256", key).update(exp).digest();
   let got;
   try { got = Buffer.from(sig, "base64url"); } catch (e) { return false; }
   return got.length === want.length && crypto.timingSafeEqual(got, want);
 }
+
+export function makeToken() { return sign(signingKey()); }
+export function verifyToken(token) { return passwordConfigured() && check(token, signingKey()); }
+
+// /tests sessions are signed with a key derived from that page's password hash,
+// so changing the /tests password in /admin signs every student out.
+function testsKey(pass) { return sha("apw-tests-session|" + pass.hash); }
+export function makeTestsToken(pass) { return sign(testsKey(pass)); }
+export function verifyTestsToken(token, pass) { return !!pass && check(token, testsKey(pass)); }
